@@ -4,7 +4,7 @@
  *  Created on: Nov 9, 2018
  *      Author: Chris
  */
-
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "GameMenuController.h"
 #include "Clickable.h"
@@ -13,7 +13,7 @@
 using std::cout;
 using std::endl;
 
-sf::RenderWindow window;
+sf::RenderWindow _window;
 sf::Event event;
 
 const int cubit = 60;
@@ -31,8 +31,8 @@ sf::Vector2f menuPosition(float xCubits, float yCubits) {
 
 GameMenuController::GameMenuController() {
 	// Debug, this should be defined in the main game view
-	window.create(sf::VideoMode(1920, 1080), "Frosh Defence");
-	window.setFramerateLimit(60); //set the frame limit to 60
+	_window.create(sf::VideoMode(1920, 1080), "Frosh Defence");
+	_window.setFramerateLimit(60); //set the frame limit to 60
 
 	// -----------------------
 	// Menu Borders
@@ -97,17 +97,17 @@ void GameMenuController::setDebug(bool mode) {
 }
 
 void GameMenuController::process() {
-	if ()
-	// Handle window events
-	while (window.pollEvent(event)) {
-		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+	// Handle _window events
+	while (_window.pollEvent(event)) {
+		sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
 		for (Clickable* c : clickVec) {
 			c->process(event, mousePos);
 		}
 		if (event.type == sf::Event::EventType::Closed
 				|| (event.type == sf::Event::KeyPressed
 						&& event.key.code == sf::Keyboard::Escape)) {
-			window.close();
+			_window.close();
 		}
 	}
 }
@@ -115,26 +115,26 @@ void GameMenuController::process() {
 void GameMenuController::update() {
 }
 void GameMenuController::render() {
-	window.clear(sf::Color::Green);
+	_window.clear(sf::Color::Green);
 
 	for (sf::Drawable* d : drawVec) {
-		window.draw(*d);
+		_window.draw(*d);
 	}
 	for (Clickable* c : clickVec) {
-		c->render(window);
+		c->render(_window);
 	}
-	window.display();
+	_window.display();
 }
 
 void GameMenuController::run() {
-	while (window.isOpen()) {
+	while (_window.isOpen()) {
 		process();
 		update();
 		render();
 	}
 }
-
+/*
 int main() {
 	GameMenuController controller;
 	controller.run();
-}
+}*/

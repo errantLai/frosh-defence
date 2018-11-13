@@ -1,7 +1,7 @@
 #ifndef CLICKABLE_H_
 #define CLICKABLE_H_
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 /*
  Clickable is an interface to be extended by objects
