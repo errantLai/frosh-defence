@@ -16,7 +16,7 @@ sf::CircleShape Frec2;
 sf::CircleShape Frec3;
 sf::Text text;
 std::vector<Point> path = {Point(15,0), Point(15,4), Point(20,4), Point(20,1), Point(24,1), Point(24,8), Point(10, 8), Point(10, 4), Point(5,4), Point(5,14), Point(10,14), Point(10,12), Point(14,12), Point(14,15), Point(20,15), Point(20,11), Point(24,11), Point(24, 18)};
-sf::RenderWindow window(sf::VideoMode(1920,1080), "Hello World");
+sf::RenderWindow window(sf::VideoMode(1920,1080), "320Project");
 
 
 	GameBoard::GameBoard(){}

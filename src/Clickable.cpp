@@ -1,5 +1,5 @@
 #include "Clickable.h"
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 /*
@@ -99,4 +99,3 @@ void Clickable::onMousePressed() {
 void Clickable::onMouseLeave() {
 	cout << "Mouse left" << endl;
 }
-

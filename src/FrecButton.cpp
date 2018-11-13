@@ -4,7 +4,7 @@
  * Created on: Nov 10, 2018
  * Author: Chris
  */
-
+#include <SFML/Graphics.hpp>
 #include "FrecButton.h"
 #include "Clickable.h"
 #include <iostream>
