@@ -12,6 +12,10 @@
 sf::RectangleShape grassTile;
 sf::RectangleShape groundTile;
 sf::RectangleShape hoverOutline;
+sf::RectangleShape* _tamsCounter;
+sf::RectangleShape* _livesCounter;
+sf::RectangleShape* _wavesCounter;
+
 sf::Text text;
 std::vector<Point> path =
 		{ Point(15, 0), Point(15, 4), Point(20, 4), Point(20, 1), Point(24, 1),
@@ -26,6 +30,25 @@ GameBoard::GameBoard() {
 	initBoard();
 }
 void GameBoard::initBoard() {
+	sf::Texture* _menuTexture = new sf::Texture;
+		if(!_menuTexture->loadFromFile("assets/menuInfo.png")){
+			std::cerr << "The texture does not exist" << std::endl;
+		}
+	_tamsCounter = new sf::RectangleShape(sf::Vector2f(398,156));
+		_tamsCounter->setPosition(36,0);
+		_tamsCounter->setTexture(_menuTexture);
+		_tamsCounter->setTextureRect(sf::IntRect(0,0,398,156));
+		//drawVec.push_back(_tamsCounter);
+	_livesCounter = new sf::RectangleShape(sf::Vector2f(408,160));
+		_livesCounter->setPosition(1104,0);
+		_livesCounter->setTexture(_menuTexture);
+		_livesCounter->setTextureRect(sf::IntRect(438,0,408,160));
+		//drawVec.push_back(_livesCounter);
+	_wavesCounter = new sf::RectangleShape(sf::Vector2f(508,153));
+		_wavesCounter->setPosition(514,10);
+		_wavesCounter->setTexture(_menuTexture);
+		_wavesCounter->setTextureRect(sf::IntRect(0,191,773,233));
+		//drawVec.push_back(_wavesCounter);
 
 	// Grass Tile Objects
 	grassTile = sf::RectangleShape(sf::Vector2f(60, 60));
@@ -83,6 +106,9 @@ void GameBoard::renderBoard() {
 			}
 		}
 	}
+	window->draw(*_tamsCounter);
+	window->draw(*_livesCounter);
+	window->draw(*_wavesCounter);
 }
 
 // Draw Hover Object
@@ -169,13 +195,14 @@ int Point::getY() {
 
 // Main
 int main() {
-	debug = false;
+	debug = true;
 	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence");
 	window->setFramerateLimit(60);
 	sf::Font font;
 	if (!font.loadFromFile("assets/georgia.ttf")) {
 	}
 
+	GameController gameController;
 	GameBoard gameBoard;
 	GameMenuController gameMenuController = GameMenuController(window);
 	gameMenuController.setDebug(debug);

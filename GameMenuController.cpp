@@ -9,6 +9,7 @@
 #include "GameMenuController.h"
 #include "Clickable.h"
 #include "FrecButton.h"
+#include "MenuButton.h"
 
 using std::cout;
 using std::endl;
@@ -50,20 +51,40 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
 	}
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
-	FrecButton* _clickable = new FrecButton(menuPosition(2, 3.75),
+	FrecButton* _clickable = new FrecButton(menuPosition(1.667, 2.5),
 			frecButtonCubits / 2, _texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 0, 0, 220, 250));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(2, 7.75), frecButtonCubits / 2,
+	_clickable = new FrecButton(menuPosition(1.667, 6), frecButtonCubits / 2,
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 1, 0, 220, 250));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(2, 11.75), frecButtonCubits / 2,
+	_clickable = new FrecButton(menuPosition(1.667, 9.5), frecButtonCubits / 2,
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 2, 0, 220, 250));
 	clickVec.push_back(_clickable);
+
+	// -------------------------
+	// Menu Buttons
+	// -------------------------
+	sf::Texture* _menuTexture = new sf::Texture;
+	if(!_menuTexture->loadFromFile("assets/menuInfo.png")){
+		std::cerr << "The texture does not exist" << std::endl;
+	}
+	texturesVector.push_back(_menuTexture);
+	MenuButton* _sound = new MenuButton(menuPosition(0.3,0.3),107, 98,_menuTexture, 0);
+	_sound->setTextureRect(sf::IntRect(888,9,107,98));
+	clickVec.push_back(_sound);
+	MenuButton* _help = new MenuButton(menuPosition(2.3,0.3),107, 98,_menuTexture, 1);
+		_help->setTextureRect(sf::IntRect(887,143,107,98));
+		clickVec.push_back(_help);
+	MenuButton* _pause = new MenuButton(menuPosition(4.3,0.3),107, 98,_menuTexture, 2);
+		_pause->setTextureRect(sf::IntRect(888,277,107,98));
+		clickVec.push_back(_pause);
+
+
 }
 
 GameMenuController::~GameMenuController() {
