@@ -31,6 +31,10 @@ public:
 	void displayHelpScreen();		// Display help
 	void updateHealth(int update);	// Update player lives
 	void updateTam(int update);		// Update player currency
+
+	void process();
+	void update();
+	void render();
 };
 
 // Game Board generates the map
