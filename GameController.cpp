@@ -11,7 +11,7 @@
 
 sf::RectangleShape grassTile;
 sf::RectangleShape groundTile;
-sf::RectangleShape hoverOutline;
+sf::CircleShape hoverOutline;
 sf::RectangleShape* _tamsCounter;
 sf::RectangleShape* _livesCounter;
 sf::RectangleShape* _wavesCounter;
@@ -61,7 +61,7 @@ void GameBoard::initBoard() {
 	groundTile.setOutlineThickness(-1);
 	groundTile.setOutlineColor(sf::Color(0, 0, 0, 100));
 	// Hover Object
-	hoverOutline = sf::RectangleShape(sf::Vector2f(60, 60));
+	hoverOutline = sf::CircleShape(60);
 	hoverOutline.setFillColor(sf::Color::Transparent);
 	hoverOutline.setOutlineColor(sf::Color::Red);
 	hoverOutline.setOutlineThickness(-3);
@@ -119,7 +119,7 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 	if (range % 2 == 1)
 		backSquares = floor(range / 2);
 
-	hoverOutline.setSize(sf::Vector2f(range * 60, range * 60));
+	hoverOutline.setRadius(range*60/2);
 	hoverOutline.setPosition((gridX - backSquares) * 60,
 			(gridY - backSquares) * 60);
 	window->draw(hoverOutline);
@@ -229,7 +229,7 @@ int main() {
 
 		window->clear();
 		gameBoard.renderBoard();
-		gameBoard.renderHover(mousePos.x, mousePos.y, 3);
+		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
 		gameMenuController.render();
 		if (debug) {
 			window->draw(text);
