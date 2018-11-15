@@ -13,7 +13,6 @@
 using std::cout;
 using std::endl;
 
-sf::RenderWindow _window;
 sf::Event event;
 
 const int cubit = 60;
@@ -29,11 +28,8 @@ sf::Vector2f menuPosition(float xCubits, float yCubits) {
 			menuPos.y + (yCubits * cubit));
 }
 
-GameMenuController::GameMenuController() {
-	// Debug, this should be defined in the main game view
-	_window.create(sf::VideoMode(1920, 1080), "Frosh Defence");
-	_window.setFramerateLimit(60); //set the frame limit to 60
-
+GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
+		windowPointer(windowPointer) {
 	// -----------------------
 	// Menu Borders
 	// -----------------------
@@ -68,7 +64,6 @@ GameMenuController::GameMenuController() {
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 2, 0, 220, 250));
 	clickVec.push_back(_clickable);
-	setDebug(true);
 }
 
 GameMenuController::~GameMenuController() {
@@ -96,45 +91,21 @@ void GameMenuController::setDebug(bool mode) {
 	}
 }
 
-void GameMenuController::process() {
-
-	// Handle _window events
-	while (_window.pollEvent(event)) {
-		sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
-		for (Clickable* c : clickVec) {
-			c->process(event, mousePos);
-		}
-		if (event.type == sf::Event::EventType::Closed
-				|| (event.type == sf::Event::KeyPressed
-						&& event.key.code == sf::Keyboard::Escape)) {
-			_window.close();
-		}
+void GameMenuController::process(sf::Event event, sf::Vector2i mousePos) {
+	// Handle windowPointer events
+	for (Clickable* c : clickVec) {
+		c->process(event, mousePos);
 	}
 }
 
 void GameMenuController::update() {
 }
 void GameMenuController::render() {
-	_window.clear(sf::Color::Green);
-
 	for (sf::Drawable* d : drawVec) {
-		_window.draw(*d);
+		windowPointer->draw(*d);
 	}
 	for (Clickable* c : clickVec) {
-		c->render(_window);
+		c->render(*windowPointer);
 	}
-	_window.display();
 }
 
-void GameMenuController::run() {
-	while (_window.isOpen()) {
-		process();
-		update();
-		render();
-	}
-}
-/*
-int main() {
-	GameMenuController controller;
-	controller.run();
-}*/

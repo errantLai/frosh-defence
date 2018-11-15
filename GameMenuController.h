@@ -12,13 +12,13 @@
 
 class GameMenuController {
 public:
-	GameMenuController();
+	GameMenuController(sf::RenderWindow* windowPointer);
 	virtual ~GameMenuController();
 
 	void setDebug(bool mode);
 	void initialize();
 	void run();
-	void process();
+	void process(sf::Event event, sf::Vector2i mousePos);
 	void update();
 	void render();
 
@@ -26,6 +26,7 @@ private:
 	std::vector<sf::Drawable*> drawVec;
 	std::vector<Clickable*> clickVec;
 	std::vector<sf::Texture*> texturesVector;
+	sf::RenderWindow* windowPointer;
 };
 
 #endif /* GAMEMENUCONTROLLER_H_ */
