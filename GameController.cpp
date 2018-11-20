@@ -7,6 +7,7 @@
 #include <vector>		// Vector object
 #include "GameController.h"
 #include "GameMenuController.h"
+#include "Timer.h"
 #include <iostream>
 
 sf::RectangleShape grassTile;
@@ -17,6 +18,7 @@ sf::RectangleShape* _livesCounter;
 sf::RectangleShape* _wavesCounter;
 
 sf::Text tamText, waveText, healthText, text;
+
 std::vector<Point> path =
 		{ Point(15, 0), Point(15, 4), Point(20, 4), Point(20, 1), Point(24, 1),
 				Point(24, 8), Point(10, 8), Point(10, 4), Point(5, 4), Point(5,
@@ -24,12 +26,15 @@ std::vector<Point> path =
 						14, 15), Point(20, 15), Point(20, 11), Point(24, 11),
 				Point(24, 18) };
 sf::RenderWindow* window;
+int gridStatus[32][18] = {0};
+
 bool debug;
 
 GameBoard::GameBoard() {
 	initBoard();
 }
 void GameBoard::initBoard() {
+
 	sf::Texture* _menuTexture = new sf::Texture;
 		if(!_menuTexture->loadFromFile("assets/menuInfo.png")){
 			std::cerr << "The texture does not exist" << std::endl;
@@ -100,6 +105,7 @@ void GameBoard::renderBoard() {
 					mapY++;		// Draw up or down until next point
 				else
 					mapY--;
+				gridStatus[mapX][mapY]=1;
 			}
 		} else if (curr.getY() == next.getY()) {	// If two points horizontal
 			while (mapX != next.getX()) {
@@ -109,8 +115,10 @@ void GameBoard::renderBoard() {
 					mapX++;		// Draw left or right until next point
 				else
 					mapX--;
+				gridStatus[mapX][mapY]=1;
 			}
 		}
+
 	}
 
 	window->draw(*_tamsCounter);
@@ -211,10 +219,13 @@ int main() {
 	if (!font.loadFromFile("assets/georgia.ttf")) {
 	}
 
+
+
 	GameController gameController;
 	GameBoard gameBoard;
 	GameMenuController gameMenuController = GameMenuController(window);
 	gameMenuController.setDebug(debug);
+	Timer clk;
 
 	tamText.setFont(font);
 	waveText.setFont(font);
@@ -222,6 +233,8 @@ int main() {
 
 	sf::Event event;
 	while (window->isOpen()) {
+		clk.start();
+
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::EventType::Closed
@@ -236,9 +249,31 @@ int main() {
 		int gridX = ceil(mousePos.x / 60);
 		int gridY = ceil(mousePos.y / 60);
 		if (debug) {
-			text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
+			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
+			text.setString(std::to_string(clk.elapsedTicks()));
 			text.setFont(font);
 			text.setPosition(float(mousePos.x), float(mousePos.y));
+		}
+
+		//TEST CLICKING BOARD
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+			if(clk.isRunning()) clk.stop();
+			else clk.start();
+			if(gridStatus[gridX][gridY] == 0 && gridStatus[gridX+1][gridY] == 0
+					&& gridStatus[gridX][gridY+1] == 0 && gridStatus[gridX+1][gridY+1] == 0){
+				gridStatus[gridX][gridY] = 2;
+				gridStatus[gridX+1][gridY] = 2;
+				gridStatus[gridX][gridY+1] = 2;
+				gridStatus[gridX+1][gridY+1] = 2;
+			}
+
+			//PRINT BOARD
+			for(int i = 0; i < 18; i ++){
+				for(int j = 0; j < 32; j ++){
+					std::cout << gridStatus[j][i] << " ";
+				}std::cout << std::endl;
+			}std::cout << std::endl;
+
 		}
 
 
