@@ -16,7 +16,7 @@ sf::RectangleShape* _tamsCounter;
 sf::RectangleShape* _livesCounter;
 sf::RectangleShape* _wavesCounter;
 
-sf::Text text;
+sf::Text tamText, waveText, healthText, text;
 std::vector<Point> path =
 		{ Point(15, 0), Point(15, 4), Point(20, 4), Point(20, 1), Point(24, 1),
 				Point(24, 8), Point(10, 8), Point(10, 4), Point(5, 4), Point(5,
@@ -38,17 +38,23 @@ void GameBoard::initBoard() {
 		_tamsCounter->setPosition(36,0);
 		_tamsCounter->setTexture(_menuTexture);
 		_tamsCounter->setTextureRect(sf::IntRect(0,0,398,156));
-		//drawVec.push_back(_tamsCounter);
 	_livesCounter = new sf::RectangleShape(sf::Vector2f(408,160));
 		_livesCounter->setPosition(1104,0);
 		_livesCounter->setTexture(_menuTexture);
 		_livesCounter->setTextureRect(sf::IntRect(438,0,408,160));
-		//drawVec.push_back(_livesCounter);
 	_wavesCounter = new sf::RectangleShape(sf::Vector2f(508,153));
 		_wavesCounter->setPosition(514,10);
 		_wavesCounter->setTexture(_menuTexture);
 		_wavesCounter->setTextureRect(sf::IntRect(0,191,773,233));
-		//drawVec.push_back(_wavesCounter);
+	tamText.setString(std::to_string(100));
+	waveText.setString(std::to_string(0));
+	healthText.setString(std::to_string(100));
+	tamText.setPosition(220, 60);
+	tamText.setCharacterSize(58);
+	waveText.setPosition(810, 70);
+	waveText.setCharacterSize(58);
+	healthText.setPosition(1220, 60);
+	healthText.setCharacterSize(58);
 
 	// Grass Tile Objects
 	grassTile = sf::RectangleShape(sf::Vector2f(60, 60));
@@ -106,9 +112,13 @@ void GameBoard::renderBoard() {
 			}
 		}
 	}
+
 	window->draw(*_tamsCounter);
 	window->draw(*_livesCounter);
 	window->draw(*_wavesCounter);
+	window->draw(tamText);
+	window->draw(waveText);
+	window->draw(healthText);
 }
 
 // Draw Hover Object
@@ -163,6 +173,7 @@ void GameController::endGame() {
 // Start Next Wave
 void GameController::startWave() {
 	this->currentWave++;
+	waveText.setString(std::to_string(this->currentWave));
 }
 
 // Display Help Screen
@@ -173,11 +184,13 @@ void GameController::displayHelpScreen() {
 // Update Player Lives
 void GameController::updateHealth(int update) {
 	this->health += update;
+	healthText.setString(std::to_string(this->health));
 }
 
 // Update Player Currency
 void GameController::updateTam(int update) {
 	this->tams += update;
+	tamText.setString(std::to_string(this->tams));
 }
 
 // Point Class used for Map
@@ -186,12 +199,8 @@ Point::Point(int xIn, int yIn) {
 	this->y = yIn;
 }
 // Accessors
-int Point::getX() {
-	return this->x;
-}
-int Point::getY() {
-	return this->y;
-}
+int Point::getX() {	return this->x;}
+int Point::getY() {return this->y;}
 
 // Main
 int main() {
@@ -206,6 +215,11 @@ int main() {
 	GameBoard gameBoard;
 	GameMenuController gameMenuController = GameMenuController(window);
 	gameMenuController.setDebug(debug);
+
+	tamText.setFont(font);
+	waveText.setFont(font);
+	healthText.setFont(font);
+
 	sf::Event event;
 	while (window->isOpen()) {
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
@@ -226,6 +240,7 @@ int main() {
 			text.setFont(font);
 			text.setPosition(float(mousePos.x), float(mousePos.y));
 		}
+
 
 		window->clear();
 		gameBoard.renderBoard();
