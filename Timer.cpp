@@ -12,40 +12,42 @@
 #include <vector>		// Vector object
 #include "Timer.h"
 
-		Timer::Timer(){
-			m_StartTime= {};
-			m_bRunning = false;
-			m_EndTime = {};
-		}
-		void Timer::start(){
-			this->m_StartTime = std::chrono::system_clock::now();
-			this->m_bRunning = true;
-			this->starts.push_back(m_StartTime);
-		}
-		void Timer::stop(){
-			this->m_EndTime = std::chrono::system_clock::now();
-			this->m_bRunning = false;
-			this->ends.push_back(m_EndTime);
-		}
-		double Timer::elapsedMilliseconds(){
-			double elapsed=0;
-			std::chrono::time_point<std::chrono::system_clock> endTime;
-			if(this->m_bRunning){
-				endTime = std::chrono::system_clock::now();
-				elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(endTime - this->m_StartTime).count();
-			}
-			for(int i = 0; i < ends.size(); i++){
-				elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(this->ends[i] - this->starts[i]).count();
-			}
-			return elapsed;
-		}
-		double Timer::elapsedSeconds(){
-			return elapsedMilliseconds() / 1000.0;
-		}
-		double Timer::elapsedTicks(){
-			return elapsedMilliseconds() / 1000;
-		}
-		bool Timer::isRunning(){
-			return this->m_bRunning;
-		}
+Timer::Timer() {
+	m_StartTime= {};
+	m_bRunning = false;
+	m_EndTime = {};
+}
+void Timer::start() {
+	this->m_StartTime = std::chrono::system_clock::now();
+	this->m_bRunning = true;
+	this->starts.push_back(m_StartTime);
+}
+void Timer::stop() {
+	this->m_EndTime = std::chrono::system_clock::now();
+	this->m_bRunning = false;
+	this->ends.push_back(m_EndTime);
+}
+double Timer::elapsedMilliseconds() {
+	double elapsed = 0;
+	std::chrono::time_point<std::chrono::system_clock> endTime;
+	if (this->m_bRunning) {
+		endTime = std::chrono::system_clock::now();
+		elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(
+				endTime - this->m_StartTime).count();
+	}
+	for (int i = 0; i < ends.size(); i++) {
+		elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(
+				this->ends[i] - this->starts[i]).count();
+	}
+	return elapsed;
+}
+double Timer::elapsedSeconds() {
+	return elapsedMilliseconds() / 1000.0;
+}
+double Timer::elapsedTicks() {
+	return elapsedMilliseconds() / 1000;
+}
+bool Timer::isRunning() {
+	return this->m_bRunning;
+}
 

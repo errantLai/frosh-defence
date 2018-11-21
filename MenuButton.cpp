@@ -29,20 +29,18 @@ void MenuButton::render(sf::RenderWindow& _window) {
 }
 
 void MenuButton::onClick() {
-	graphic.setOutlineThickness(0);
 }
 
 void MenuButton::onMouseEnter() {
-	graphic.setFillColor(sf::Color(255, 255, 255, 255)); // half transparent
+	graphic.setFillColor(sf::Color(255, 255, 255, 255)); // No transparency
 }
 
 void MenuButton::onMousePressed() {
-	graphic.setOutlineThickness(10);
 }
 
 void MenuButton::onMouseLeave() {
 	graphic.setOutlineThickness(0);
-	graphic.setFillColor(sf::Color(255, 255, 255, 180)); // half transparent
+	graphic.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
 }
 
 VolumeButton::VolumeButton(sf::Vector2f _position, int _sizex, int _sizey,

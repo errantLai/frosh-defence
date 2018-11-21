@@ -26,7 +26,7 @@ std::vector<Point> path =
 						14, 15), Point(20, 15), Point(20, 11), Point(24, 11),
 				Point(24, 18) };
 sf::RenderWindow* window;
-int gridStatus[32][18] = {0};
+int gridStatus[32][18] = { 0 };
 
 bool debug;
 
@@ -36,21 +36,21 @@ GameBoard::GameBoard() {
 void GameBoard::initBoard() {
 
 	sf::Texture* _menuTexture = new sf::Texture;
-		if(!_menuTexture->loadFromFile("assets/menuInfo.png")){
-			std::cerr << "The texture does not exist" << std::endl;
-		}
-	_tamsCounter = new sf::RectangleShape(sf::Vector2f(398,156));
-		_tamsCounter->setPosition(36,0);
-		_tamsCounter->setTexture(_menuTexture);
-		_tamsCounter->setTextureRect(sf::IntRect(0,0,398,156));
-	_livesCounter = new sf::RectangleShape(sf::Vector2f(408,160));
-		_livesCounter->setPosition(1104,0);
-		_livesCounter->setTexture(_menuTexture);
-		_livesCounter->setTextureRect(sf::IntRect(438,0,408,160));
-	_wavesCounter = new sf::RectangleShape(sf::Vector2f(508,153));
-		_wavesCounter->setPosition(514,10);
-		_wavesCounter->setTexture(_menuTexture);
-		_wavesCounter->setTextureRect(sf::IntRect(0,191,773,233));
+	if (!_menuTexture->loadFromFile("assets/menuInfo.png")) {
+		std::cerr << "The texture does not exist" << std::endl;
+	}
+	_tamsCounter = new sf::RectangleShape(sf::Vector2f(398, 156));
+	_tamsCounter->setPosition(36, 0);
+	_tamsCounter->setTexture(_menuTexture);
+	_tamsCounter->setTextureRect(sf::IntRect(0, 0, 398, 156));
+	_livesCounter = new sf::RectangleShape(sf::Vector2f(408, 160));
+	_livesCounter->setPosition(1104, 0);
+	_livesCounter->setTexture(_menuTexture);
+	_livesCounter->setTextureRect(sf::IntRect(438, 0, 408, 160));
+	_wavesCounter = new sf::RectangleShape(sf::Vector2f(508, 153));
+	_wavesCounter->setPosition(514, 10);
+	_wavesCounter->setTexture(_menuTexture);
+	_wavesCounter->setTextureRect(sf::IntRect(0, 191, 773, 233));
 	tamText.setString(std::to_string(100));
 	waveText.setString(std::to_string(0));
 	healthText.setString(std::to_string(100));
@@ -105,7 +105,7 @@ void GameBoard::renderBoard() {
 					mapY++;		// Draw up or down until next point
 				else
 					mapY--;
-				gridStatus[mapX][mapY]=1;
+				gridStatus[mapX][mapY] = 1;
 			}
 		} else if (curr.getY() == next.getY()) {	// If two points horizontal
 			while (mapX != next.getX()) {
@@ -115,7 +115,7 @@ void GameBoard::renderBoard() {
 					mapX++;		// Draw left or right until next point
 				else
 					mapX--;
-				gridStatus[mapX][mapY]=1;
+				gridStatus[mapX][mapY] = 1;
 			}
 		}
 
@@ -137,7 +137,7 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 	if (range % 2 == 1)
 		backSquares = floor(range / 2);
 
-	hoverOutline.setRadius(range*60/2);
+	hoverOutline.setRadius(range * 60 / 2);
 	hoverOutline.setPosition((gridX - backSquares) * 60,
 			(gridY - backSquares) * 60);
 	window->draw(hoverOutline);
@@ -207,19 +207,21 @@ Point::Point(int xIn, int yIn) {
 	this->y = yIn;
 }
 // Accessors
-int Point::getX() {	return this->x;}
-int Point::getY() {return this->y;}
+int Point::getX() {
+	return this->x;
+}
+int Point::getY() {
+	return this->y;
+}
 
 // Main
 int main() {
-	debug = true;
+	debug = false;
 	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence");
 	window->setFramerateLimit(60);
 	sf::Font font;
 	if (!font.loadFromFile("assets/georgia.ttf")) {
 	}
-
-
 
 	GameController gameController;
 	GameBoard gameBoard;
@@ -256,26 +258,31 @@ int main() {
 		}
 
 		//TEST CLICKING BOARD
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-			if(clk.isRunning()) clk.stop();
-			else clk.start();
-			if(gridStatus[gridX][gridY] == 0 && gridStatus[gridX+1][gridY] == 0
-					&& gridStatus[gridX][gridY+1] == 0 && gridStatus[gridX+1][gridY+1] == 0){
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && debug) {
+			if (clk.isRunning())
+				clk.stop();
+			else
+				clk.start();
+			if (gridStatus[gridX][gridY] == 0
+					&& gridStatus[gridX + 1][gridY] == 0
+					&& gridStatus[gridX][gridY + 1] == 0
+					&& gridStatus[gridX + 1][gridY + 1] == 0) {
 				gridStatus[gridX][gridY] = 2;
-				gridStatus[gridX+1][gridY] = 2;
-				gridStatus[gridX][gridY+1] = 2;
-				gridStatus[gridX+1][gridY+1] = 2;
+				gridStatus[gridX + 1][gridY] = 2;
+				gridStatus[gridX][gridY + 1] = 2;
+				gridStatus[gridX + 1][gridY + 1] = 2;
 			}
 
 			//PRINT BOARD
-			for(int i = 0; i < 18; i ++){
-				for(int j = 0; j < 32; j ++){
+			for (int i = 0; i < 18; i++) {
+				for (int j = 0; j < 32; j++) {
 					std::cout << gridStatus[j][i] << " ";
-				}std::cout << std::endl;
-			}std::cout << std::endl;
+				}
+				std::cout << std::endl;
+			}
+			std::cout << std::endl;
 
 		}
-
 
 		window->clear();
 		gameBoard.renderBoard();
