@@ -216,26 +216,26 @@ int Point::getY() {
 
 // Main
 int main() {
-	debug = false;
+	debug = true;
 	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence");
 	window->setFramerateLimit(60);
 	sf::Font font;
 	if (!font.loadFromFile("assets/georgia.ttf")) {
 	}
 
+	Timer* clk = new Timer();
 	GameController gameController;
 	GameBoard gameBoard;
-	GameMenuController gameMenuController = GameMenuController(window);
+	GameMenuController gameMenuController = GameMenuController(window, clk);
 	gameMenuController.setDebug(debug);
-	Timer clk;
 
 	tamText.setFont(font);
 	waveText.setFont(font);
 	healthText.setFont(font);
 
 	sf::Event event;
+	clk->start();
 	while (window->isOpen()) {
-		clk.start();
 
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 		while (window->pollEvent(event)) {
@@ -252,36 +252,31 @@ int main() {
 		int gridY = ceil(mousePos.y / 60);
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
-			text.setString(std::to_string(clk.elapsedTicks()));
+			text.setString(std::to_string(clk->elapsedTicks()));
 			text.setFont(font);
 			text.setPosition(float(mousePos.x), float(mousePos.y));
-		}
 
-		//TEST CLICKING BOARD
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && debug) {
-			if (clk.isRunning())
-				clk.stop();
-			else
-				clk.start();
-			if (gridStatus[gridX][gridY] == 0
-					&& gridStatus[gridX + 1][gridY] == 0
-					&& gridStatus[gridX][gridY + 1] == 0
-					&& gridStatus[gridX + 1][gridY + 1] == 0) {
-				gridStatus[gridX][gridY] = 2;
-				gridStatus[gridX + 1][gridY] = 2;
-				gridStatus[gridX][gridY + 1] = 2;
-				gridStatus[gridX + 1][gridY + 1] = 2;
-			}
+			//TEST CLICKING BOARD
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				if (gridStatus[gridX][gridY] == 0
+						&& gridStatus[gridX + 1][gridY] == 0
+						&& gridStatus[gridX][gridY + 1] == 0
+						&& gridStatus[gridX + 1][gridY + 1] == 0) {
+					gridStatus[gridX][gridY] = 2;
+					gridStatus[gridX + 1][gridY] = 2;
+					gridStatus[gridX][gridY + 1] = 2;
+					gridStatus[gridX + 1][gridY + 1] = 2;
+				}
 
-			//PRINT BOARD
-			for (int i = 0; i < 18; i++) {
-				for (int j = 0; j < 32; j++) {
-					std::cout << gridStatus[j][i] << " ";
+				//PRINT BOARD
+				for (int i = 0; i < 18; i++) {
+					for (int j = 0; j < 32; j++) {
+						std::cout << gridStatus[j][i] << " ";
+					}
+					std::cout << std::endl;
 				}
 				std::cout << std::endl;
 			}
-			std::cout << std::endl;
-
 		}
 
 		window->clear();

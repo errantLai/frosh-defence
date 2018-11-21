@@ -43,6 +43,7 @@ void MenuButton::onMouseLeave() {
 	graphic.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
 }
 
+// Volume Button Implementation
 VolumeButton::VolumeButton(sf::Vector2f _position, int _sizex, int _sizey,
 		sf::Texture* _texture, int type, sf::Music* music) :
 		MenuButton(_position, _sizex, _sizey, _texture, type), music(music) {
@@ -57,4 +58,18 @@ void VolumeButton::onClick() {
 		music->setVolume(100);
 	}
 	isPlaying ^= 1;
+}
+
+// Pause Button Implementation
+PauseButton::PauseButton(sf::Vector2f _position, int _sizex, int _sizey,
+		sf::Texture* _texture, int type, Timer* timer) :
+		MenuButton(_position, _sizex, _sizey, _texture, type), timer(timer) {
+}
+
+void PauseButton::onClick() {
+	if (timer->isRunning()) {
+		timer->stop();
+	} else {
+		timer->start();
+	}
 }

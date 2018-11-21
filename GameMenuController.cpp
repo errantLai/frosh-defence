@@ -30,8 +30,8 @@ sf::Vector2f menuPosition(float xCubits, float yCubits) {
 			menuPos.y + (yCubits * cubit));
 }
 
-GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
-		windowPointer(windowPointer) {
+GameMenuController::GameMenuController(sf::RenderWindow* windowPointer, Timer* timer) :
+		windowPointer(windowPointer), timer(timer) {
 	// -----------------------
 	// Menu Borders
 	// -----------------------
@@ -76,7 +76,7 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
 	}
 	texturesVector.push_back(_menuTexture);
 
-	sf::Music* music = new sf::Music;
+	music = new sf::Music;
 	if (!music->openFromFile("assets/give_it_up.wav"))
 		std::cerr << "The music file was not found" << std::endl;
 	music->setLoop(true);
@@ -88,8 +88,8 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
 			_menuTexture, 1);
 	_help->setTextureRect(sf::IntRect(887, 143, 107, 98));
 	clickVec.push_back(_help);
-	MenuButton* _pause = new MenuButton(menuPosition(4.3, 0.3), 107, 98,
-			_menuTexture, 2);
+	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 107, 98,
+			_menuTexture, 2, timer);
 	_pause->setTextureRect(sf::IntRect(888, 277, 107, 98));
 	clickVec.push_back(_pause);
 
@@ -110,6 +110,9 @@ GameMenuController::~GameMenuController() {
 	for (sf::Texture* t : texturesVector) {
 		delete t;
 	}
+
+	// Delete menu assets
+	music->stop();
 }
 
 void GameMenuController::setDebug(bool mode) {
