@@ -5,6 +5,7 @@
  *      Author: Chris
  */
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "GameMenuController.h"
 #include "Clickable.h"
@@ -70,20 +71,27 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
 	// Menu Buttons
 	// -------------------------
 	sf::Texture* _menuTexture = new sf::Texture;
-	if(!_menuTexture->loadFromFile("assets/menuInfo.png")){
+	if (!_menuTexture->loadFromFile("assets/menuInfo.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
 	}
 	texturesVector.push_back(_menuTexture);
-	MenuButton* _sound = new MenuButton(menuPosition(0.3,0.3),107, 98,_menuTexture, 0);
-	_sound->setTextureRect(sf::IntRect(888,9,107,98));
-	clickVec.push_back(_sound);
-	MenuButton* _help = new MenuButton(menuPosition(2.3,0.3),107, 98,_menuTexture, 1);
-		_help->setTextureRect(sf::IntRect(887,143,107,98));
-		clickVec.push_back(_help);
-	MenuButton* _pause = new MenuButton(menuPosition(4.3,0.3),107, 98,_menuTexture, 2);
-		_pause->setTextureRect(sf::IntRect(888,277,107,98));
-		clickVec.push_back(_pause);
 
+	sf::Music* music = new sf::Music;
+	if (!music->openFromFile("assets/give_it_up.wav"))
+		std::cerr << "The music file was not found" << std::endl;
+	music->setLoop(true);
+	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 107, 98,
+			_menuTexture, 0, music);
+	_sound->setTextureRect(sf::IntRect(888, 9, 107, 98));
+	clickVec.push_back(_sound);
+	MenuButton* _help = new MenuButton(menuPosition(2.3, 0.3), 107, 98,
+			_menuTexture, 1);
+	_help->setTextureRect(sf::IntRect(887, 143, 107, 98));
+	clickVec.push_back(_help);
+	MenuButton* _pause = new MenuButton(menuPosition(4.3, 0.3), 107, 98,
+			_menuTexture, 2);
+	_pause->setTextureRect(sf::IntRect(888, 277, 107, 98));
+	clickVec.push_back(_pause);
 
 }
 

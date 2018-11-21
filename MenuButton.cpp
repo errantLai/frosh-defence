@@ -9,12 +9,10 @@
 #include "Clickable.h"
 #include <iostream>
 
-MenuButton::MenuButton(sf::Vector2f _position, int _sizex, int _sizey, sf::Texture* _texture, int type) {
-	// TODO Auto-generated constructor stub
-	graphic = sf::RectangleShape(sf::Vector2f(_sizex,_sizey));
+MenuButton::MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
+		sf::Texture* _texture, int type) {
+	graphic = sf::RectangleShape(sf::Vector2f(_sizex, _sizey));
 	setPosition(_position);
-	// The alternative is to use shape's getLocalBounds, and override insideShape().
-	// I am unsure where else the size would be useful for the button object
 	graphic.setTexture(_texture);
 	update();
 }
@@ -32,7 +30,6 @@ void MenuButton::render(sf::RenderWindow& _window) {
 
 void MenuButton::onClick() {
 	graphic.setOutlineThickness(0);
-	//cout << "Button is clicked" << endl;
 }
 
 void MenuButton::onMouseEnter() {
@@ -48,3 +45,18 @@ void MenuButton::onMouseLeave() {
 	graphic.setFillColor(sf::Color(255, 255, 255, 180)); // half transparent
 }
 
+VolumeButton::VolumeButton(sf::Vector2f _position, int _sizex, int _sizey,
+		sf::Texture* _texture, int type, sf::Music* music) :
+		MenuButton(_position, _sizex, _sizey, _texture, type), music(music) {
+	music->play();
+	isPlaying = true;
+}
+
+void VolumeButton::onClick() {
+	if (isPlaying) {
+		music->setVolume(0);
+	} else {
+		music->setVolume(100);
+	}
+	isPlaying ^= 1;
+}
