@@ -8,10 +8,12 @@
 #ifndef MENUBUTTON_H_
 #define MENUBUTTON_H_
 #include "Clickable.h"
+#include <SFML/Audio.hpp>
 
-class MenuButton: public Clickable{
+class MenuButton: public Clickable {
 public:
-	MenuButton(sf::Vector2f _position, int _sizex, int _sizey, sf::Texture* _texture, int type);
+	MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
+			sf::Texture* _texture, int type);
 	void setTextureRect(const sf::IntRect& rect);
 	void update() override;
 	void render(sf::RenderWindow& _window) override;
@@ -22,15 +24,16 @@ private:
 	void onMousePressed() override;
 	void onMouseLeave() override;
 	sf::RectangleShape graphic;
-	int type;
-	// 0 - sound
-	// 1 - help
-	// 2 - pause
 };
 
-
-
-
-
+class VolumeButton: public MenuButton {
+public:
+	VolumeButton(sf::Vector2f _position, int _sizex, int _sizey,
+			sf::Texture* _texture, int type, sf::Music* music);
+private:
+	sf::Music* music;
+	bool isPlaying;
+	void onClick() override;
+};
 
 #endif /* MENUBUTTON_H_ */
