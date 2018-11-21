@@ -7,7 +7,7 @@
 #pragma once
 
 // Game Controller keeps all Game State Variables Running and Updated
-class GameController{
+class GameController {
 private:
 	int health;
 	int tams;
@@ -38,7 +38,7 @@ public:
 };
 
 // Game Board generates the map
-class GameBoard{
+class GameBoard {
 public:
 	GameBoard();
 
@@ -48,7 +48,7 @@ public:
 };
 
 // Point Class is a simple point to help with Map Dynamics
-class Point{
+class Point {
 private:
 	int x;
 	int y;

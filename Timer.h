@@ -12,7 +12,7 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-class Timer{
+class Timer {
 public:
 	Timer();
 	void start();
@@ -29,7 +29,5 @@ private:
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> starts;
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> ends;
 };
-
-
 
 #endif /* TIMER_H_ */
