@@ -77,7 +77,7 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer, Timer* t
 	texturesVector.push_back(_menuTexture);
 
 	music = new sf::Music;
-	if (!music->openFromFile("assets/give_it_up.wav"))
+	if (!music->openFromFile("assets/give_it_up.ogg"))
 		std::cerr << "The music file was not found" << std::endl;
 	music->setLoop(true);
 	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 107, 98,
