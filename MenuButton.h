@@ -9,6 +9,7 @@
 #define MENUBUTTON_H_
 #include <SFML/Audio.hpp>
 #include "Clickable.h"
+#include "GameState.h"
 #include "Timer.h"
 
 class MenuButton: public Clickable {
@@ -34,6 +35,15 @@ public:
 private:
 	sf::Music* music;
 	bool isPlaying;
+	void onClick() override;
+};
+
+class InfoButton: public MenuButton {
+public:
+	InfoButton(sf::Vector2f _position, int _sizex, int _sizey,
+			sf::Texture* _texture, int type, GameState* gameState);
+private:
+	GameState* gameState;
 	void onClick() override;
 };
 

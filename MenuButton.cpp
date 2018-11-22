@@ -14,6 +14,7 @@ MenuButton::MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
 	graphic = sf::RectangleShape(sf::Vector2f(_sizex, _sizey));
 	setPosition(_position);
 	graphic.setTexture(_texture);
+	graphic.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
 	update();
 }
 
@@ -60,6 +61,17 @@ void VolumeButton::onClick() {
 	isPlaying ^= 1;
 }
 
+// Info Button Implementation
+InfoButton::InfoButton(sf::Vector2f _position, int _sizex, int _sizey,
+		sf::Texture* _texture, int type, GameState* gameState) :
+		MenuButton(_position, _sizex, _sizey, _texture, type), gameState(
+				gameState) {
+}
+
+void InfoButton::onClick() {
+	gameState->toggleHelpScreen();
+}
+
 // Pause Button Implementation
 PauseButton::PauseButton(sf::Vector2f _position, int _sizex, int _sizey,
 		sf::Texture* _texture, int type, Timer* timer) :
@@ -73,3 +85,4 @@ void PauseButton::onClick() {
 		timer->start();
 	}
 }
+
