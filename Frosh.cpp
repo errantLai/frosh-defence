@@ -8,11 +8,14 @@
 #include "Frosh.h"
 
 Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
-		int _tam, int _health, int _damage) :
-		texture(_texture), tamValue(_tam), health(_health), damage(_damage) {
+		sf::IntRect _textureRect, int _tam, int _health, int _damage,
+		float _speed) :
+		texture(_texture), textureRect(_textureRect), tamValue(_tam), health(
+				_health), damage(_damage), speed(_speed) {
 	shape = sf::RectangleShape(sf::Vector2f(_size.x, _size.y));
 	shape.setSize(_size);
 	shape.setTexture(texture);
+	shape.setTextureRect(textureRect);
 	shape.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
 }
 
@@ -38,6 +41,13 @@ sf::Vector2f Frosh::getPosition() {
 
 void Frosh::setPosition(sf::Vector2f position) {
 	this->shape.setPosition(position);
+}
+
+sf::IntRect Frosh::getTextureRect() {
+	return this->textureRect;
+}
+void Frosh::setTextureRect(sf::IntRect textureRect) {
+	this->textureRect = textureRect;
 }
 
 int Frosh::reduceHealth(int damage) {
