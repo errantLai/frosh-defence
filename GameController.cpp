@@ -7,6 +7,7 @@
 #include <vector>		// Vector object
 #include "GameController.h"
 #include "GameMenuController.h"
+#include "gameState.h"
 #include "Timer.h"
 #include <iostream>
 
@@ -16,6 +17,7 @@ sf::CircleShape hoverOutline;
 sf::RectangleShape* _tamsCounter;
 sf::RectangleShape* _livesCounter;
 sf::RectangleShape* _wavesCounter;
+sf::RectangleShape helpScreen;
 
 sf::Text tamText, waveText, healthText, text;
 
@@ -26,15 +28,13 @@ std::vector<Point> path =
 						14, 15), Point(20, 15), Point(20, 11), Point(24, 11),
 				Point(24, 18) };
 sf::RenderWindow* window;
-int gridStatus[32][18] = { 0 };
 
 bool debug;
 
 GameBoard::GameBoard() {
-	initBoard();
+	init();
 }
-void GameBoard::initBoard() {
-
+void GameBoard::init() {
 	sf::Texture* _menuTexture = new sf::Texture;
 	if (!_menuTexture->loadFromFile("assets/menuInfo.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
@@ -43,14 +43,26 @@ void GameBoard::initBoard() {
 	_tamsCounter->setPosition(36, 0);
 	_tamsCounter->setTexture(_menuTexture);
 	_tamsCounter->setTextureRect(sf::IntRect(0, 0, 398, 156));
+
 	_livesCounter = new sf::RectangleShape(sf::Vector2f(408, 160));
 	_livesCounter->setPosition(1104, 0);
 	_livesCounter->setTexture(_menuTexture);
 	_livesCounter->setTextureRect(sf::IntRect(438, 0, 408, 160));
+
 	_wavesCounter = new sf::RectangleShape(sf::Vector2f(508, 153));
 	_wavesCounter->setPosition(514, 10);
 	_wavesCounter->setTexture(_menuTexture);
 	_wavesCounter->setTextureRect(sf::IntRect(0, 191, 773, 233));
+
+	sf::Texture* _helpTexture = new sf::Texture;
+	if (!_helpTexture->loadFromFile("assets/help_screen.jpg")) {
+		std::cerr << "Error loading the help screen" << std::endl;
+	}
+
+	helpScreen = sf::RectangleShape(sf::Vector2f(1920, 1080));
+	helpScreen.setPosition(0, 0);
+	helpScreen.setTexture(_helpTexture);
+
 	tamText.setString(std::to_string(100));
 	waveText.setString(std::to_string(0));
 	healthText.setString(std::to_string(100));
@@ -78,8 +90,38 @@ void GameBoard::initBoard() {
 	hoverOutline.setOutlineThickness(-3);
 }
 
+void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
+	int gridX = ceil(mousePos.x / 60);
+	int gridY = ceil(mousePos.y / 60);
+	if ((event.type == sf::Event::MouseButtonPressed)
+			&& (event.mouseButton.button == sf::Mouse::Left)) {
+		// If an open space exists, fill the board with twos.
+		if (gridStatus[gridX][gridY] == 0 && gridStatus[gridX + 1][gridY] == 0
+				&& gridStatus[gridX][gridY + 1] == 0
+				&& gridStatus[gridX + 1][gridY + 1] == 0) {
+			gridStatus[gridX][gridY] = 2;
+			gridStatus[gridX + 1][gridY] = 2;
+			gridStatus[gridX][gridY + 1] = 2;
+			gridStatus[gridX + 1][gridY + 1] = 2;
+			// TODO: Create frec object via its controller
+		}
+
+		if (debug) {
+			//PRINT BOARD
+			for (int i = 0; i < 18; i++) {
+				for (int j = 0; j < 32; j++) {
+					std::cout << gridStatus[j][i] << " ";
+				}
+				std::cout << std::endl;
+			}
+			std::cout << std::endl;
+
+		}
+	}
+}
+
 // Draws Map with Ground and Grass Objects
-void GameBoard::renderBoard() {
+void GameBoard::render() {
 	int mapX = 0, mapY = 0;
 	// Each square is to be 60 pixels wide,
 	// with an exact height of 18 tiles
@@ -144,61 +186,6 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 }
 
 GameController::GameController() {
-	health = 100;
-	tams = 100;
-	currentWave = 0;
-	froshRemaining = 100;
-	froshEliminated = 0;
-}
-
-// Game State Accessors
-int GameController::getHealth() {
-	return this->health;
-}
-int GameController::getTams() {
-	return this->tams;
-}
-int GameController::getCurrentWave() {
-	return this->currentWave;
-}
-int GameController::getFroshRemaining() {
-	return this->froshRemaining;
-}
-int GameController::getFroshEliminated() {
-	return this->froshEliminated;
-}
-
-// Start the Game
-void GameController::startGame() {
-
-}
-
-// End Current Game
-void GameController::endGame() {
-
-}
-
-// Start Next Wave
-void GameController::startWave() {
-	this->currentWave++;
-	waveText.setString(std::to_string(this->currentWave));
-}
-
-// Display Help Screen
-void GameController::displayHelpScreen() {
-
-}
-
-// Update Player Lives
-void GameController::updateHealth(int update) {
-	this->health += update;
-	healthText.setString(std::to_string(this->health));
-}
-
-// Update Player Currency
-void GameController::updateTam(int update) {
-	this->tams += update;
-	tamText.setString(std::to_string(this->tams));
 }
 
 // Point Class used for Map
@@ -216,7 +203,8 @@ int Point::getY() {
 
 // Main
 int main() {
-	debug = true;
+	// Initialization
+	debug = false;
 	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence");
 	window->setFramerateLimit(60);
 	sf::Font font;
@@ -224,20 +212,43 @@ int main() {
 	}
 
 	Timer* clk = new Timer();
+	GameState* gameState = new GameState(clk);
 	GameController gameController;
 	GameBoard gameBoard;
-	GameMenuController gameMenuController = GameMenuController(window, clk);
+	GameMenuController gameMenuController = GameMenuController(window,
+			gameState);
 	gameMenuController.setDebug(debug);
 
 	tamText.setFont(font);
 	waveText.setFont(font);
 	healthText.setFont(font);
 
-	sf::Event event;
 	clk->start();
+	sf::Event event;
+	// Main game loop
 	while (window->isOpen()) {
-
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+
+		// Display the help menu
+		if (gameState->getHelperState()) {
+			window->clear();
+			window->draw(helpScreen);
+			window->display();
+			while (gameState->getHelperState()) {
+				while (window->pollEvent(event)) {
+					if (event.type == sf::Event::EventType::Closed
+							|| (event.type == sf::Event::KeyPressed
+									&& event.key.code == sf::Keyboard::Escape)) {
+						window->close();
+					} else if ((event.type == sf::Event::MouseButtonReleased)
+							&& (event.mouseButton.button == sf::Mouse::Left)) {
+						gameState->toggleHelpScreen();
+					}
+				}
+			}
+		}
+
+		// Process
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::EventType::Closed
 					|| (event.type == sf::Event::KeyPressed
@@ -245,48 +256,31 @@ int main() {
 				window->close();
 			} else {
 				gameMenuController.process(event, mousePos);
+				gameBoard.process(event, mousePos);
 			}
 		}
 
-		int gridX = ceil(mousePos.x / 60);
-		int gridY = ceil(mousePos.y / 60);
+		// Update
+		if (gameState->dirtyBit) {
+			waveText.setString(std::to_string(gameState->getCurrentWave()));
+			healthText.setString(std::to_string(gameState->getHealth()));
+			tamText.setString(std::to_string(gameState->getTams()));
+			gameState->dirtyBit = false;
+		}
+
+		// Render
+		window->clear();
+		gameBoard.render();
+		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
+		gameMenuController.render();
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
 			text.setString(std::to_string(clk->elapsedTicks()));
 			text.setFont(font);
 			text.setPosition(float(mousePos.x), float(mousePos.y));
-
-			//TEST CLICKING BOARD
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-				if (gridStatus[gridX][gridY] == 0
-						&& gridStatus[gridX + 1][gridY] == 0
-						&& gridStatus[gridX][gridY + 1] == 0
-						&& gridStatus[gridX + 1][gridY + 1] == 0) {
-					gridStatus[gridX][gridY] = 2;
-					gridStatus[gridX + 1][gridY] = 2;
-					gridStatus[gridX][gridY + 1] = 2;
-					gridStatus[gridX + 1][gridY + 1] = 2;
-				}
-
-				//PRINT BOARD
-				for (int i = 0; i < 18; i++) {
-					for (int j = 0; j < 32; j++) {
-						std::cout << gridStatus[j][i] << " ";
-					}
-					std::cout << std::endl;
-				}
-				std::cout << std::endl;
-			}
-		}
-
-		window->clear();
-		gameBoard.renderBoard();
-		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
-		gameMenuController.render();
-		if (debug) {
 			window->draw(text);
 		}
 		window->display();
-	}
+	} // End of main game loop
 	return 0;
 }
