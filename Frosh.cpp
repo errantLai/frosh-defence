@@ -7,23 +7,10 @@
 
 #include "Frosh.h"
 
-void Frosh::assignFroshStats(int type, double modifier) {
-	if (type == 0) {
-		tamValue = 5;
-		health = 10;
-		damage = 1;
-	} else {
-		tamValue = 5 * modifier;
-		health = 10;
-		damage = 1;
-	}
-}
-
 Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
-		int type, double modifier) :
-		position(_position), size(_size), texture(_texture) {
-	assignFroshStats(type, modifier);
-	shape = sf::RectangleShape(sf::Vector2f(size.x, size.y));
+		int _tam, int _health, int _damage) :
+		texture(_texture), tamValue(_tam), health(_health), damage(_damage) {
+	shape = sf::RectangleShape(sf::Vector2f(_size.x, _size.y));
 	shape.setSize(_size);
 	shape.setTexture(texture);
 	shape.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
@@ -46,7 +33,11 @@ int Frosh::getDamage() {
 }
 
 sf::Vector2f Frosh::getPosition() {
-	return this->position;
+	return this->shape.getPosition();
+}
+
+void Frosh::setPosition(sf::Vector2f position) {
+	this->shape.setPosition(position);
 }
 
 int Frosh::reduceHealth(int damage) {
@@ -54,9 +45,8 @@ int Frosh::reduceHealth(int damage) {
 	return this->health;
 }
 
-void Frosh::update() {
 //	This is the movement logic that updates the position
-//
+void Frosh::update() {
 
 }
 void Frosh::render(sf::RenderWindow* window) {
