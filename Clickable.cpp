@@ -74,8 +74,7 @@ void Clickable::process(const sf::Event& event, const sf::Vector2i& mousePos) {
 			onClick();
 			update();
 		}
-		if (debug
-				&& (sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+		if (debug && (sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
 			sf::Vector2f temp = getSize();
 			setPosition(
 					sf::Vector2f(mousePos.x - (temp.x / 2),
