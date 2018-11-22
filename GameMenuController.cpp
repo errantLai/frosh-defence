@@ -30,8 +30,9 @@ sf::Vector2f menuPosition(float xCubits, float yCubits) {
 			menuPos.y + (yCubits * cubit));
 }
 
-GameMenuController::GameMenuController(sf::RenderWindow* windowPointer, Timer* timer) :
-		windowPointer(windowPointer), timer(timer) {
+GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
+		GameState* gameState) :
+		windowPointer(windowPointer), gameState(gameState) {
 	// -----------------------
 	// Menu Borders
 	// -----------------------
@@ -84,12 +85,12 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer, Timer* t
 			_menuTexture, 0, music);
 	_sound->setTextureRect(sf::IntRect(888, 9, 107, 98));
 	clickVec.push_back(_sound);
-	MenuButton* _help = new MenuButton(menuPosition(2.3, 0.3), 107, 98,
-			_menuTexture, 1);
+	MenuButton* _help = new InfoButton(menuPosition(2.3, 0.3), 107, 98,
+			_menuTexture, 1, gameState);
 	_help->setTextureRect(sf::IntRect(887, 143, 107, 98));
 	clickVec.push_back(_help);
 	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 107, 98,
-			_menuTexture, 2, timer);
+			_menuTexture, 2, gameState->timer);
 	_pause->setTextureRect(sf::IntRect(888, 277, 107, 98));
 	clickVec.push_back(_pause);
 

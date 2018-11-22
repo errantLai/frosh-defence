@@ -8,13 +8,13 @@
 #ifndef GAMEMENUCONTROLLER_H_
 #define GAMEMENUCONTROLLER_H_
 #include "Clickable.h"
-#include "Timer.h"
+#include "GameState.h"
 #include <SFML/Audio.hpp>
 #include <vector>
 
 class GameMenuController {
 public:
-	GameMenuController(sf::RenderWindow* windowPointer, Timer* timer);
+	GameMenuController(sf::RenderWindow* windowPointer, GameState* gameState);
 	virtual ~GameMenuController();
 
 	void setDebug(bool mode);
@@ -30,7 +30,7 @@ private:
 	std::vector<sf::Texture*> texturesVector;
 	sf::RenderWindow* windowPointer;
 	sf::Music* music;
-	Timer* timer;
+	GameState* gameState;
 };
 
 #endif /* GAMEMENUCONTROLLER_H_ */
