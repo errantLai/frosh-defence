@@ -5,10 +5,12 @@
  *      Author: Chris
  */
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "GameMenuController.h"
 #include "Clickable.h"
 #include "FrecButton.h"
+#include "MenuButton.h"
 
 using std::cout;
 using std::endl;
@@ -28,8 +30,9 @@ sf::Vector2f menuPosition(float xCubits, float yCubits) {
 			menuPos.y + (yCubits * cubit));
 }
 
-GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
-		windowPointer(windowPointer) {
+GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
+		GameState* gameState) :
+		windowPointer(windowPointer), gameState(gameState) {
 	// -----------------------
 	// Menu Borders
 	// -----------------------
@@ -50,20 +53,47 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer) :
 	}
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
-	FrecButton* _clickable = new FrecButton(menuPosition(2, 3.75),
+	FrecButton* _clickable = new FrecButton(menuPosition(1.667, 2.5),
 			frecButtonCubits / 2, _texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 0, 0, 220, 250));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(2, 7.75), frecButtonCubits / 2,
+	_clickable = new FrecButton(menuPosition(1.667, 6), frecButtonCubits / 2,
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 1, 0, 220, 250));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(2, 11.75), frecButtonCubits / 2,
+	_clickable = new FrecButton(menuPosition(1.667, 9.5), frecButtonCubits / 2,
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(220 * 2, 0, 220, 250));
 	clickVec.push_back(_clickable);
+
+	// -------------------------
+	// Menu Buttons
+	// -------------------------
+	sf::Texture* _menuTexture = new sf::Texture;
+	if (!_menuTexture->loadFromFile("assets/menuInfo.png")) {
+		std::cerr << "The texture does not exist" << std::endl;
+	}
+	texturesVector.push_back(_menuTexture);
+
+	music = new sf::Music;
+	if (!music->openFromFile("assets/give_it_up.ogg"))
+		std::cerr << "The music file was not found" << std::endl;
+	music->setLoop(true);
+	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 107, 98,
+			_menuTexture, 0, music);
+	_sound->setTextureRect(sf::IntRect(888, 9, 107, 98));
+	clickVec.push_back(_sound);
+	MenuButton* _help = new InfoButton(menuPosition(2.3, 0.3), 107, 98,
+			_menuTexture, 1, gameState);
+	_help->setTextureRect(sf::IntRect(887, 143, 107, 98));
+	clickVec.push_back(_help);
+	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 107, 98,
+			_menuTexture, 2, gameState->timer);
+	_pause->setTextureRect(sf::IntRect(888, 277, 107, 98));
+	clickVec.push_back(_pause);
+
 }
 
 GameMenuController::~GameMenuController() {
@@ -81,6 +111,9 @@ GameMenuController::~GameMenuController() {
 	for (sf::Texture* t : texturesVector) {
 		delete t;
 	}
+
+	// Delete menu assets
+	music->stop();
 }
 
 void GameMenuController::setDebug(bool mode) {

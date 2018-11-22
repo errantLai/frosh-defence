@@ -3,4 +3,4 @@
 arial
 SFML/*
 .settings/*
-Debug/*
+/Debug/
