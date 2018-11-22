@@ -10,29 +10,36 @@
 #include "Frosh.h"
 #include "GameState.h"
 #include "GameController.h"
+#include <string>
 #include <SFML/Graphics.hpp>
+
+using std::string;
+
+enum class FroshType {
+	slow, regular, fast
+};
 
 class FroshController {
 private:
-	sf::Texture* froshSprite1, froshSprite2, froshSprite3;
+	sf::Texture* froshSprites;
 	sf::RenderWindow* window;
 	GameState* gameState;
+
+	sf::Vector2f froshBaseSize = sf::Vector2f(120, 120);
+	std::map<string, std::map<string, int>> froshProps;
 	// This is a difficulty modifer that affects the stats
 	// of generated frosh. This is modified when waves change
 	float modifier;
-
 	std::vector<Frosh*> froshVec;
 	std::vector<Point> pathToFollow;
-	// Create references to textures
-	void initialize();
 
 public:
-	FroshController(sf::RenderWindow* windowPointer, GameState* gameState);
+	FroshController(sf::RenderWindow* windowPointer, GameState* gameState,
+			std::vector<Point> pathToFollow);
 	// This destroys all the frosh that it contains
 	virtual ~FroshController();
-	// This creates a frosh and puts it into the froshVec
-	Frosh* createFrosh(sf::Vector2f _position, sf::Vector2f _size,
-			sf::Texture* _texture, int _tam, int _health, int _damage);
+
+	Frosh* spawnFrosh(sf::Vector2f position, FroshType type);
 	// This removes a frosh from the vector, deleting it.
 	void removeFrosh(Frosh* targetFrosh);
 	// Used by the attackController to deal damage. This function
@@ -47,7 +54,7 @@ public:
 
 	// Accessors
 	float getModifier();
-	float setModifier();
+	void setModifier(float _modifier);
 	std::vector<Frosh*> getFroshVec();
 };
 
