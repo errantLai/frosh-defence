@@ -99,6 +99,7 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 GameMenuController::~GameMenuController() {
 	for (sf::Drawable* d : drawVec) {
 		delete d;
+		d = nullptr;
 	}
 	for (Clickable* c : clickVec) {
 		sf::Vector2f temp = c->getPosition();
@@ -107,9 +108,11 @@ GameMenuController::~GameMenuController() {
 		cout << "Clickable Cubits: (" << temp.x << ", " << temp.y << ")"
 				<< endl;
 		delete c;
+		c = nullptr;
 	}
 	for (sf::Texture* t : texturesVector) {
 		delete t;
+		t = nullptr;
 	}
 
 	// Delete menu assets
