@@ -31,11 +31,12 @@ private:
 	// of generated frosh. This is modified when waves change
 	float modifier;
 	std::vector<Frosh*> froshVec;
-	std::vector<Point> pathToFollow;
+	const std::vector<sf::Vector2f> pathInCubits;
 
 public:
-	FroshController(sf::RenderWindow* windowPointer, GameState* gameState,
-			std::vector<Point> pathToFollow);
+	FroshController() = delete;
+	FroshController(sf::RenderWindow* window, GameState* gameState,
+			const std::vector<sf::Vector2f> pathToFollow);
 	// This destroys all the frosh that it contains
 	virtual ~FroshController();
 

@@ -10,8 +10,8 @@
 #include <algorithm> // remove and remove_if
 
 FroshController::FroshController(sf::RenderWindow* _window,
-		GameState* _gameState, std::vector<Point> _path) :
-		window(_window), gameState(_gameState), pathToFollow(_path) {
+		GameState* _gameState, const std::vector<sf::Vector2f> _path) :
+		window(_window), gameState(_gameState), pathInCubits(_path) {
 	modifier = 1;
 	froshSprites = new sf::Texture;
 	if (!froshSprites->loadFromFile("assets/zergling_120.png")) {
@@ -19,8 +19,8 @@ FroshController::FroshController(sf::RenderWindow* _window,
 	}
 
 	froshProps["slow"]= { {"tam", 1}, {"health", 30}, {"damage", 3}, {"speed", 1}};
-	froshProps["regular"]= { {"tam", 2}, {"health", 20}, {"damage", 2}, {"speed", 2}};
-	froshProps["fast"]= { {"tam", 3}, {"health", 10}, {"damage", 1}, {"speed", 5}};
+	froshProps["regular"]= { {"tam", 2}, {"health", 20}, {"damage", 2}, {"speed", 1.8}};
+	froshProps["fast"]= { {"tam", 3}, {"health", 10}, {"damage", 1}, {"speed", 2.6}};
 }
 
 FroshController::~FroshController() {
@@ -59,6 +59,7 @@ Frosh* FroshController::spawnFrosh(sf::Vector2f position, FroshType type) {
 		break;
 	}
 	froshVec.push_back(frosh);
+	std::cout << "Frosh added" << std::endl;
 	return frosh;
 }
 
@@ -84,7 +85,50 @@ void FroshController::dealDamage(Frosh* frosh, int damage) {
 
 void FroshController::update() {
 	// Go through each frosh object, and find the best point.
-	// Follow that path!
+	// Follow that path! This is a simple implementation, which
+	// relies on the fact that all paths follow linear changes,
+	// aka no need for diagonal travel.
+	sf::Vector2f currentPos, targetPos, distancePos;
+	int cubit = gameState->getCubitLength();
+	int maxPathIndex = pathInCubits.size() - 1;
+	float pixelSpeed;
+	for (Frosh* frosh : froshVec) {
+		if (frosh->getPathIndex() == maxPathIndex) {
+			gameState->updateHealth(-(frosh->getDamage()));
+			removeFrosh(frosh);
+			break;
+		}
+		currentPos = frosh->getPosition();
+		targetPos = pathInCubits[frosh->getPathIndex()];
+		// Convert the path vector to one in cubits
+		targetPos = sf::Vector2f(
+				(pathInCubits[frosh->getPathIndex()].x * cubit) - cubit / 2,
+				(pathInCubits[frosh->getPathIndex()].y * cubit) - cubit / 2);
+		distancePos = targetPos - currentPos;
+
+		if (distancePos.x == 0 && distancePos.y == 0) {
+			frosh->increasePathIndex();
+		} else {
+			pixelSpeed = frosh->getPixelSpeed();
+			// Deal with excess movements
+			if (distancePos.x != 0 && (abs(distancePos.x) < pixelSpeed)) {
+				pixelSpeed = abs(distancePos.x);
+			} else if (distancePos.y != 0 && abs(distancePos.y) < pixelSpeed) {
+				pixelSpeed = abs(distancePos.y);
+			}
+
+			if (distancePos.x > 0) {
+				currentPos.x += pixelSpeed;
+			} else if (distancePos.x < 0) {
+				currentPos.x -= pixelSpeed;
+			} else if (distancePos.y > 0) {
+				currentPos.y += pixelSpeed;
+			} else if (distancePos.y < 0) {
+				currentPos.y -= pixelSpeed;
+			}
+			frosh->setPosition(currentPos);
+		}
+	}
 }
 
 void FroshController::render() {

@@ -20,10 +20,15 @@ private:
 
 	// Internal game attributes
 	int tamValue;
+	// Decreases when attacked by a frec
 	int health;
 	// This determines how much health is lost when it crosses the finish
 	int damage;
-	float speed;
+	// Pixels moved after each update()
+	float pixelSpeed;
+	// The index of the path that it is moving towards
+	// Reaching the final index means clearing the map
+	int targetPathPoint;
 
 	// To handle movement, I can have a reference to the array
 	// of points, and then a current pathIndex. Once the point is reached,
@@ -32,7 +37,8 @@ private:
 public:
 	// The actual texture definition occurs within the froshController
 	Frosh(sf::Vector2f position, sf::Vector2f size, sf::Texture* texture,
-			sf::IntRect textureRect, int _tam, int _health, int _damage, float _speed);
+			sf::IntRect textureRect, int _tam, int _health, int _damage,
+			float _pixelSpeed);
 	virtual ~Frosh();
 
 	// Game logic functions
@@ -43,6 +49,8 @@ public:
 	int getTamValue();
 	int getHealth();
 	int getDamage();
+	int getPixelSpeed();
+	int getPathIndex();
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f position);
 	// The frosh controller will use these to change animations
@@ -50,6 +58,8 @@ public:
 	void setTextureRect(sf::IntRect textureRect);
 	// This returns the resulting health of the frosh
 	int reduceHealth(int damage);
+	// Bumps the point by one
+	void increasePathIndex();
 };
 
 #endif /* FROSH_H_ */
