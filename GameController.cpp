@@ -214,7 +214,7 @@ int main() {
 	healthText.setFont(font);
 
 	// TODO: Remove this temp frosh creating code
-	froshController.spawnFrosh(sf::Vector2f(100, 100), FroshType::slow);
+	froshController.spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
 	froshController.spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
 
 	clk->start();
@@ -269,7 +269,6 @@ int main() {
 		gameBoard.render();
 		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
 		froshController.render();
-
 		gameMenuController.render();
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
