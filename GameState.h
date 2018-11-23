@@ -17,6 +17,8 @@ private:
 	int froshRemaining = -1;
 	int froshEliminated = 0;
 	bool helperState = true;
+	// This is the pixel length of a cubit
+	int cubit = 60;
 
 public:
 	GameState(Timer* timer);
@@ -29,6 +31,7 @@ public:
 	int getFroshRemaining();
 	int getFroshEliminated();
 	bool getHelperState();
+	int getCubitLength();
 	Timer* timer;
 
 	void startGame();				// Starts game
