@@ -36,7 +36,9 @@ int GameState::getFroshEliminated() {
 bool GameState::getHelperState() {
 	return this->helperState;
 }
-
+int GameState::getCubitLength() {
+	return this->cubit;
+}
 // Start Next Wave
 void GameState::startWave() {
 	this->currentWave++;
