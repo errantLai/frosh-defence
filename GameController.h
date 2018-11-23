@@ -29,15 +29,3 @@ public:
 	void renderHover(int mouseX, int mouseY, int range);
 	int gridStatus[32][18] = { 0 };
 };
-
-// Point Class is a simple point to help with Map Dynamics
-class Point {
-private:
-	int x;
-	int y;
-public:
-	Point(int xIn, int yIn);
-	// Accessors
-	int getX();
-	int getY();
-};
