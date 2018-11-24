@@ -15,7 +15,7 @@
 class MenuButton: public Clickable {
 public:
 	MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
-			sf::Texture* _texture, int type);
+			sf::Texture* _texture);
 	void setTextureRect(const sf::IntRect& rect);
 	void update() override;
 	void render(sf::RenderWindow& _window) override;
@@ -31,7 +31,7 @@ private:
 class VolumeButton: public MenuButton {
 public:
 	VolumeButton(sf::Vector2f _position, int _sizex, int _sizey,
-			sf::Texture* _texture, int type, sf::Music* music);
+			sf::Texture* _texture, sf::Music* music);
 private:
 	sf::Music* music;
 	bool isPlaying;
@@ -41,7 +41,7 @@ private:
 class InfoButton: public MenuButton {
 public:
 	InfoButton(sf::Vector2f _position, int _sizex, int _sizey,
-			sf::Texture* _texture, int type, GameState* gameState);
+			sf::Texture* _texture, GameState* gameState);
 private:
 	GameState* gameState;
 	void onClick() override;
@@ -50,7 +50,7 @@ private:
 class PauseButton: public MenuButton {
 public:
 	PauseButton(sf::Vector2f _position, int _sizex, int _sizey,
-			sf::Texture* _texture, int type, Timer* timer);
+			sf::Texture* _texture, Timer* timer);
 private:
 	Timer* timer;
 	void onClick() override;
