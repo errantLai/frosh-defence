@@ -47,13 +47,13 @@ void GameState::startWave() {
 }
 
 // Update Player Lives
-void GameState::updateHealth(int update) {
+void GameState::updateHealthBy(int update) {
 	this->health += update;
 	dirtyBit = true;
 }
 
 // Update Player Currency
-void GameState::updateTam(int update) {
+void GameState::updateTamBy(int update) {
 	this->tams += update;
 }
 

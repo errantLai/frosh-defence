@@ -15,10 +15,6 @@
 
 using std::string;
 
-enum class FroshType {
-	slow, regular, fast
-};
-
 class FroshController {
 private:
 	sf::Texture* froshSprites;

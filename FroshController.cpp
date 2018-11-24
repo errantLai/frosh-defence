@@ -78,7 +78,7 @@ void FroshController::removeFrosh(Frosh* targetFrosh) {
 
 void FroshController::dealDamage(Frosh* frosh, int damage) {
 	if (frosh->reduceHealth(damage) <= 0) {
-		gameState->updateTam(frosh->getTamValue());
+		gameState->updateTamBy(frosh->getTamValue());
 		removeFrosh(frosh);
 	}
 }
@@ -94,7 +94,7 @@ void FroshController::update() {
 	float pixelSpeed;
 	for (Frosh* frosh : froshVec) {
 		if (frosh->getPathIndex() == maxPathIndex) {
-			gameState->updateHealth(-(frosh->getDamage()));
+			gameState->updateHealthBy(-(frosh->getDamage()));
 			removeFrosh(frosh);
 			break;
 		}
