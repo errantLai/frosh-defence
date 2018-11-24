@@ -33,6 +33,10 @@ sf::Vector2f menuPosition(float xCubits, float yCubits) {
 GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 		GameState* gameState) :
 		windowPointer(windowPointer), gameState(gameState) {
+	sf::Font font;
+			if (!font.loadFromFile("assets/georgia.ttf")) {
+		}
+
 	// -----------------------
 	// Menu Borders
 	// -----------------------
@@ -54,17 +58,17 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
 	FrecButton* _clickable = new FrecButton(menuPosition(1.4, 2.2),
-			frecButtonCubits / 1.7, _texture);
+			frecButtonCubits / 1.7, _texture, "Price: 30T, Damage: 1, Cooldown: 1s");
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.4, 6.1), frecButtonCubits / 1.7,
-			_texture);
+			_texture, "Price: 30T, Damage: 1, Cooldown: 1s");
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.4, 10), frecButtonCubits / 1.7,
-			_texture);
+			_texture, "Price: 30T, Damage: 1, Cooldown: 1s");
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
@@ -97,6 +101,7 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 			200, _menuTexture);
 	_upgrade->setTextureRect(sf::IntRect(1056, 0, 224, 160));
 	clickVec.push_back(_upgrade);
+
 
 }
 

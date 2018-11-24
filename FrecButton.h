@@ -8,10 +8,11 @@
 #ifndef FRECBUTTON_H_
 #define FRECBUTTON_H_
 #include "Clickable.h"
+#include <string>
 
 class FrecButton: public Clickable {
 public:
-	FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _texture);
+	FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _texture, std::string inText);
 	void setTextureRect(const sf::IntRect& rect);
 	virtual ~FrecButton();
 
@@ -26,6 +27,8 @@ private:
 	void onMousePressed() override;
 	void onMouseLeave() override;
 	sf::CircleShape graphic;
+	bool displayText;
+	sf::Text frecButtonText;
 };
 
 #endif /* FRECBUTTON_H_ */

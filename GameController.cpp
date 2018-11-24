@@ -204,8 +204,8 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 		backSquares = floor(range / 2);
 
 	hoverOutline.setRadius(range * 60 / 2);
-	hoverOutline.setPosition((gridX - backSquares) * 60,
-			(gridY - backSquares) * 60);
+	hoverOutline.setPosition((gridX - backSquares+1) * 60,
+			(gridY - backSquares+1) * 60);
 	window->draw(hoverOutline);
 }
 
