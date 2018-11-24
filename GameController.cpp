@@ -73,9 +73,9 @@ void GameBoard::init() {
 	waveWord.setString("Wave");
 	tamText.setPosition(220, 60);
 	tamText.setCharacterSize(58);
-	waveText.setPosition(810, 70);
+	waveText.setPosition(820, 70);
 	waveText.setCharacterSize(58);
-	healthText.setPosition(1220, 60);
+	healthText.setPosition(1250, 60);
 	healthText.setCharacterSize(58);
 	waveWord.setPosition(625, 85);
 	waveWord.setCharacterSize(40);
