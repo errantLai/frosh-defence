@@ -73,9 +73,9 @@ void GameBoard::init() {
 	waveWord.setString("Wave");
 	tamText.setPosition(220, 60);
 	tamText.setCharacterSize(58);
-	waveText.setPosition(810, 70);
+	waveText.setPosition(820, 70);
 	waveText.setCharacterSize(58);
-	healthText.setPosition(1220, 60);
+	healthText.setPosition(1235, 60);
 	healthText.setCharacterSize(58);
 	waveWord.setPosition(625, 85);
 	waveWord.setCharacterSize(40);
@@ -137,7 +137,7 @@ bool GameBoard::validatePos(int mouseX, int mouseY, int range){
 	int gridY = ceil(mouseY / 60);
 	for(int x = 0; x < range; x++){
 		for(int y = 0; y < range; y++){
-			if(gridStatus[x][y] != 0) return false;
+			if(gridStatus[gridX+ x][gridY +y] != 0) return false;
 		}
 	}
 	return true;

@@ -53,17 +53,17 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	}
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
-	FrecButton* _clickable = new FrecButton(menuPosition(1.667, 2.5),
-			frecButtonCubits / 2, _texture);
+	FrecButton* _clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits / 1.7,
+			_texture);
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.667, 6), frecButtonCubits / 2,
+	_clickable = new FrecButton(menuPosition(1.4, 6.1), frecButtonCubits / 1.7,
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.667, 9.5), frecButtonCubits / 2,
+	_clickable = new FrecButton(menuPosition(1.4, 10.0), frecButtonCubits / 1.7,
 			_texture);
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	clickVec.push_back(_clickable);
@@ -93,7 +93,7 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 			_menuTexture, gameState->timer);
 	_pause->setTextureRect(sf::IntRect(896, 384, 128, 128));
 	clickVec.push_back(_pause);
-	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(1.1, 13.5), 289, 200,
+	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(0.8, 14.1), 289, 200,
 			_menuTexture);
 	_upgrade->setTextureRect(sf::IntRect(1056, 0, 224, 160));
 	clickVec.push_back(_upgrade);
