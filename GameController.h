@@ -25,7 +25,9 @@ public:
 
 	void init();		// Create board
 	void process(sf::Event event, sf::Vector2i mousePos);
+	bool validatePos(int mouseX, int mouseY, int range);
 	void render();		// Render board
 	void renderHover(int mouseX, int mouseY, int range);
+	void renderShadow(int mouseX, int mouseY, int ranger);
 	int gridStatus[32][18] = { 0 };
 };

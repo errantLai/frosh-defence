@@ -18,6 +18,7 @@ using sf::Vector2f;
 sf::RectangleShape grassTile;
 sf::RectangleShape groundTile;
 sf::CircleShape hoverOutline;
+sf::RectangleShape shadowTile;
 sf::RectangleShape* _tamsCounter;
 sf::RectangleShape* _livesCounter;
 sf::RectangleShape* _wavesCounter;
@@ -94,6 +95,11 @@ void GameBoard::init() {
 	hoverOutline.setFillColor(sf::Color::Transparent);
 	hoverOutline.setOutlineColor(sf::Color::Red);
 	hoverOutline.setOutlineThickness(-3);
+	// Shadow Object
+	shadowTile = sf::RectangleShape(sf::Vector2f(60,60));
+	shadowTile.setFillColor(sf::Color(255, 0, 0, 150));
+
+
 }
 
 void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
@@ -124,6 +130,17 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 
 		}
 	}
+}
+
+bool GameBoard::validatePos(int mouseX, int mouseY, int range){
+	int gridX = ceil(mouseX / 60);
+	int gridY = ceil(mouseY / 60);
+	for(int x = 0; x < range; x++){
+		for(int y = 0; y < range; y++){
+			if(gridStatus[x][y] != 0) return false;
+		}
+	}
+	return true;
 }
 
 // Draws Map with Ground and Grass Objects
@@ -190,6 +207,15 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 	hoverOutline.setPosition((gridX - backSquares) * 60,
 			(gridY - backSquares) * 60);
 	window->draw(hoverOutline);
+}
+
+// Draw Placement Shadow
+void GameBoard::renderShadow(int mouseX, int mouseY, int range){
+	int gridX = ceil(mouseX / 60);
+	int gridY = ceil(mouseY / 60);
+	shadowTile.setSize(sf::Vector2f(range*60, range*60));
+	shadowTile.setPosition(gridX*60, gridY*60);
+	window->draw(shadowTile);
 }
 
 GameController::GameController() {
@@ -272,6 +298,7 @@ int main() {
 		window->clear();
 		gameBoard.render();
 		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
+		gameBoard.renderShadow(mousePos.x, mousePos.y, 2);
 		froshController.render();
 		gameMenuController.render();
 		if (debug) {
