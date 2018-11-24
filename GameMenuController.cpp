@@ -82,15 +82,15 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 		std::cerr << "The music file was not found" << std::endl;
 	music->setLoop(true);
 	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 107, 98,
-			_menuTexture, 0, music);
+			_menuTexture, music);
 	_sound->setTextureRect(sf::IntRect(888, 9, 107, 98));
 	clickVec.push_back(_sound);
 	MenuButton* _help = new InfoButton(menuPosition(2.3, 0.3), 107, 98,
-			_menuTexture, 1, gameState);
+			_menuTexture, gameState);
 	_help->setTextureRect(sf::IntRect(887, 143, 107, 98));
 	clickVec.push_back(_help);
 	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 107, 98,
-			_menuTexture, 2, gameState->timer);
+			_menuTexture, gameState->timer);
 	_pause->setTextureRect(sf::IntRect(888, 277, 107, 98));
 	clickVec.push_back(_pause);
 
