@@ -8,6 +8,15 @@
 #ifndef GAMESTATE_H_
 #define GAMESTATE_H_
 #include "Timer.h"
+#include "Frec.h"
+
+enum class FroshType {
+	slow, regular, fast
+};
+
+enum class FrecType {
+	empty, slammer, swinger, thrower
+};
 
 class GameState {
 private:
@@ -19,11 +28,16 @@ private:
 	bool helperState = true;
 	// This is the pixel length of a cubit
 	int cubit = 60;
+	FrecType purchaseFrec = FrecType::empty;
+	// This is used by the upgrade button
+	Frec* boardFrec = nullptr;
 
 public:
 	GameState(Timer* timer);
 	virtual ~GameState();
 	bool dirtyBit = true;
+	Timer* timer;
+
 	//Accessors
 	int getHealth();
 	int getTams();
@@ -32,14 +46,16 @@ public:
 	int getFroshEliminated();
 	bool getHelperState();
 	int getCubitLength();
-	Timer* timer;
+	// This is used by the GameMenuController to determine opacity
+	FrecType getPurchaseFrec();
+	void setPurchaseFrec(FrecType frecType);
 
 	void startGame();				// Starts game
 	void endGame();					// Ends game
 	void startWave();				// Starts wave
 	void displayHelpScreen();		// Display help
-	void updateHealth(int update);	// Update player lives
-	void updateTam(int update);		// Update player currency
+	void updateHealthBy(int update);	// Update player lives
+	void updateTamBy(int update);		// Update player currency
 	void toggleHelpScreen();
 
 };
