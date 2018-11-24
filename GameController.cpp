@@ -23,7 +23,7 @@ sf::RectangleShape* _livesCounter;
 sf::RectangleShape* _wavesCounter;
 sf::RectangleShape helpScreen;
 
-sf::Text tamText, waveText, healthText, text;
+sf::Text tamText, waveText, waveWord, healthText, text;
 
 const std::vector<Vector2f> path = { Vector2f(15, 0), Vector2f(15, 4), Vector2f(
 		20, 4), Vector2f(20, 1), Vector2f(24, 1), Vector2f(24, 8), Vector2f(10,
@@ -39,23 +39,23 @@ GameBoard::GameBoard() {
 }
 void GameBoard::init() {
 	sf::Texture* _menuTexture = new sf::Texture;
-	if (!_menuTexture->loadFromFile("assets/menuInfo.png")) {
+	if (!_menuTexture->loadFromFile("assets/menuButtons.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
 	}
-	_tamsCounter = new sf::RectangleShape(sf::Vector2f(398, 156));
+	_tamsCounter = new sf::RectangleShape(sf::Vector2f(416, 160));
 	_tamsCounter->setPosition(36, 0);
 	_tamsCounter->setTexture(_menuTexture);
-	_tamsCounter->setTextureRect(sf::IntRect(0, 0, 398, 156));
+	_tamsCounter->setTextureRect(sf::IntRect(0, 0, 416, 160));
 
-	_livesCounter = new sf::RectangleShape(sf::Vector2f(408, 160));
+	_livesCounter = new sf::RectangleShape(sf::Vector2f(416, 160));
 	_livesCounter->setPosition(1104, 0);
 	_livesCounter->setTexture(_menuTexture);
-	_livesCounter->setTextureRect(sf::IntRect(438, 0, 408, 160));
+	_livesCounter->setTextureRect(sf::IntRect(416, 0, 416, 160));
 
 	_wavesCounter = new sf::RectangleShape(sf::Vector2f(508, 153));
 	_wavesCounter->setPosition(514, 10);
 	_wavesCounter->setTexture(_menuTexture);
-	_wavesCounter->setTextureRect(sf::IntRect(0, 191, 773, 233));
+	_wavesCounter->setTextureRect(sf::IntRect(0, 192, 768, 224));
 
 	sf::Texture* _helpTexture = new sf::Texture;
 	if (!_helpTexture->loadFromFile("assets/help_screen.jpg")) {
@@ -69,12 +69,15 @@ void GameBoard::init() {
 	tamText.setString(std::to_string(100));
 	waveText.setString(std::to_string(0));
 	healthText.setString(std::to_string(100));
+	waveWord.setString("Wave");
 	tamText.setPosition(220, 60);
 	tamText.setCharacterSize(58);
 	waveText.setPosition(810, 70);
 	waveText.setCharacterSize(58);
 	healthText.setPosition(1220, 60);
 	healthText.setCharacterSize(58);
+	waveWord.setPosition(625, 85);
+	waveWord.setCharacterSize(40);
 
 	// Grass Tile Objects
 	grassTile = sf::RectangleShape(sf::Vector2f(60, 60));
@@ -172,6 +175,7 @@ void GameBoard::render() {
 	window->draw(tamText);
 	window->draw(waveText);
 	window->draw(healthText);
+	window->draw(waveWord);
 }
 
 // Draw Hover Object
@@ -212,12 +216,12 @@ int main() {
 	tamText.setFont(font);
 	waveText.setFont(font);
 	healthText.setFont(font);
+	waveWord.setFont(font);
 
 	// TODO: Remove this temp frosh creating code
 	froshController.spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
 	froshController.spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
 
-	clk->start();
 	sf::Event event;
 	// Main game loop
 	while (window->isOpen()) {
@@ -254,16 +258,16 @@ int main() {
 			}
 		}
 
-		// if (clockTick)
-		// Update
-		if (gameState->dirtyBit) {
-			waveText.setString(std::to_string(gameState->getCurrentWave()));
-			healthText.setString(std::to_string(gameState->getHealth()));
-			tamText.setString(std::to_string(gameState->getTams()));
-			gameState->dirtyBit = false;
+		if(clk->newTick()){
+			//update
+			if (gameState->dirtyBit) {
+				waveText.setString(std::to_string(gameState->getCurrentWave()));
+				healthText.setString(std::to_string(gameState->getHealth()));
+				tamText.setString(std::to_string(gameState->getTams()));
+				gameState->dirtyBit = false;
+			}
+			froshController.update();
 		}
-		froshController.update();
-
 		// Render
 		window->clear();
 		gameBoard.render();

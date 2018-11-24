@@ -11,6 +11,7 @@
  */
 
 #include "GameState.h"
+#include "Timer.h"
 
 GameState::GameState(Timer* timer) :
 		timer(timer) {

@@ -22,6 +22,10 @@ void MenuButton::setTextureRect(const sf::IntRect& rect) {
 	graphic.setTextureRect(rect);
 }
 
+void MenuButton::setTransparency(const int transparency){
+	graphic.setFillColor(sf::Color(255,255,255,transparency));
+}
+
 void MenuButton::update() {
 	graphic.setPosition(getPosition());
 }
@@ -61,6 +65,7 @@ void VolumeButton::onClick() {
 	isPlaying ^= 1;
 }
 
+
 // Info Button Implementation
 InfoButton::InfoButton(sf::Vector2f _position, int _sizex, int _sizey,
 		sf::Texture* _texture, GameState* gameState) :
@@ -79,9 +84,32 @@ PauseButton::PauseButton(sf::Vector2f _position, int _sizex, int _sizey,
 
 void PauseButton::onClick() {
 	if (timer->isRunning()) {
+		setTextureRect(sf::IntRect(896, 384, 128, 128));
 		timer->stop();
 	} else {
+		setTextureRect(sf::IntRect(897, 256, 128, 128));
 		timer->start();
 	}
 }
 
+// Upgrade Button Implementation
+UpgradeButton::UpgradeButton(sf::Vector2f _position, int _sizex, int _sizey,
+		sf::Texture* _texture):
+		MenuButton(_position, _sizex, _sizey, _texture) {
+	selected = false;
+}
+void UpgradeButton::onClick(){
+
+}
+void UpgradeButton::onMouseEnter(){
+
+}
+void UpgradeButton::onMouseLeave(){
+
+}
+void UpgradeButton::update(){
+	if(selected){
+		setTransparency(255);
+		selected = false;
+	} else setTransparency(180);
+}

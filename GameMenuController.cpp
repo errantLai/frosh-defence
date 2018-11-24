@@ -48,31 +48,31 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	// Frec Buttons
 	// -----------------------
 	sf::Texture* _texture = new sf::Texture;
-	if (!_texture->loadFromFile("assets/frec_texture.png")) {
+	if (!_texture->loadFromFile("assets/FrecIcon3.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
 	}
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
 	FrecButton* _clickable = new FrecButton(menuPosition(1.667, 2.5),
 			frecButtonCubits / 2, _texture);
-	_clickable->setTextureRect(sf::IntRect(220 * 0, 0, 220, 250));
+	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.667, 6), frecButtonCubits / 2,
 			_texture);
-	_clickable->setTextureRect(sf::IntRect(220 * 1, 0, 220, 250));
+	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.667, 9.5), frecButtonCubits / 2,
 			_texture);
-	_clickable->setTextureRect(sf::IntRect(220 * 2, 0, 220, 250));
+	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	// -------------------------
 	// Menu Buttons
 	// -------------------------
 	sf::Texture* _menuTexture = new sf::Texture;
-	if (!_menuTexture->loadFromFile("assets/menuInfo.png")) {
+	if (!_menuTexture->loadFromFile("assets/menuButtons.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
 	}
 	texturesVector.push_back(_menuTexture);
@@ -81,18 +81,23 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	if (!music->openFromFile("assets/give_it_up.ogg"))
 		std::cerr << "The music file was not found" << std::endl;
 	music->setLoop(true);
-	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 107, 98,
+	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 108, 108,
 			_menuTexture, music);
-	_sound->setTextureRect(sf::IntRect(888, 9, 107, 98));
+	_sound->setTextureRect(sf::IntRect(896, 0, 128, 128));
 	clickVec.push_back(_sound);
-	MenuButton* _help = new InfoButton(menuPosition(2.3, 0.3), 107, 98,
+	MenuButton* _help = new InfoButton(menuPosition(2.3, 0.3), 108, 108,
 			_menuTexture, gameState);
-	_help->setTextureRect(sf::IntRect(887, 143, 107, 98));
+	_help->setTextureRect(sf::IntRect(896, 128, 128, 128));
 	clickVec.push_back(_help);
-	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 107, 98,
+	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 108, 108,
 			_menuTexture, gameState->timer);
-	_pause->setTextureRect(sf::IntRect(888, 277, 107, 98));
+	_pause->setTextureRect(sf::IntRect(896, 384, 128, 128));
 	clickVec.push_back(_pause);
+	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(1.1, 13.5), 289, 200,
+			_menuTexture);
+	_upgrade->setTextureRect(sf::IntRect(1056, 0, 224, 160));
+	clickVec.push_back(_upgrade);
+
 
 }
 

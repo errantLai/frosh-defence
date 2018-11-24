@@ -21,6 +21,7 @@ public:
 	double elapsedSeconds();
 	double elapsedTicks();
 	bool isRunning();
+	bool newTick();
 
 private:
 	std::chrono::time_point<std::chrono::system_clock> m_StartTime;
@@ -28,6 +29,7 @@ private:
 	bool m_bRunning;
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> starts;
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> ends;
+	double lastTick;
 };
 
 #endif /* TIMER_H_ */

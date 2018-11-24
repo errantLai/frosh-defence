@@ -16,6 +16,7 @@ Timer::Timer() {
 	m_StartTime= {};
 	m_bRunning = false;
 	m_EndTime = {};
+	lastTick = -1;
 }
 void Timer::start() {
 	this->m_StartTime = std::chrono::system_clock::now();
@@ -45,9 +46,16 @@ double Timer::elapsedSeconds() {
 	return elapsedMilliseconds() / 1000.0;
 }
 double Timer::elapsedTicks() {
-	return elapsedMilliseconds() / 1000;
+	return floor(elapsedMilliseconds() / 10);
 }
 bool Timer::isRunning() {
 	return this->m_bRunning;
+}
+bool Timer::newTick(){
+	if(elapsedTicks() > lastTick){
+		this->lastTick = elapsedTicks();
+		return true;
+	}
+	return false;
 }
 
