@@ -93,11 +93,10 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 			_menuTexture, gameState->timer);
 	_pause->setTextureRect(sf::IntRect(896, 384, 128, 128));
 	clickVec.push_back(_pause);
-	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(1.1, 13.5), 289, 200,
-			_menuTexture);
+	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(1.1, 13.5), 289,
+			200, _menuTexture);
 	_upgrade->setTextureRect(sf::IntRect(1056, 0, 224, 160));
 	clickVec.push_back(_upgrade);
-
 
 }
 
