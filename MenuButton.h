@@ -17,6 +17,7 @@ public:
 	MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
 			sf::Texture* _texture);
 	void setTextureRect(const sf::IntRect& rect);
+	void setTransparency(const int transparency);
 	void update() override;
 	void render(sf::RenderWindow& _window) override;
 
@@ -56,4 +57,17 @@ private:
 	void onClick() override;
 };
 
+class UpgradeButton: public MenuButton {
+public:
+	UpgradeButton(sf::Vector2f _positin, int _sizex, int _sizey,
+			sf::Texture* _texture);
+private:
+	//GameState* gameState;
+	void onClick() override;
+	void onMouseEnter() override;
+	void onMouseLeave() override;
+	void update();
+	bool selected;
+
+};
 #endif /* MENUBUTTON_H_ */
