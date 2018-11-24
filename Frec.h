@@ -20,7 +20,7 @@ public:
 	char getDirection() const;
 	char getMode() const;
 	sf::Sprite getFrecSprite() const;
-	sf::Vector2f getfrecPosition() const;
+	sf::Vector2f getPosition() const;
 	float getSpeed() const;
 	float getRange() const;
 	float getDamage() const;

@@ -185,7 +185,7 @@ void Frec::flipBack() {
 }
 
 // new
-sf::Vector2f Frec::getfrecPosition() const {
+sf::Vector2f Frec::getPosition() const {
 	return frecPos;
 }
 
