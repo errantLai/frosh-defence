@@ -7,26 +7,21 @@
 
 #include "Frosh.h"
 
-void Frosh::assignFroshStats(int type, double modifier) {
-	if (type == 0) {
-		tamValue = 5;
-		health = 10;
-		damage = 1;
-	} else {
-		tamValue = 5 * modifier;
-		health = 10;
-		damage = 1;
-	}
-}
-
 Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
-		int type, double modifier) :
-		position(_position), size(_size), texture(_texture) {
-	assignFroshStats(type, modifier);
-	shape = sf::RectangleShape(sf::Vector2f(size.x, size.y));
+		sf::IntRect _textureRect, int _tam, int _health, int _damage,
+		float _pixelSpeed) :
+		texture(_texture), textureRect(_textureRect), tamValue(_tam), health(
+				_health), damage(_damage), pixelSpeed(_pixelSpeed) {
+	// Map shape properties
+	shape = sf::RectangleShape(sf::Vector2f(_size.x, _size.y));
+	shape.setPosition(_position);
 	shape.setSize(_size);
 	shape.setTexture(texture);
+	shape.setTextureRect(textureRect);
 	shape.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
+
+	targetPathPoint = 0;
+
 }
 
 // FroshController is responsible for creating and deleting objects
@@ -46,7 +41,18 @@ int Frosh::getDamage() {
 }
 
 sf::Vector2f Frosh::getPosition() {
-	return this->position;
+	return this->shape.getPosition();
+}
+
+void Frosh::setPosition(sf::Vector2f position) {
+	this->shape.setPosition(position);
+}
+
+sf::IntRect Frosh::getTextureRect() {
+	return this->textureRect;
+}
+void Frosh::setTextureRect(sf::IntRect textureRect) {
+	this->textureRect = textureRect;
 }
 
 int Frosh::reduceHealth(int damage) {
@@ -54,9 +60,20 @@ int Frosh::reduceHealth(int damage) {
 	return this->health;
 }
 
-void Frosh::update() {
+int Frosh::getPixelSpeed() {
+	return this->pixelSpeed;
+}
+
+int Frosh::getPathIndex() {
+	return this->targetPathPoint;
+}
+
+void Frosh::increasePathIndex() {
+	this->targetPathPoint++;
+}
+
 //	This is the movement logic that updates the position
-//
+void Frosh::update() {
 
 }
 void Frosh::render(sf::RenderWindow* window) {

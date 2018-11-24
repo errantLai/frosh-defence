@@ -10,7 +10,7 @@
 #include <iostream>
 
 MenuButton::MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
-		sf::Texture* _texture, int type) {
+		sf::Texture* _texture) {
 	graphic = sf::RectangleShape(sf::Vector2f(_sizex, _sizey));
 	setPosition(_position);
 	graphic.setTexture(_texture);
@@ -46,8 +46,8 @@ void MenuButton::onMouseLeave() {
 
 // Volume Button Implementation
 VolumeButton::VolumeButton(sf::Vector2f _position, int _sizex, int _sizey,
-		sf::Texture* _texture, int type, sf::Music* music) :
-		MenuButton(_position, _sizex, _sizey, _texture, type), music(music) {
+		sf::Texture* _texture, sf::Music* music) :
+		MenuButton(_position, _sizex, _sizey, _texture), music(music) {
 	music->play();
 	isPlaying = true;
 }
@@ -63,9 +63,8 @@ void VolumeButton::onClick() {
 
 // Info Button Implementation
 InfoButton::InfoButton(sf::Vector2f _position, int _sizex, int _sizey,
-		sf::Texture* _texture, int type, GameState* gameState) :
-		MenuButton(_position, _sizex, _sizey, _texture, type), gameState(
-				gameState) {
+		sf::Texture* _texture, GameState* gameState) :
+		MenuButton(_position, _sizex, _sizey, _texture), gameState(gameState) {
 }
 
 void InfoButton::onClick() {
@@ -74,8 +73,8 @@ void InfoButton::onClick() {
 
 // Pause Button Implementation
 PauseButton::PauseButton(sf::Vector2f _position, int _sizex, int _sizey,
-		sf::Texture* _texture, int type, Timer* timer) :
-		MenuButton(_position, _sizex, _sizey, _texture, type), timer(timer) {
+		sf::Texture* _texture, Timer* timer) :
+		MenuButton(_position, _sizex, _sizey, _texture), timer(timer) {
 }
 
 void PauseButton::onClick() {
