@@ -35,7 +35,7 @@ double Timer::elapsedMilliseconds() {
 		elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(
 				endTime - this->m_StartTime).count();
 	}
-	for (int i = 0; i < ends.size(); i++) {
+	for (int i = 0, end_size = ends.size(); i < end_size; i++) {
 		elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(
 				this->ends[i] - this->starts[i]).count();
 	}
