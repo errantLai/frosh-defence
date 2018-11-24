@@ -73,9 +73,9 @@ void GameBoard::init() {
 	waveWord.setString("Wave");
 	tamText.setPosition(220, 60);
 	tamText.setCharacterSize(58);
-	waveText.setPosition(820, 70);
+	waveText.setPosition(810, 70);
 	waveText.setCharacterSize(58);
-	healthText.setPosition(1235, 60);
+	healthText.setPosition(1220, 60);
 	healthText.setCharacterSize(58);
 	waveWord.setPosition(625, 85);
 	waveWord.setCharacterSize(40);
@@ -96,9 +96,8 @@ void GameBoard::init() {
 	hoverOutline.setOutlineColor(sf::Color::Red);
 	hoverOutline.setOutlineThickness(-3);
 	// Shadow Object
-	shadowTile = sf::RectangleShape(sf::Vector2f(60,60));
+	shadowTile = sf::RectangleShape(sf::Vector2f(60, 60));
 	shadowTile.setFillColor(sf::Color(255, 0, 0, 150));
-
 
 }
 
@@ -132,12 +131,13 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 	}
 }
 
-bool GameBoard::validatePos(int mouseX, int mouseY, int range){
+bool GameBoard::validatePos(int mouseX, int mouseY, int range) {
 	int gridX = ceil(mouseX / 60);
 	int gridY = ceil(mouseY / 60);
-	for(int x = 0; x < range; x++){
-		for(int y = 0; y < range; y++){
-			if(gridStatus[gridX+ x][gridY +y] != 0) return false;
+	for (int x = 0; x < range; x++) {
+		for (int y = 0; y < range; y++) {
+			if (gridStatus[x][y] != 0)
+				return false;
 		}
 	}
 	return true;
@@ -210,11 +210,11 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 }
 
 // Draw Placement Shadow
-void GameBoard::renderShadow(int mouseX, int mouseY, int range){
+void GameBoard::renderShadow(int mouseX, int mouseY, int range) {
 	int gridX = ceil(mouseX / 60);
 	int gridY = ceil(mouseY / 60);
-	shadowTile.setSize(sf::Vector2f(range*60, range*60));
-	shadowTile.setPosition(gridX*60, gridY*60);
+	shadowTile.setSize(sf::Vector2f(range * 60, range * 60));
+	shadowTile.setPosition(gridX * 60, gridY * 60);
 	window->draw(shadowTile);
 }
 
@@ -284,7 +284,7 @@ int main() {
 			}
 		}
 
-		if(clk->newTick()){
+		if (clk->newTick()) {
 			//update
 			if (gameState->dirtyBit) {
 				waveText.setString(std::to_string(gameState->getCurrentWave()));
