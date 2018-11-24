@@ -5,11 +5,15 @@
 #include <cmath>
 #include <string>		// String object
 #include <vector>		// Vector object
+#include <iostream>
+
 #include "GameController.h"
 #include "GameMenuController.h"
-#include "gameState.h"
+#include "FroshController.h"
+#include "GameState.h"
 #include "Timer.h"
-#include <iostream>
+
+using sf::Vector2f;
 
 sf::RectangleShape grassTile;
 sf::RectangleShape groundTile;
@@ -21,12 +25,11 @@ sf::RectangleShape helpScreen;
 
 sf::Text tamText, waveText, healthText, text;
 
-std::vector<Point> path =
-		{ Point(15, 0), Point(15, 4), Point(20, 4), Point(20, 1), Point(24, 1),
-				Point(24, 8), Point(10, 8), Point(10, 4), Point(5, 4), Point(5,
-						14), Point(10, 14), Point(10, 12), Point(14, 12), Point(
-						14, 15), Point(20, 15), Point(20, 11), Point(24, 11),
-				Point(24, 18) };
+const std::vector<Vector2f> path = { Vector2f(15, 0), Vector2f(15, 4), Vector2f(
+		20, 4), Vector2f(20, 1), Vector2f(24, 1), Vector2f(24, 8), Vector2f(10,
+		8), Vector2f(10, 4), Vector2f(5, 4), Vector2f(5, 14), Vector2f(10, 14),
+		Vector2f(10, 12), Vector2f(14, 12), Vector2f(14, 15), Vector2f(20, 15),
+		Vector2f(20, 11), Vector2f(24, 11), Vector2f(24, 18) };
 sf::RenderWindow* window;
 
 bool debug;
@@ -135,26 +138,26 @@ void GameBoard::render() {
 	}
 	// Draw Ground on Path Only
 	for (unsigned int i = 0; i < path.size() - 1; i++) {
-		Point curr = path[i];		// Current Point
-		Point next = path[i + 1];		// Next Point
-		mapX = curr.getX();
-		mapY = curr.getY();
-		if (curr.getX() == next.getX()) {			// If two points vertical
-			while (mapY != next.getY()) {
+		Vector2f curr = path[i];		// Current Vector2f
+		Vector2f next = path[i + 1];		// Next Vector2f
+		mapX = curr.x;
+		mapY = curr.y;
+		if (curr.x == next.x) {			// If two Vector2fs vertical
+			while (mapY != next.y) {
 				groundTile.setPosition(mapX * 60, mapY * 60);
 				window->draw(groundTile);
-				if (mapY < next.getY())
-					mapY++;		// Draw up or down until next point
+				if (mapY < next.y)
+					mapY++;		// Draw up or down until next Vector2f
 				else
 					mapY--;
 				gridStatus[mapX][mapY] = 1;
 			}
-		} else if (curr.getY() == next.getY()) {	// If two points horizontal
-			while (mapX != next.getX()) {
+		} else if (curr.y == next.y) {	// If two Vector2fs horizontal
+			while (mapX != next.x) {
 				groundTile.setPosition(mapX * 60, mapY * 60);
 				window->draw(groundTile);
-				if (mapX < next.getX())
-					mapX++;		// Draw left or right until next point
+				if (mapX < next.x)
+					mapX++;		// Draw left or right until next Vector2f
 				else
 					mapX--;
 				gridStatus[mapX][mapY] = 1;
@@ -188,19 +191,6 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 GameController::GameController() {
 }
 
-// Point Class used for Map
-Point::Point(int xIn, int yIn) {
-	this->x = xIn;
-	this->y = yIn;
-}
-// Accessors
-int Point::getX() {
-	return this->x;
-}
-int Point::getY() {
-	return this->y;
-}
-
 // Main
 int main() {
 	// Initialization
@@ -213,15 +203,19 @@ int main() {
 
 	Timer* clk = new Timer();
 	GameState* gameState = new GameState(clk);
-	GameController gameController;
 	GameBoard gameBoard;
 	GameMenuController gameMenuController = GameMenuController(window,
 			gameState);
+	FroshController froshController = FroshController(window, gameState, path);
 	gameMenuController.setDebug(debug);
 
 	tamText.setFont(font);
 	waveText.setFont(font);
 	healthText.setFont(font);
+
+	// TODO: Remove this temp frosh creating code
+	froshController.spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
+	froshController.spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
 
 	clk->start();
 	sf::Event event;
@@ -260,6 +254,7 @@ int main() {
 			}
 		}
 
+		// if (clockTick)
 		// Update
 		if (gameState->dirtyBit) {
 			waveText.setString(std::to_string(gameState->getCurrentWave()));
@@ -267,11 +262,13 @@ int main() {
 			tamText.setString(std::to_string(gameState->getTams()));
 			gameState->dirtyBit = false;
 		}
+		froshController.update();
 
 		// Render
 		window->clear();
 		gameBoard.render();
 		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
+		froshController.render();
 		gameMenuController.render();
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
