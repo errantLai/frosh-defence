@@ -44,6 +44,13 @@ sf::Vector2f Frosh::getPosition() {
 	return this->shape.getPosition();
 }
 
+sf::Vector2f Frosh::getCenterPosition() {
+	sf::Vector2f center = this->shape.getPosition();
+	center.x += this->shape.getSize().x / 2;
+	center.y += this->shape.getSize().y / 2;
+	return center;
+}
+
 void Frosh::setPosition(sf::Vector2f position) {
 	this->shape.setPosition(position);
 }

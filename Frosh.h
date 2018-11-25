@@ -52,6 +52,7 @@ public:
 	int getPixelSpeed();
 	int getPathIndex();
 	sf::Vector2f getPosition();
+	sf::Vector2f getCenterPosition();
 	void setPosition(sf::Vector2f position);
 	// The frosh controller will use these to change animations
 	sf::IntRect getTextureRect();

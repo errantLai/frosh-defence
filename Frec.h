@@ -3,17 +3,22 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include<math.h>
+#include <math.h>
 #include <string>
 #include <vector>
 
 using namespace std;
 typedef sf::IntRect* srcArrayPtr;
 
+enum class FrecType {
+	empty, slammer, swinger, thrower
+};
+
 class Frec {
 public:
 	Frec() = delete;
-	Frec(const sf::Vector2f position, sf::Texture* texture);
+	Frec(const sf::Vector2f coordinate, sf::Texture* texture, FrecType type,
+			int damage, int range, int cooldown);
 	~Frec();
 
 	// accessors for attributes on stack
@@ -21,16 +26,22 @@ public:
 	char getMode() const;
 	sf::Sprite getFrecSprite() const;
 	sf::Vector2f getPosition() const;
-	float getSpeed() const;
-	float getRange() const;
+	sf::Vector2f getCenterPosition() const;
 	float getDamage() const;
+	float getRange() const;
+	FrecType getFrecType() const;
+	int getCooldown();
 
 	// accessors for attributes on heap
 	srcArrayPtr* getIntRects() const;
 
-	// functionals
+	// Attribute modifiers
 	void setMode(char);
 	void setDirection(char);
+	void decreaseCooldown();
+	void resetCooldown();
+
+	// Handling attacks
 	void froshDirection(sf::Vector2f froshPos); // find the direction of the frosh relative to the frec
 	float froshDistance(sf::Vector2f frosh); // returns distance between two points
 	bool froshCollides(sf::Vector2f frosh); // collision detection between two objects, using the distance function
@@ -53,19 +64,17 @@ private:
 	sf::Vector2f frecPos;
 	int numPers = 3;
 	int numFrame = 3;
+	FrecType type;
 
 	// the attributes about attack and frec properties
 	char mode; // a - attack; s - stop attack
 	char direction; // udlr -> up, down, left, right
-	int baseCooldown;
 	int currentCooldown;
 
 	// modifed by the upgrade function
-	float frecSpeed;
-	float frecRange;
 	float frecDamage;
-
-	sf::CircleShape range; // the attack range shape
+	float frecRange;
+	int baseCooldown;
 };
 
 class SlammingFrec {

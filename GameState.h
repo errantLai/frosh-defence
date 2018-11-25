@@ -14,10 +14,6 @@ enum class FroshType {
 	slow, regular, fast
 };
 
-enum class FrecType {
-	empty, slammer, swinger, thrower
-};
-
 class GameState {
 private:
 	int health = 20;
