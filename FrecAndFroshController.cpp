@@ -1,9 +1,11 @@
 #include "FrecAndFroshController.h"
 #include <math.h>
 
-FrecAndFroshController::FrecAndFroshController(vector<Frec*>* _allFrecs,
+FrecAndFroshController::FrecAndFroshController(sf::RenderWindow* _window,
+		GameState* _gameState, vector<Frec*>* _allFrecs,
 		vector<Frosh*>* _allFrosh) :
-		allThrowFrecs(_allFrecs), allFrosh(_allFrosh) {
+		window(_window), gameState(_gameState), allThrowFrecs(_allFrecs), allFrosh(
+				_allFrosh) {
 }
 FrecAndFroshController::~FrecAndFroshController() {
 }
@@ -18,15 +20,14 @@ void FrecAndFroshController::addThrowObjectToList(int index,
 void FrecAndFroshController::deleteThrowObjectAtIndex(int index) {
 	delete allThrowObjects[index];
 	allThrowObjects[index] = nullptr;
-	allThrowObjects.erase(allThrowObjects.begin() + index,
-			allThrowObjects.begin() + index + 1);
+	allThrowObjects.erase(allThrowObjects.begin() + index);
 	//delete image? I dont think you'll need to explicitly do this
 	//delete &allThrowObjects[index];
 }
 void FrecAndFroshController::drawAllThrowObjectsOnGrid(
-		sf::RenderWindow &theWindow) {	//draws the frec onto the grid
+		sf::RenderWindow* _window) {	//draws the frec onto the grid
 	for (auto& projectile : allThrowObjects) {
-		projectile->drawProjectile(theWindow);
+		projectile->drawProjectile(_window);
 	}
 }
 /*__________________________________________OBJECT BEING THROWN_________________________________________________*/
@@ -124,7 +125,7 @@ void FrecAndFroshController::update() { //essentially do every attack related fu
 	moveAllThrowObjectTowardsFroshAndDelete();
 }
 
-void FrecAndFroshController::render(sf::RenderWindow &_window) {
-	drawAllThrowObjectsOnGrid(_window);
+void FrecAndFroshController::render() {
+	drawAllThrowObjectsOnGrid(window);
 }
 

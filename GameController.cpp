@@ -142,7 +142,8 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 			gridStatus[gridX + 1][gridY + 1] = 2;
 			sf::Vector2f spawnPos = sf::Vector2f(gridX * gameState->cubit,
 					gridY * gameState->cubit);
-			std::cout << "Spawn Pos: " << spawnPos.x << " " << spawnPos.y << std::endl;
+			std::cout << "Spawn Pos: " << spawnPos.x << " " << spawnPos.y
+					<< std::endl;
 			frecController->spawnFrec(spawnPos, type);
 			gameState->updateTamBy(
 					-(frecController->getFrecProps(type)["tam"]));
@@ -275,7 +276,8 @@ int main() {
 			gameMenuController->getMenuPos().x);
 
 	FrecAndFroshController* attackController = new FrecAndFroshController(
-			frecController->getFrecVec(), froshController->getFroshVec());
+			window, gameState, frecController->getFrecVec(),
+			froshController->getFroshVec());
 
 // TODO: Remove this temp frosh creating code
 	froshController->spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
@@ -339,6 +341,7 @@ int main() {
 		froshController->render();
 		frecController->render();
 		gameMenuController->render();
+		attackController->render();
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
 			text.setString(std::to_string(clk->elapsedTicks()));

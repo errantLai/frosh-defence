@@ -16,7 +16,7 @@ public:
 	throwProjectile(int ind, sf::Vector2f frecPosition,
 			Frosh* froshToFireAt);
 	~throwProjectile();
-	void drawProjectile(sf::RenderWindow &theWindow);
+	void drawProjectile(sf::RenderWindow* _window);
 	void moveObjectTowardsFrosh(sf::Vector2f frosh); //using frosh position, heatseeks towards the frosh until collision occurs
 	float DistanceFromFrosh(sf::Vector2f frosh); // returns distance between two points
 	bool projectileFroshCollision(sf::Vector2f frosh); // collision detection between two objects, using the distance function

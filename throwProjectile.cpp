@@ -23,8 +23,8 @@ throwProjectile::throwProjectile(int ind, sf::Vector2f frecPosition,
 throwProjectile::~throwProjectile() {
 }
 
-void throwProjectile::drawProjectile(sf::RenderWindow &theWindow) {
-	theWindow.draw(projectileShape);
+void throwProjectile::drawProjectile(sf::RenderWindow* _window) {
+	_window->draw(projectileShape);
 }
 
 //gets a vector of length 1, to be multipled by a speed
