@@ -5,25 +5,10 @@
 using namespace std;
 typedef sf::IntRect* srcArrayPtr;
 
-/*
- - upgrades:
- - Throw:
- - damage *= 1.25; // up 25%
- - range += 1;
- - speed *= 1.25; // up 25%
-
- - Slam:
- - damage *= 1.5; // up 50%
- - speed *= 1.25; // up 25%
-
- - Swing:
- - damage *= 1.4; // up 40%
- - range += 1;
- - speed *= 1.2; // up 20%
- */
-
-Frec::Frec(const sf::Vector2f _coordinate, sf::Texture* _texture) :
-		coordinate(_coordinate), texture(_texture) {
+Frec::Frec(const sf::Vector2f _coordinate, sf::Texture* _texture,
+		FrecType _type, int damage, int range, int cooldown) :
+		coordinate(_coordinate), texture(_texture), type(_type), frecDamage(
+				damage), frecRange(range), baseCooldown(cooldown) {
 	// these can be changed to adapt to whichever frec spritesheet we are using
 	// and to their sizes, as well as the coordinate
 
@@ -47,14 +32,10 @@ Frec::Frec(const sf::Vector2f _coordinate, sf::Texture* _texture) :
 	frecSprite.setPosition(coordinate.x, coordinate.y);
 
 	// set initial attributes
-	frecSpeed = 0.166667f; // speed
-	frecRange = 2.0; // range
-	frecDamage = 1.0; // damage
 	frecPos = coordinate;
 	mode = 'a';
 	direction = 'r';
 	currentCooldown = 0;
-	baseCooldown = 100;
 }
 
 Frec::~Frec() {
@@ -66,13 +47,102 @@ Frec::~Frec() {
 	srcSprite = nullptr;
 }
 
+FrecType Frec::getFrecType() const {
+	return this->type;
+}
+
 // test heap functions
 void Frec::setPosition(sf::Vector2f newPosition) {
 	frecSprite.setPosition(newPosition);
 }
 
+void Frec::setMode(char AorS) {
+	mode = AorS;
+}
+
+char Frec::getDirection() const {
+	return direction;
+}
+
+char Frec::getMode() const {
+	return mode;
+}
+
+void Frec::setDirection(char UDLR) {
+	direction = UDLR;
+}
+
+void Frec::decreaseCooldown() {
+	this->currentCooldown--;
+}
+void Frec::resetCooldown() {
+	this->currentCooldown = this->baseCooldown;
+}
+
+sf::Vector2f Frec::getPosition() const {
+	return frecPos;
+}
+
+sf::Vector2f Frec::getCenterPosition() const {
+	sf::Vector2f center = this->frecSprite.getPosition();
+	center.x += this->frecSprite.getGlobalBounds().top / 2;
+	center.y += this->frecSprite.getGlobalBounds().left / 2;
+	return center;
+}
+
+float Frec::getDamage() const {
+	return this->frecDamage;
+}
+float Frec::getRange() const {
+	return this->frecRange;
+}
+
+int Frec::getCooldown() {
+	return this->currentCooldown;
+}
+
+void Frec::froshDirection(sf::Vector2f froshPos) {
+	float dx = frecPos.x - froshPos.x;
+	float dy = frecPos.y - froshPos.y;
+	if (dy > 0 && dy > dx && dx < -dy)
+		setDirection('u');
+	else if (dx < 0 && -dx > dy && dy >= dx)
+		setDirection('r');
+	else if (dy < 0 && dy < dx && -dy >= dx)
+		setDirection('d');
+	else
+		setDirection('l');
+}
+
+sf::Sprite Frec::getFrecSprite() const {
+	return frecSprite;
+}
+
+void Frec::flipSprite() {
+	frecSprite.setScale(-1.0, 1.0);
+	frecSprite.setPosition(coordinate.x + 128, coordinate.y);
+}
+void Frec::flipBack() {
+	frecSprite.setScale(1.0, 1.0);
+	frecSprite.setPosition(coordinate.x, coordinate.y);
+}
+
+float Frec::froshDistance(sf::Vector2f frosh) // returns distance between two points
+		{
+	float x = (frecPos.x - frosh.x) * (frecPos.x - frosh.x);
+	float y = (frecPos.y - frosh.y) * (frecPos.y - frosh.y);
+	float xPlusY = x + y;
+	return (float) (powf(xPlusY, 0.5)); //returns hypotenuse , ie. distance between points
+}
+
+bool Frec::froshCollides(sf::Vector2f frosh) // simple collision detection between two circles
+		{
+	float dist = froshDistance(frosh); // gets distance between circles
+	return dist < frecRange; // if dist < frec range we have a collision
+}
+
 void Frec::Attack() {
-	// (myClock.getElapsedClick() > attackSpeeck) or whatever, 
+	// (myClock.getElapsedClick() > attackSpeeck) or whatever,
 	// waiting for the "click" done by the controller class
 	// use another layer of conditional to determine which direction is facing
 	// i.e. switch (direction) {case 'l': //sth; case 'r': //sth; ...}
@@ -142,84 +212,8 @@ void Frec::StopAttack() {
 	frecSprite.setTextureRect(currentSprite);
 }
 
-void Frec::setMode(char AorS) {
-	mode = AorS;
-}
-
-char Frec::getMode() const {
-	return mode;
-}
-
-void Frec::setDirection(char UDLR) {
-	direction = UDLR;
-}
-
-char Frec::getDirection() const {
-	return direction;
-}
-
-void Frec::froshDirection(sf::Vector2f froshPos) {
-	float dx = frecPos.x - froshPos.x;
-	float dy = frecPos.y - froshPos.y;
-	if (dy > 0 && dy > dx && dx < -dy)
-		setDirection('u');
-	else if (dx < 0 && -dx > dy && dy >= dx)
-		setDirection('r');
-	else if (dy < 0 && dy < dx && -dy >= dx)
-		setDirection('d');
-	else
-		setDirection('l');
-}
-
-sf::Sprite Frec::getFrecSprite() const {
-	return frecSprite;
-}
-
-void Frec::flipSprite() {
-	frecSprite.setScale(-1.0, 1.0);
-	frecSprite.setPosition(coordinate.x + 128, coordinate.y);
-}
-void Frec::flipBack() {
-	frecSprite.setScale(1.0, 1.0);
-	frecSprite.setPosition(coordinate.x, coordinate.y);
-}
-
-// new
-sf::Vector2f Frec::getPosition() const {
-	return frecPos;
-}
-
-// new
-float Frec::froshDistance(sf::Vector2f frosh) // returns distance between two points
-		{
-	float x = (frecPos.x - frosh.x) * (frecPos.x - frosh.x);
-	float y = (frecPos.y - frosh.y) * (frecPos.y - frosh.y);
-	float xPlusY = x + y;
-	return (float) (powf(xPlusY, 0.5)); //returns hypotenuse , ie. distance between points
-}
-
-// new
-bool Frec::froshCollides(sf::Vector2f frosh) // simple collision detection between two circles
-		{
-	float dist = froshDistance(frosh); // gets distance between circles
-	return dist < frecRange; // if dist < frec range we have a collision
-}
-
-// new
 void Frec::upgrade() {
 
-}
-
-float Frec::getSpeed() const {
-	return frecSpeed;
-}
-
-float Frec::getRange() const {
-	return frecRange;
-}
-
-float Frec::getDamage() const {
-	return frecDamage;
 }
 
 srcArrayPtr* Frec::getIntRects() const {

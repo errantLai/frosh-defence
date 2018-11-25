@@ -12,6 +12,23 @@ FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState)
 	frecThrowTexture = new sf::Texture;
 	frecThrowTexture->loadFromFile("assets/ThrowingFrecSprite.png");
 
+	/*
+	 - upgrades:
+	 - Throw:
+	 - damage *= 1.25; // up 25%
+	 - range += 1;
+	 - speed *= 1.25; // up 25%
+
+	 - Slam:
+	 - damage *= 1.5; // up 50%
+	 - speed *= 1.25; // up 25%
+
+	 - Swing:
+	 - damage *= 1.4; // up 40%
+	 - range += 1;
+	 - speed *= 1.2; // up 20%
+	 */
+
 	frecProps[FrecType::slammer]= { {"tam", 20}, {"damage", 30}, {"range", 100}, {"cooldown", 6}};
 	frecProps[FrecType::swinger]= { {"tam", 20}, {"damage", 30}, {"range", 200}, {"cooldown", 30}};
 	frecProps[FrecType::thrower]= { {"tam", 20}, {"damage", 30}, {"range", 400}, {"cooldown", 10}};
@@ -28,20 +45,12 @@ FrecController::~FrecController() {
 
 Frec* FrecController::spawnFrec(sf::Vector2f position, FrecType type) {
 	Frec* frec;
-	std::map<string, int> props;
-	switch (type) {
-	case FrecType::empty:
-		break;
-	case FrecType::slammer:
-		frec = new Frec(position, frecThrowTexture);
-		break;
-	case FrecType::swinger:
-		frec = new Frec(position, frecThrowTexture);
-		break;
-	case FrecType::thrower:
-		frec = new Frec(position, frecThrowTexture);
-		break;
+	if (type == FrecType::empty) {
+		return nullptr;
 	}
+	std::map<string, int> props = frecProps[type];
+	frec = new Frec(position, frecThrowTexture, type, props["damage"],
+			props["range"], props["cooldown"]);
 	frecVec.push_back(frec);
 	return frec;
 }
