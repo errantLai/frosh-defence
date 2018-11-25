@@ -5,10 +5,10 @@
 using namespace std;
 typedef sf::IntRect* srcArrayPtr;
 
-Frec::Frec(const sf::Vector2f _coordinate, sf::Texture* _texture,
-		FrecType _type, int damage, int range, int cooldown) :
-		coordinate(_coordinate), texture(_texture), type(_type), frecDamage(
-				damage), frecRange(range), baseCooldown(cooldown) {
+Frec::Frec(const sf::Vector2f position, sf::Texture* _texture, FrecType _type,
+		int damage, int range, int cooldown) :
+		frecPos(position), texture(_texture), type(_type), frecDamage(damage), frecRange(
+				range), baseCooldown(cooldown) {
 	// these can be changed to adapt to whichever frec spritesheet we are using
 	// and to their sizes, as well as the coordinate
 
@@ -27,12 +27,10 @@ Frec::Frec(const sf::Vector2f _coordinate, sf::Texture* _texture,
 	}
 
 	currentSprite = srcSprite[0][0];
-	frecSprite.setTexture(*texture);
-	frecSprite.setTextureRect(currentSprite);
-	frecSprite.setPosition(coordinate.x, coordinate.y);
+	frecSprite = sf::Sprite(*texture, currentSprite);
+	frecSprite.setPosition(frecPos.x, frecPos.y);
 
 	// set initial attributes
-	frecPos = coordinate;
 	mode = 'a';
 	direction = 'r';
 	currentCooldown = 0;
@@ -85,8 +83,8 @@ sf::Vector2f Frec::getPosition() const {
 
 sf::Vector2f Frec::getCenterPosition() const {
 	sf::Vector2f center = this->frecSprite.getPosition();
-	center.x += this->frecSprite.getGlobalBounds().top / 2;
-	center.y += this->frecSprite.getGlobalBounds().left / 2;
+	center.x += 120 / 2;
+	center.y += 120 / 2;
 	return center;
 }
 
@@ -120,11 +118,11 @@ sf::Sprite Frec::getFrecSprite() const {
 
 void Frec::flipSprite() {
 	frecSprite.setScale(-1.0, 1.0);
-	frecSprite.setPosition(coordinate.x + 128, coordinate.y);
+	frecSprite.setPosition(frecPos.x + 128, frecPos.y);
 }
 void Frec::flipBack() {
 	frecSprite.setScale(1.0, 1.0);
-	frecSprite.setPosition(coordinate.x, coordinate.y);
+	frecSprite.setPosition(frecPos.x, frecPos.y);
 }
 
 float Frec::froshDistance(sf::Vector2f frosh) // returns distance between two points

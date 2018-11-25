@@ -11,6 +11,8 @@
 #include "GameMenuController.h"
 #include "FroshController.h"
 #include "FrecController.h"
+#include "FrecAndFroshController.h"
+#include "Frec.h"
 #include "GameState.h"
 #include "Timer.h"
 
@@ -140,6 +142,7 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 			gridStatus[gridX + 1][gridY + 1] = 2;
 			sf::Vector2f spawnPos = sf::Vector2f(gridX * gameState->cubit,
 					gridY * gameState->cubit);
+			std::cout << "Spawn Pos: " << spawnPos.x << " " << spawnPos.y << std::endl;
 			frecController->spawnFrec(spawnPos, type);
 			gameState->updateTamBy(
 					-(frecController->getFrecProps(type)["tam"]));
@@ -265,18 +268,20 @@ int main() {
 	GameState* gameState = new GameState(clk);
 	GameMenuController* gameMenuController = new GameMenuController(window,
 			gameState);
+	FrecController* frecController = new FrecController(window, gameState);
 	FroshController* froshController = new FroshController(window, gameState,
 			path);
-	FrecController* frecController = new FrecController(window, gameState);
 	GameBoard* gameBoard = new GameBoard(gameState, frecController,
 			gameMenuController->getMenuPos().x);
 
-	gameMenuController->setDebug(debug);
+	FrecAndFroshController* attackController = new FrecAndFroshController(
+			frecController->getFrecVec(), froshController->getFroshVec());
 
 // TODO: Remove this temp frosh creating code
 	froshController->spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
 	froshController->spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
 
+	gameMenuController->setDebug(debug);
 	sf::Event event;
 // Main game loop
 	while (window->isOpen()) {
@@ -317,6 +322,7 @@ int main() {
 		if (clk->newTick()) {
 			//update
 			froshController->update();
+			attackController->update();
 		}
 
 		if (gameState->dirtyBit) {

@@ -6,12 +6,14 @@
  */
 
 #include "FroshController.h"
+#include "Frosh.h"
 #include <iostream>
 #include <algorithm> // remove and remove_if
 
 FroshController::FroshController(sf::RenderWindow* _window,
 		GameState* _gameState, const std::vector<sf::Vector2f> _path) :
 		window(_window), gameState(_gameState), pathInCubits(_path) {
+	froshVec = new std::vector<Frosh*>;
 	modifier = 1;
 	froshSprites = new sf::Texture;
 	if (!froshSprites->loadFromFile("assets/zergling_120.png")) {
@@ -24,7 +26,7 @@ FroshController::FroshController(sf::RenderWindow* _window,
 }
 
 FroshController::~FroshController() {
-	for (Frosh* frosh : froshVec) {
+	for (Frosh* frosh : *froshVec) {
 		delete frosh;
 		frosh = nullptr;
 	}
@@ -58,7 +60,7 @@ Frosh* FroshController::spawnFrosh(sf::Vector2f position, FroshType type) {
 				props["speed"] * modifier);
 		break;
 	}
-	froshVec.push_back(frosh);
+	froshVec->push_back(frosh);
 	std::cout << "Frosh added" << std::endl;
 	return frosh;
 }
@@ -66,11 +68,11 @@ Frosh* FroshController::spawnFrosh(sf::Vector2f position, FroshType type) {
 void FroshController::removeFrosh(Frosh* targetFrosh) {
 	// This is an acceptable computational cost due to rarity of action.
 	// O(N) for each deletion
-	for (int i = 0, size = froshVec.size(); i < size; i++) {
-		if (froshVec[i] == targetFrosh) {
-			delete froshVec[i];
-			froshVec[i] = nullptr; // CYA
-			froshVec.erase(froshVec.begin() + i);
+	for (int i = 0, size = froshVec->size(); i < size; i++) {
+		if ((*froshVec)[i] == targetFrosh) {
+			delete (*froshVec)[i];
+			(*froshVec)[i] = nullptr; // CYA
+			froshVec->erase(froshVec->begin() + i);
 			break;
 		}
 	}
@@ -92,7 +94,7 @@ void FroshController::update() {
 	int cubit = gameState->cubit;
 	int maxPathIndex = pathInCubits.size() - 1;
 	float pixelSpeed;
-	for (Frosh* frosh : froshVec) {
+	for (Frosh* frosh : *froshVec) {
 		if (frosh->getPathIndex() == maxPathIndex) {
 			gameState->updateHealthBy(-(frosh->getDamage()));
 			removeFrosh(frosh);
@@ -132,7 +134,7 @@ void FroshController::update() {
 }
 
 void FroshController::render() {
-	for (Frosh* frosh : froshVec) {
+	for (Frosh* frosh : *froshVec) {
 		frosh->render(window);
 	}
 }
@@ -145,6 +147,6 @@ void FroshController::setModifier(float _modifier) {
 	this->modifier = _modifier;
 }
 
-std::vector<Frosh*> FroshController::getFroshVec() {
+std::vector<Frosh*>* FroshController::getFroshVec() {
 	return this->froshVec;
 }

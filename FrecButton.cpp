@@ -5,6 +5,7 @@
  * Author: Chris
  */
 #include <SFML/Graphics.hpp>
+#include "Frec.h"
 #include "FrecButton.h"
 #include "Clickable.h"
 #include <iostream>
