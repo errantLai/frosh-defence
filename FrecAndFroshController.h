@@ -19,14 +19,14 @@ using namespace std;
 
 class FrecAndFroshController {
 public:
-	FrecAndFroshController(int notUsed);
+	FrecAndFroshController(vector<Frec*> allFrecs, vector<Frosh*> allFrosh);
 	~FrecAndFroshController();
 	//throwFrec Object
 	void addThrowFrecToList(sf::Vector2f position, int index); //using string
 	void deleteThrowFrecAtIndex(int index);
 	//Throw Objects
 	void addThrowObjectToList(int index, sf::Vector2f frecPosition,
-			shared_ptr<Frosh> froshPtr);
+			Frosh* froshPtr);
 	void drawAllThrowObjectsOnGrid(sf::RenderWindow &theWindow);
 	void deleteThrowObjectAtIndex(int index);
 	void moveAllThrowObjectTowardsFroshAndDelete();
@@ -39,20 +39,19 @@ public:
 	void process();
 	void render(sf::RenderWindow &_window);
 private:
-	vector<unique_ptr<throwProjectile>> allThrowObjects;
+	vector<throwProjectile*> allThrowObjects;
 
-	vector<shared_ptr<Frec>> allThrowFrecs;
-	vector<shared_ptr<Frec>> allThrowFrecsInRangeOfFrosh;
+	vector<Frec*> allThrowFrecs;
+	vector<Frec*> allThrowFrecsInRangeOfFrosh;
 
-	vector<shared_ptr<Frosh>> allFroshInRangeOfFrecs;
-	vector<shared_ptr<Frosh>> allFrosh;
+	vector<Frosh*> allFroshInRangeOfFrecs;
+	vector<Frosh*> allFrosh;
 
-	bool collisionDetected(shared_ptr<Frec>, shared_ptr<Frosh>);
+	bool collisionDetected(Frec*, Frosh*);
 
 	//vector<unique_ptr<Frec>> allTSlamFrecs;
 //vector<unique_ptr<Frec>> allSkipFrecs;
 	//vector<unique_ptr<Frec>> allSlamObjects;
 //vector<unique_ptr<Frec>> allSkipObjects;
-	int unused;
 };
 

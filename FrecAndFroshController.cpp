@@ -1,7 +1,9 @@
 #include "FrecAndFroshController.h"
+#include <math.h>
 
-FrecAndFroshController::FrecAndFroshController(int notUsed) {
-	unused = notUsed; //must have private members to make an object
+FrecAndFroshController::FrecAndFroshController(vector<Frec*> _allFrecs,
+		vector<Frosh*> _allFrosh) :
+		allThrowFrecs(_allFrecs), allFrosh(_allFrosh) {
 }
 FrecAndFroshController::~FrecAndFroshController() {
 	allThrowFrecs.erase(allThrowFrecs.begin(), allThrowFrecs.end());
@@ -10,12 +12,13 @@ FrecAndFroshController::~FrecAndFroshController() {
 /*___________________________________________OBJECT BEING THROWN_________________________________________________*/
 
 void FrecAndFroshController::addThrowObjectToList(int index,
-		sf::Vector2f frecPosition, shared_ptr<Frosh> froshPtr) {
+		sf::Vector2f frecPosition, Frosh* froshPtr) {
 	allThrowObjects.push_back(
-			make_unique<throwProjectile>(index, frecPosition, froshPtr));
+			new throwProjectile(index, frecPosition, froshPtr));
 }
 void FrecAndFroshController::deleteThrowObjectAtIndex(int index) {
-	allThrowObjects[index].reset();
+	delete allThrowObjects[index];
+	allThrowObjects[index] = nullptr;
 	allThrowObjects.erase(allThrowObjects.begin() + index,
 			allThrowObjects.begin() + index + 1);
 	//delete image? I dont think you'll need to explicitly do this
@@ -55,8 +58,13 @@ void FrecAndFroshController::moveAllThrowObjectTowardsFroshAndDelete() { //this 
 	}
 }
 
-bool FrecAndFroshController::collisionDetected(shared_ptr<Frec>,
-		shared_ptr<Frosh>) {
+// Uses Pythagorean to detect a point collision with a circle
+bool FrecAndFroshController::collisionDetected(Frec* frec, Frosh* frosh) {
+	float distX = frosh->getCenterPosition().x - frec->getCenterPosition().x;
+	float distY = frosh->getCenterPosition().y - frec->getCenterPosition().y;
+	float distance = sqrt(distX * distX + distY * distY);
+	if (distance <= frec->getRange())
+		return true;
 	return false;
 }
 

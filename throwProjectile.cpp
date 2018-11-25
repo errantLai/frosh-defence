@@ -3,7 +3,7 @@
 
 //creates a throwProjectile object
 throwProjectile::throwProjectile(int ind, sf::Vector2f frecPosition,
-		shared_ptr<Frosh> froshToFireAt) :
+		Frosh* froshToFireAt) :
 		index(ind), projectilePosition(frecPosition), froshTarget(froshToFireAt) {
 	damage = 10;
 	speed = 4.0f;
@@ -21,8 +21,6 @@ throwProjectile::throwProjectile(int ind, sf::Vector2f frecPosition,
 			frecPosition.y + 30.0f / 2);
 }
 throwProjectile::~throwProjectile() {
-	cout << "Actually deleted" << endl;
-	froshTarget.reset();
 }
 
 void throwProjectile::drawProjectile(sf::RenderWindow &theWindow) {
@@ -70,7 +68,7 @@ void throwProjectile::dealDamage() {
 
 //Accessors:
 
-shared_ptr<Frosh> throwProjectile::getFroshTarget() {
+Frosh* throwProjectile::getFroshTarget() {
 	return froshTarget;
 }
 string throwProjectile::getThrowProjImage() {
