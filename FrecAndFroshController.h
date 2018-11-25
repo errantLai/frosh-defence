@@ -11,6 +11,7 @@
 #include <cassert>
 #include <functional>
 
+#include "GameState.h"
 #include "Frec.h"
 #include "throwProjectile.h"
 #include "Frosh.h"
@@ -19,7 +20,8 @@ using namespace std;
 
 class FrecAndFroshController {
 public:
-	FrecAndFroshController(vector<Frec*>* allFrecs, vector<Frosh*>* allFrosh);
+	FrecAndFroshController(sf::RenderWindow* window, GameState* gameState,
+			vector<Frec*>* allFrecs, vector<Frosh*>* allFrosh);
 	~FrecAndFroshController();
 	//throwFrec Object
 	void addThrowFrecToList(sf::Vector2f position, int index); //using string
@@ -27,7 +29,7 @@ public:
 	//Throw Objects
 	void addThrowObjectToList(int index, sf::Vector2f frecPosition,
 			Frosh* froshPtr);
-	void drawAllThrowObjectsOnGrid(sf::RenderWindow &theWindow);
+	void drawAllThrowObjectsOnGrid(sf::RenderWindow* theWindow);
 	void deleteThrowObjectAtIndex(int index);
 	void moveAllThrowObjectTowardsFroshAndDelete();
 	void updateFrecFroshRange();
@@ -37,8 +39,10 @@ public:
 			sf::Texture* _texture, int type, double modifier);
 
 	void update();
-	void render(sf::RenderWindow &_window);
+	void render();
 private:
+	sf::RenderWindow* window;
+	GameState* gameState;
 	vector<throwProjectile*> allThrowObjects;
 
 	vector<Frec*>* allThrowFrecs;
