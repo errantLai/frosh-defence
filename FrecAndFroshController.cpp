@@ -1,12 +1,11 @@
 #include "FrecAndFroshController.h"
 #include <math.h>
 
-FrecAndFroshController::FrecAndFroshController(vector<Frec*> _allFrecs,
-		vector<Frosh*> _allFrosh) :
+FrecAndFroshController::FrecAndFroshController(vector<Frec*>* _allFrecs,
+		vector<Frosh*>* _allFrosh) :
 		allThrowFrecs(_allFrecs), allFrosh(_allFrosh) {
 }
 FrecAndFroshController::~FrecAndFroshController() {
-	allThrowFrecs.erase(allThrowFrecs.begin(), allThrowFrecs.end());
 }
 
 /*___________________________________________OBJECT BEING THROWN_________________________________________________*/
@@ -62,7 +61,10 @@ void FrecAndFroshController::moveAllThrowObjectTowardsFroshAndDelete() { //this 
 bool FrecAndFroshController::collisionDetected(Frec* frec, Frosh* frosh) {
 	float distX = frosh->getCenterPosition().x - frec->getCenterPosition().x;
 	float distY = frosh->getCenterPosition().y - frec->getCenterPosition().y;
-	float distance = sqrt(distX * distX + distY * distY);
+	float distance = sqrt((distX * distX) + (distY * distY));
+//	cout << "DistX: " << distX << " DistY: " << distY << endl;
+//	cout << "Distance detected: " << distance << " for a range: "
+//			<< frec->getRange() << endl;
 	if (distance <= frec->getRange())
 		return true;
 	return false;
@@ -79,12 +81,13 @@ void FrecAndFroshController::updateFrecFroshRange() {
 		allFroshInRangeOfFrecs.erase(allFroshInRangeOfFrecs.begin(),
 				allFroshInRangeOfFrecs.end());
 
-	for (int i = 0, allFrecSize = allThrowFrecs.size(); i < allFrecSize; i++) { //for each frec object
-		for (int j = 0, allFroshSize = allFrosh.size(); j < allFroshSize; j++) { //for each frosh object
-			if (collisionDetected(allThrowFrecs[i], allFrosh[j])) {
-				//cout << "Frec Frosh Collision" << endl;
-				allFroshInRangeOfFrecs.push_back(allFrosh[j]); //the indices will line up for each frec sticking to one frosh target
-				allThrowFrecsInRangeOfFrosh.push_back(allThrowFrecs[i]);
+	for (int i = 0, allFrecSize = allThrowFrecs->size(); i < allFrecSize; i++) { //for each frec object
+		for (int j = 0, allFroshSize = allFrosh->size(); j < allFroshSize;
+				j++) { //for each frosh object
+			if (collisionDetected((*allThrowFrecs)[i], (*allFrosh)[j])) {
+				// cout << "Frec Frosh Collision" << endl;
+				allFroshInRangeOfFrecs.push_back((*allFrosh)[j]); //the indices will line up for each frec sticking to one frosh target
+				allThrowFrecsInRangeOfFrosh.push_back((*allThrowFrecs)[i]);
 			}
 		}
 	}
@@ -95,18 +98,20 @@ void FrecAndFroshController::updateFrecFroshRange() {
 //if frosh is in range of a frec, generate a projectile as long as the frec is not on cooldown
 //assign that projectile to a frosh object
 
-void FrecAndFroshController::process() { //essentially do every attack related function in a small time tick within process
+void FrecAndFroshController::update() { //essentially do every attack related function in a small time tick within process
 	//for each frec, decrease its cooldown by one tick, when at 0 it can fire
-	for (int i = 0, frecSize = allThrowFrecs.size(); i < frecSize; i++) {
-		if (allThrowFrecs[i]->getCooldown() > 1)
-			allThrowFrecs[i]->decreaseCooldown();
+	for (int i = 0, frecSize = allThrowFrecs->size(); i < frecSize; i++) {
+		if ((*allThrowFrecs)[i]->getCooldown() > 1) {
+			(*allThrowFrecs)[i]->decreaseCooldown();
+			cout << "Cooldown: " << (*allThrowFrecs)[i]->getCooldown() << endl;
+		}
 	}
 	//ascocitate each frec with a frosh within range, each with a vector of pointers (eg. frec index 0 will fire at frosh index 0)
 	updateFrecFroshRange();
 	//if the frec is not on cooldown, create a throwProjectile object that is assigned to a frosh object
 	for (int i = 0, availableFrosh = allThrowFrecsInRangeOfFrosh.size();
 			i < availableFrosh; i++) { //frecs and frosh will have same index i
-		if (allThrowFrecsInRangeOfFrosh[i]->getCooldown() == 0) { //if the frec is not on cooldown fire a new projectile, else do nothing
+		if (allThrowFrecsInRangeOfFrosh[i]->getCooldown() <= 0) { //if the frec is not on cooldown fire a new projectile, else do nothing
 			cout << "Firing Projectile" << endl;
 			allThrowFrecsInRangeOfFrosh[i]->resetCooldown();
 			addThrowObjectToList(allThrowObjects.size() - 1,

@@ -26,7 +26,7 @@ private:
 	// This is a difficulty modifer that affects the stats
 	// of generated frosh. This is modified when waves change
 	float modifier;
-	std::vector<Frosh*> froshVec;
+	std::vector<Frosh*>* froshVec;
 	const std::vector<sf::Vector2f> pathInCubits;
 
 public:
@@ -52,7 +52,7 @@ public:
 	// Accessors
 	float getModifier();
 	void setModifier(float _modifier);
-	std::vector<Frosh*> getFroshVec();
+	std::vector<Frosh*>* getFroshVec();
 };
 
 #endif /* FROSHCONTROLLER_H_ */

@@ -39,6 +39,6 @@ private:
 	sf::Vector2f projectileCenter;
 	float speed;
 	int damage;
-	string throwProjImage = "assets/jacket.jpg";
+	string throwProjImage = "assets/jacket.png";
 	Frosh* froshTarget;
 };

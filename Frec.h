@@ -17,7 +17,7 @@ enum class FrecType {
 class Frec {
 public:
 	Frec() = delete;
-	Frec(const sf::Vector2f coordinate, sf::Texture* texture, FrecType type,
+	Frec(const sf::Vector2f position, sf::Texture* texture, FrecType type,
 			int damage, int range, int cooldown);
 	~Frec();
 
@@ -58,10 +58,10 @@ private:
 	// Sprite properties
 	sf::Vector2f coordinate; // the frec position on map
 	sf::Sprite frecSprite;
+	sf::Vector2f frecPos;
 	sf::Texture* texture;
 	sf::IntRect currentSprite;
 	srcArrayPtr* srcSprite; // on heap
-	sf::Vector2f frecPos;
 	int numPers = 3;
 	int numFrame = 3;
 	FrecType type;

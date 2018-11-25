@@ -63,6 +63,7 @@ bool throwProjectile::projectileFroshCollision(sf::Vector2f frosh) // simple col
 
 void throwProjectile::dealDamage() {
 	int dmg = getDamage();
+	std::cout << "Damage Dealt" << std::endl;
 	//find out how to deal damage, talk to the frosh lads about a controller implementation
 } //deals the damage associated with the projectile
 

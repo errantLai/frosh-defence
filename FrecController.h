@@ -22,7 +22,7 @@ public:
 
 	sf::Vector2f frecBaseSize = sf::Vector2f(120, 120);
 	// Contains all active frec pointers
-	std::vector<Frec*> frecVec;
+	std::vector<Frec*>* frecVec;
 	// This contains info about frec pricing, damage, etc
 	std::map<FrecType, std::map<string, int>> frecProps;
 
@@ -39,7 +39,7 @@ public:
 	void render();
 
 	// Accessors
-	std::vector<Frec*> getFrecVec();
+	std::vector<Frec*>* getFrecVec();
 	std::map<string, int> getFrecProps(FrecType type);
 
 };

@@ -19,7 +19,7 @@ using namespace std;
 
 class FrecAndFroshController {
 public:
-	FrecAndFroshController(vector<Frec*> allFrecs, vector<Frosh*> allFrosh);
+	FrecAndFroshController(vector<Frec*>* allFrecs, vector<Frosh*>* allFrosh);
 	~FrecAndFroshController();
 	//throwFrec Object
 	void addThrowFrecToList(sf::Vector2f position, int index); //using string
@@ -36,16 +36,16 @@ public:
 	void addFroshObjectToList(sf::Vector2f _position, sf::Vector2f _size,
 			sf::Texture* _texture, int type, double modifier);
 
-	void process();
+	void update();
 	void render(sf::RenderWindow &_window);
 private:
 	vector<throwProjectile*> allThrowObjects;
 
-	vector<Frec*> allThrowFrecs;
+	vector<Frec*>* allThrowFrecs;
 	vector<Frec*> allThrowFrecsInRangeOfFrosh;
 
+	vector<Frosh*>* allFrosh;
 	vector<Frosh*> allFroshInRangeOfFrecs;
-	vector<Frosh*> allFrosh;
 
 	bool collisionDetected(Frec*, Frosh*);
 
