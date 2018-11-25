@@ -15,7 +15,6 @@
 
 GameState::GameState(Timer* timer) :
 		timer(timer) {
-
 }
 
 // Game State Accessors
@@ -37,9 +36,7 @@ int GameState::getFroshEliminated() {
 bool GameState::getHelperState() {
 	return this->helperState;
 }
-int GameState::getCubitLength() {
-	return this->cubit;
-}
+
 // Start Next Wave
 void GameState::startWave() {
 	this->currentWave++;
@@ -55,6 +52,21 @@ void GameState::updateHealthBy(int update) {
 // Update Player Currency
 void GameState::updateTamBy(int update) {
 	this->tams += update;
+	dirtyBit = true;
+}
+
+FrecType GameState::getPurchaseFrec() {
+	return this->purchaseFrec;
+}
+
+void GameState::setPurchaseFrec(FrecType frecType) {
+	this->purchaseFrec = frecType;
+}
+
+void GameState::startGame() {
+}
+
+void GameState::endGame() {
 }
 
 void GameState::toggleHelpScreen() {

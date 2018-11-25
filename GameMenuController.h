@@ -23,6 +23,7 @@ public:
 	void process(sf::Event event, sf::Vector2i mousePos);
 	void update();
 	void render();
+	sf::Vector2f getMenuPos();
 
 private:
 	std::vector<sf::Drawable*> drawVec;
@@ -31,6 +32,10 @@ private:
 	sf::RenderWindow* windowPointer;
 	sf::Music* music;
 	GameState* gameState;
+	sf::Vector2f gameSize, menuPos;
+	int cubit;
+
+	sf::Vector2f menuPosition(float xCubits, float yCubits);
 };
 
 #endif /* GAMEMENUCONTROLLER_H_ */

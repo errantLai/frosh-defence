@@ -9,9 +9,10 @@
 #define FRECCONTROLLER_H_
 #include "Frec.h"
 #include "GameState.h"
-#include "GameController.h"
 #include <string>
 #include <SFML/Graphics.hpp>
+
+using std::string;
 
 class FrecController {
 public:
@@ -23,8 +24,7 @@ public:
 	// Contains all active frec pointers
 	std::vector<Frec*> frecVec;
 	// This contains info about frec pricing, damage, etc
-	std::map<string, std::map<string, int>> frecProps;
-
+	std::map<FrecType, std::map<string, int>> frecProps;
 
 public:
 	FrecController() = delete;
@@ -40,6 +40,7 @@ public:
 
 	// Accessors
 	std::vector<Frec*> getFrecVec();
+	std::map<string, int> getFrecProps(FrecType type);
 
 };
 
