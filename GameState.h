@@ -25,9 +25,9 @@ private:
 	int currentWave = 1;
 	int froshRemaining = -1;
 	int froshEliminated = 0;
+	// Should the help menu be active
 	bool helperState = true;
-	// This is the pixel length of a cubit
-	int cubit = 60;
+
 	FrecType purchaseFrec = FrecType::empty;
 	// This is used by the upgrade button
 	Frec* boardFrec = nullptr;
@@ -35,6 +35,8 @@ private:
 public:
 	GameState(Timer* timer);
 	virtual ~GameState();
+	// This is the pixel length of a cubit
+	const int cubit = 60;
 	bool dirtyBit = true;
 	Timer* timer;
 
@@ -45,7 +47,6 @@ public:
 	int getFroshRemaining();
 	int getFroshEliminated();
 	bool getHelperState();
-	int getCubitLength();
 	// This is used by the GameMenuController to determine opacity
 	FrecType getPurchaseFrec();
 	void setPurchaseFrec(FrecType frecType);
@@ -53,7 +54,6 @@ public:
 	void startGame();				// Starts game
 	void endGame();					// Ends game
 	void startWave();				// Starts wave
-	void displayHelpScreen();		// Display help
 	void updateHealthBy(int update);	// Update player lives
 	void updateTamBy(int update);		// Update player currency
 	void toggleHelpScreen();

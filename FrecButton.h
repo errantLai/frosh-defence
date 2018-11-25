@@ -8,11 +8,13 @@
 #ifndef FRECBUTTON_H_
 #define FRECBUTTON_H_
 #include "Clickable.h"
+#include "GameState.h"
 #include <string>
 
 class FrecButton: public Clickable {
 public:
-	FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _texture, std::string inText);
+	FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _texture,
+			std::string inText, FrecType _type, GameState* _gameState);
 	void setTextureRect(const sf::IntRect& rect);
 	virtual ~FrecButton();
 
@@ -22,6 +24,9 @@ public:
 	void render(sf::RenderWindow& _window) override;
 
 private:
+	FrecType frecType;
+	GameState* gameState;
+
 	void onClick() override;
 	void onMouseEnter() override;
 	void onMousePressed() override;

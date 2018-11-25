@@ -10,10 +10,13 @@
 #include "GameController.h"
 #include "GameMenuController.h"
 #include "FroshController.h"
+#include "FrecController.h"
 #include "GameState.h"
 #include "Timer.h"
 
 using sf::Vector2f;
+using std::cout;
+using std::endl;
 
 sf::RectangleShape grassTile;
 sf::RectangleShape groundTile;
@@ -35,10 +38,9 @@ sf::RenderWindow* window;
 
 bool debug;
 
-GameBoard::GameBoard() {
-	init();
-}
-void GameBoard::init() {
+GameBoard::GameBoard(GameState* _gameState, FrecController* _frecController,
+		int _width) :
+		gameState(_gameState), frecController(_frecController), width(_width) {
 	sf::Texture* _menuTexture = new sf::Texture;
 	if (!_menuTexture->loadFromFile("assets/menuButtons.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
@@ -98,27 +100,52 @@ void GameBoard::init() {
 	// Shadow Object
 	shadowTile = sf::RectangleShape(sf::Vector2f(60, 60));
 	shadowTile.setFillColor(sf::Color(255, 0, 0, 150));
-
 }
 
+bool GameBoard::gridSpaceAvailable(int gridX, int gridY) {
+	if (gridStatus[gridX][gridY] == 0 && gridStatus[gridX + 1][gridY] == 0
+			&& gridStatus[gridX][gridY + 1] == 0
+			&& gridStatus[gridX + 1][gridY + 1] == 0) {
+		return true;
+	} else
+		return false;
+}
+
+bool GameBoard::frecIsPurchasable(FrecType type) {
+	if (type != FrecType::empty) {
+		if (gameState->getTams() >= frecController->getFrecProps(type)["tam"]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// Determine if any action needs ton be taken by
+// cliking on the game board
 void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
+	if (mousePos.x >= width) {
+		return;
+	}
+
 	int gridX = ceil(mousePos.x / 60);
 	int gridY = ceil(mousePos.y / 60);
 	if ((event.type == sf::Event::MouseButtonPressed)
 			&& (event.mouseButton.button == sf::Mouse::Left)) {
+		FrecType type = gameState->getPurchaseFrec();
 		// If an open space exists, fill the board with twos.
-		if (gridStatus[gridX][gridY] == 0 && gridStatus[gridX + 1][gridY] == 0
-				&& gridStatus[gridX][gridY + 1] == 0
-				&& gridStatus[gridX + 1][gridY + 1] == 0) {
+		if (gridSpaceAvailable(gridX, gridY) && frecIsPurchasable(type)) {
 			gridStatus[gridX][gridY] = 2;
 			gridStatus[gridX + 1][gridY] = 2;
 			gridStatus[gridX][gridY + 1] = 2;
 			gridStatus[gridX + 1][gridY + 1] = 2;
-			// TODO: Create frec object via its controller
+			sf::Vector2f spawnPos = sf::Vector2f(gridX * gameState->cubit,
+					gridY * gameState->cubit);
+			frecController->spawnFrec(spawnPos, type);
+			gameState->updateTamBy(
+					-(frecController->getFrecProps(type)["tam"]));
 		}
-
+		//PRINT BOARD
 		if (debug) {
-			//PRINT BOARD
 			for (int i = 0; i < 18; i++) {
 				for (int j = 0; j < 32; j++) {
 					std::cout << gridStatus[j][i] << " ";
@@ -126,7 +153,6 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 				std::cout << std::endl;
 			}
 			std::cout << std::endl;
-
 		}
 	}
 }
@@ -136,7 +162,7 @@ bool GameBoard::validatePos(int mouseX, int mouseY, int range) {
 	int gridY = ceil(mouseY / 60);
 	for (int x = 0; x < range; x++) {
 		for (int y = 0; y < range; y++) {
-			if (gridStatus[x][y] != 0)
+			if (gridStatus[gridX + x][gridY + y] != 0)
 				return false;
 		}
 	}
@@ -146,17 +172,17 @@ bool GameBoard::validatePos(int mouseX, int mouseY, int range) {
 // Draws Map with Ground and Grass Objects
 void GameBoard::render() {
 	int mapX = 0, mapY = 0;
-	// Each square is to be 60 pixels wide,
-	// with an exact height of 18 tiles
+// Each square is to be 60 pixels wide,
+// with an exact height of 18 tiles
 
-	// Draw Grass Everywhere
+// Draw Grass Everywhere
 	for (int x = 0; x < 32; x++) {
 		for (int y = 0; y < 18; y++) {
 			grassTile.setPosition(x * 60, y * 60);
 			window->draw(grassTile);
 		}
 	}
-	// Draw Ground on Path Only
+// Draw Ground on Path Only
 	for (unsigned int i = 0; i < path.size() - 1; i++) {
 		Vector2f curr = path[i];		// Current Vector2f
 		Vector2f next = path[i + 1];		// Next Vector2f
@@ -183,7 +209,6 @@ void GameBoard::render() {
 				gridStatus[mapX][mapY] = 1;
 			}
 		}
-
 	}
 
 	window->draw(*_tamsCounter);
@@ -204,8 +229,8 @@ void GameBoard::renderHover(int mouseX, int mouseY, int range) {
 		backSquares = floor(range / 2);
 
 	hoverOutline.setRadius(range * 60 / 2);
-	hoverOutline.setPosition((gridX - backSquares+1) * 60,
-			(gridY - backSquares+1) * 60);
+	hoverOutline.setPosition((gridX - backSquares + 1) * 60,
+			(gridY - backSquares + 1) * 60);
 	window->draw(hoverOutline);
 }
 
@@ -223,33 +248,37 @@ GameController::GameController() {
 
 // Main
 int main() {
-	// Initialization
+// Initialization
 	debug = false;
 	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence");
 	window->setFramerateLimit(60);
 	sf::Font font;
 	if (!font.loadFromFile("assets/georgia.ttf")) {
+	} else {
+		tamText.setFont(font);
+		waveText.setFont(font);
+		healthText.setFont(font);
+		waveWord.setFont(font);
 	}
 
 	Timer* clk = new Timer();
 	GameState* gameState = new GameState(clk);
-	GameBoard gameBoard;
-	GameMenuController gameMenuController = GameMenuController(window,
+	GameMenuController* gameMenuController = new GameMenuController(window,
 			gameState);
-	FroshController froshController = FroshController(window, gameState, path);
-	gameMenuController.setDebug(debug);
+	FroshController* froshController = new FroshController(window, gameState,
+			path);
+	FrecController* frecController = new FrecController(window, gameState);
+	GameBoard* gameBoard = new GameBoard(gameState, frecController,
+			gameMenuController->getMenuPos().x);
 
-	tamText.setFont(font);
-	waveText.setFont(font);
-	healthText.setFont(font);
-	waveWord.setFont(font);
+	gameMenuController->setDebug(debug);
 
-	// TODO: Remove this temp frosh creating code
-	froshController.spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
-	froshController.spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
+// TODO: Remove this temp frosh creating code
+	froshController->spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
+	froshController->spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
 
 	sf::Event event;
-	// Main game loop
+// Main game loop
 	while (window->isOpen()) {
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
@@ -264,6 +293,7 @@ int main() {
 							|| (event.type == sf::Event::KeyPressed
 									&& event.key.code == sf::Keyboard::Escape)) {
 						window->close();
+						return 0;
 					} else if ((event.type == sf::Event::MouseButtonReleased)
 							&& (event.mouseButton.button == sf::Mouse::Left)) {
 						gameState->toggleHelpScreen();
@@ -279,28 +309,30 @@ int main() {
 							&& event.key.code == sf::Keyboard::Escape)) {
 				window->close();
 			} else {
-				gameMenuController.process(event, mousePos);
-				gameBoard.process(event, mousePos);
+				gameMenuController->process(event, mousePos);
+				gameBoard->process(event, mousePos);
 			}
 		}
 
 		if (clk->newTick()) {
 			//update
-			if (gameState->dirtyBit) {
-				waveText.setString(std::to_string(gameState->getCurrentWave()));
-				healthText.setString(std::to_string(gameState->getHealth()));
-				tamText.setString(std::to_string(gameState->getTams()));
-				gameState->dirtyBit = false;
-			}
-			froshController.update();
+			froshController->update();
+		}
+
+		if (gameState->dirtyBit) {
+			waveText.setString(std::to_string(gameState->getCurrentWave()));
+			healthText.setString(std::to_string(gameState->getHealth()));
+			tamText.setString(std::to_string(gameState->getTams()));
+			gameState->dirtyBit = false;
 		}
 		// Render
 		window->clear();
-		gameBoard.render();
-		gameBoard.renderHover(mousePos.x, mousePos.y, 5);
-		gameBoard.renderShadow(mousePos.x, mousePos.y, 2);
-		froshController.render();
-		gameMenuController.render();
+		gameBoard->render();
+		gameBoard->renderHover(mousePos.x, mousePos.y, 5);
+		gameBoard->renderShadow(mousePos.x, mousePos.y, 2);
+		froshController->render();
+		frecController->render();
+		gameMenuController->render();
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
 			text.setString(std::to_string(clk->elapsedTicks()));

@@ -15,18 +15,16 @@ using std::endl;
 
 sf::Font font;
 
-
 const bool _debug = true;
 
-
-FrecButton::FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _texture,std::string inText) {
-		if (!font.loadFromFile("assets/georgia.ttf")) {
+FrecButton::FrecButton(sf::Vector2f _position, int _radius,
+		sf::Texture* _texture, std::string inText, FrecType _type,
+		GameState* _gameState) :
+		frecType(_type), gameState(_gameState) {
+	if (!font.loadFromFile("assets/georgia.ttf")) {
 	}
-	// TODO Auto-generated constructor stub
 	graphic = sf::CircleShape(_radius);
 	setPosition(_position);
-	// The alternative is to use shape's getLocalBounds, and override insideShape().
-	// I am unsure where else the size would be useful for the button object
 	setSize(sf::Vector2f(_radius * 2, _radius * 2));
 	graphic.setTexture(_texture);
 	graphic.setFillColor(sf::Color(255, 255, 255, 180)); // half transparent
@@ -36,7 +34,7 @@ FrecButton::FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _textur
 	frecButtonText.setString(inText);
 
 	frecButtonText.setCharacterSize(50);
-	frecButtonText.setPosition(0,00);
+	frecButtonText.setPosition(0, 00);
 
 	update();
 }
@@ -55,17 +53,17 @@ void FrecButton::render(sf::RenderWindow& _window) {
 
 	frecButtonText.setFont(font);
 	_window.draw(graphic);
-//	cout << (frecButtonText.getString()) << endl;
-	if(displayText)_window.draw(frecButtonText);
+	if (displayText)
+		_window.draw(frecButtonText);
 }
 
 void FrecButton::onClick() {
 	graphic.setOutlineThickness(0);
-	cout << "Button is clicked" << endl;
+	gameState->setPurchaseFrec(this->frecType);
 }
 
 void FrecButton::onMouseEnter() {
-	graphic.setFillColor(sf::Color(255, 255, 255, 255)); // half transparent
+	graphic.setFillColor(sf::Color(255, 255, 255, 255)); // Solid Colour
 	displayText = true;
 }
 

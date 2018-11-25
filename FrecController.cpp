@@ -11,6 +11,10 @@ FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState)
 		window(_window), gameState(_gameState) {
 	frecThrowTexture = new sf::Texture;
 	frecThrowTexture->loadFromFile("assets/ThrowingFrecSprite.png");
+
+	frecProps[FrecType::slammer]= { {"tam", 20}, {"damage", 30}, {"range", 100}, {"cooldown", 6}};
+	frecProps[FrecType::swinger]= { {"tam", 20}, {"damage", 30}, {"range", 200}, {"cooldown", 30}};
+	frecProps[FrecType::thrower]= { {"tam", 20}, {"damage", 30}, {"range", 400}, {"cooldown", 10}};
 }
 
 FrecController::~FrecController() {
@@ -53,4 +57,8 @@ void FrecController::render() {
 
 std::vector<Frec*> FrecController::getFrecVec() {
 	return this->frecVec;
+}
+
+std::map<string, int> FrecController::getFrecProps(FrecType type) {
+	return this->frecProps[type];
 }

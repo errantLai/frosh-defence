@@ -89,7 +89,7 @@ void FroshController::update() {
 	// relies on the fact that all paths follow linear changes,
 	// aka no need for diagonal travel.
 	sf::Vector2f currentPos, targetPos, distancePos;
-	int cubit = gameState->getCubitLength();
+	int cubit = gameState->cubit;
 	int maxPathIndex = pathInCubits.size() - 1;
 	float pixelSpeed;
 	for (Frosh* frosh : froshVec) {

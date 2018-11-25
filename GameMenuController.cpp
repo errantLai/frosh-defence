@@ -17,26 +17,26 @@ using std::endl;
 
 sf::Event event;
 
-const int cubit = 60;
-float menuRatio = 0.2, frecButtonCubits = 3.2 * cubit, menuButtonCubits = 2
-		* cubit;
-sf::Vector2f gameSize = sf::Vector2f(1920, 1080);
-sf::Vector2f menuPos = sf::Vector2f(gameSize.x - (gameSize.x * menuRatio), 0);
-
 // The position is relative to the top left of the menu region,
 // so zero is used as the start menu height
-sf::Vector2f menuPosition(float xCubits, float yCubits) {
+sf::Vector2f GameMenuController::menuPosition(float xCubits, float yCubits) {
 	return sf::Vector2f(menuPos.x + (xCubits * cubit),
 			menuPos.y + (yCubits * cubit));
+}
+
+sf::Vector2f GameMenuController::getMenuPos() {
+	return this->menuPos;
 }
 
 GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 		GameState* gameState) :
 		windowPointer(windowPointer), gameState(gameState) {
-	sf::Font font;
-			if (!font.loadFromFile("assets/georgia.ttf")) {
-		}
+	cubit = gameState->cubit;
+	float menuRatio = 0.2, frecButtonCubits = 1.9 * cubit, menuButtonCubits =
+			1.8 * cubit;
 
+	gameSize = sf::Vector2f(windowPointer->getSize());
+	menuPos = sf::Vector2f(gameSize.x - (gameSize.x * menuRatio), 0);
 	// -----------------------
 	// Menu Borders
 	// -----------------------
@@ -57,18 +57,22 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	}
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
-	FrecButton* _clickable = new FrecButton(menuPosition(1.4, 2.2),
-			frecButtonCubits / 1.7, _texture, "Price: 30T, Damage: 1, Cooldown: 1s");
+	FrecButton* _clickable;
+	_clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits,
+			_texture, "Price: 30T, Damage: 1, Cooldown: 1s", FrecType::slammer,
+			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.4, 6.1), frecButtonCubits / 1.7,
-			_texture, "Price: 30T, Damage: 1, Cooldown: 1s");
+	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,
+			_texture, "Price: 30T, Damage: 1, Cooldown: 1s", FrecType::swinger,
+			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.4, 10), frecButtonCubits / 1.7,
-			_texture, "Price: 30T, Damage: 1, Cooldown: 1s");
+	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,
+			_texture, "Price: 30T, Damage: 1, Cooldown: 1s", FrecType::thrower,
+			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
@@ -85,23 +89,22 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	if (!music->openFromFile("assets/give_it_up.ogg"))
 		std::cerr << "The music file was not found" << std::endl;
 	music->setLoop(true);
-	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3), 108, 108,
-			_menuTexture, music);
+	MenuButton* _sound = new VolumeButton(menuPosition(0.3, 0.3),
+			menuButtonCubits, menuButtonCubits, _menuTexture, music);
 	_sound->setTextureRect(sf::IntRect(896, 0, 128, 128));
 	clickVec.push_back(_sound);
-	MenuButton* _help = new InfoButton(menuPosition(2.3, 0.3), 108, 108,
-			_menuTexture, gameState);
+	MenuButton* _help = new InfoButton(menuPosition(2.35, 0.3),
+			menuButtonCubits, menuButtonCubits, _menuTexture, gameState);
 	_help->setTextureRect(sf::IntRect(896, 128, 128, 128));
 	clickVec.push_back(_help);
-	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3), 108, 108,
-			_menuTexture, gameState->timer);
+	MenuButton* _pause = new PauseButton(menuPosition(4.3, 0.3),
+			menuButtonCubits, menuButtonCubits, _menuTexture, gameState->timer);
 	_pause->setTextureRect(sf::IntRect(896, 384, 128, 128));
 	clickVec.push_back(_pause);
-	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(0.8, 14.1), 289,
+	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(0.9, 14.3), 289,
 			200, _menuTexture);
 	_upgrade->setTextureRect(sf::IntRect(1056, 0, 224, 160));
 	clickVec.push_back(_upgrade);
-
 
 }
 
