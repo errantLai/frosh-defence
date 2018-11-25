@@ -5,14 +5,16 @@
 #include "Frosh.h"
 #include <vector>
 #include <memory>
+#include <string>
 
-using std::shared_ptr;
-using std::unique_ptr;
+using std::cout;
+using std::endl;
+using std::string;
 
 class throwProjectile { //must extend frec class to access its position easiest/ most efficently 
 public:
 	throwProjectile(int ind, sf::Vector2f frecPosition,
-			shared_ptr<Frosh> froshToFireAt);
+			Frosh* froshToFireAt);
 	~throwProjectile();
 	void drawProjectile(sf::RenderWindow &theWindow);
 	void moveObjectTowardsFrosh(sf::Vector2f frosh); //using frosh position, heatseeks towards the frosh until collision occurs
@@ -25,18 +27,18 @@ public:
 	string getThrowProjImage();
 	sf::Vector2f getThrowProjectilePosition();
 	float getSpeed();
-	shared_ptr<Frosh> getFroshTarget();
+	Frosh* getFroshTarget();
 	int getDamage();
 	sf::Vector2f getProjectileCenter();
 
 private:
+	int index;
 	sf::Texture projectileTexture;
 	sf::RectangleShape projectileShape;
 	sf::Vector2f projectilePosition;
 	sf::Vector2f projectileCenter;
 	float speed;
-	int index;
 	int damage;
 	string throwProjImage = "assets/jacket.jpg";
-	shared_ptr<Frosh> froshTarget;
+	Frosh* froshTarget;
 };
