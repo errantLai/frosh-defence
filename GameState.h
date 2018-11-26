@@ -16,13 +16,18 @@ enum class FroshType {
 
 class GameState {
 private:
+	// This contains info about frec pricing, damage, etc
+	std::map<FrecType, std::map<string, int>> frecProps;
+	std::map<FroshType, std::map<string, int>> froshProps;
+
+	// Should the help menu be active
+	bool helperState = true;
+
 	int health = 20;
 	int tams = 100;
 	int currentWave = 1;
 	int froshRemaining = -1;
 	int froshEliminated = 0;
-	// Should the help menu be active
-	bool helperState = true;
 
 	FrecType purchaseFrec = FrecType::empty;
 	// This is used by the upgrade button
@@ -35,6 +40,7 @@ public:
 	const int cubit = 60;
 	bool dirtyBit = true;
 	Timer* timer;
+	sf::Vector2i mousePos;
 
 	//Accessors
 	int getHealth();
@@ -46,6 +52,9 @@ public:
 	// This is used by the GameMenuController to determine opacity
 	FrecType getPurchaseFrec();
 	void setPurchaseFrec(FrecType frecType);
+
+	std::map<string, int> getFrecProps(FrecType type);
+	std::map<string, int> getFroshProps(FroshType type);
 
 	void startGame();				// Starts game
 	void endGame();					// Ends game

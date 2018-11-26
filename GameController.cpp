@@ -115,7 +115,7 @@ bool GameBoard::gridSpaceAvailable(int gridX, int gridY) {
 
 bool GameBoard::frecIsPurchasable(FrecType type) {
 	if (type != FrecType::empty) {
-		if (gameState->getTams() >= frecController->getFrecProps(type)["tam"]) {
+		if (gameState->getTams() >= gameState->getFrecProps(type)["tam"]) {
 			return true;
 		}
 	}
@@ -145,8 +145,7 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 			std::cout << "Spawn Pos: " << spawnPos.x << " " << spawnPos.y
 					<< std::endl;
 			frecController->spawnFrec(spawnPos, type);
-			gameState->updateTamBy(
-					-(frecController->getFrecProps(type)["tam"]));
+			gameState->updateTamBy(-(gameState->getFrecProps(type)["tam"]));
 		}
 		//PRINT BOARD
 		if (debug) {
@@ -175,11 +174,12 @@ bool GameBoard::validatePos(int mouseX, int mouseY, int range) {
 
 // Draws Map with Ground and Grass Objects
 void GameBoard::render() {
-	int mapX = 0, mapY = 0;
-// Each square is to be 60 pixels wide,
-// with an exact height of 18 tiles
+	sf::Vector2i mousePos = gameState->mousePos;
 
-// Draw Grass Everywhere
+	// Each square is to be 60 pixels wide,
+	// with an exact height of 18 tiles
+
+	// Draw Grass Everywhere
 	for (int x = 0; x < 32; x++) {
 		for (int y = 0; y < 18; y++) {
 			grassTile.setPosition(x * 60, y * 60);
@@ -188,29 +188,27 @@ void GameBoard::render() {
 	}
 // Draw Ground on Path Only
 	for (unsigned int i = 0; i < path.size() - 1; i++) {
-		Vector2f curr = path[i];		// Current Vector2f
-		Vector2f next = path[i + 1];		// Next Vector2f
-		mapX = curr.x;
-		mapY = curr.y;
+		sf::Vector2i curr = sf::Vector2i(path[i]);		// Current Vector2f
+		sf::Vector2i next = sf::Vector2i(path[i + 1]);		// Next Vector2f
 		if (curr.x == next.x) {			// If two Vector2fs vertical
-			while (mapY != next.y) {
-				groundTile.setPosition(mapX * 60, mapY * 60);
+			while (curr.y != next.y) {
+				groundTile.setPosition(curr.x * 60, curr.y * 60);
 				window->draw(groundTile);
-				if (mapY < next.y)
-					mapY++;		// Draw up or down until next Vector2f
+				if (curr.y < next.y)
+					curr.y++;		// Draw up or down until next Vector2f
 				else
-					mapY--;
-				gridStatus[mapX][mapY] = 1;
+					curr.y--;
+				gridStatus[curr.x][curr.y] = 1;
 			}
 		} else if (curr.y == next.y) {	// If two Vector2fs horizontal
-			while (mapX != next.x) {
-				groundTile.setPosition(mapX * 60, mapY * 60);
+			while (curr.x != next.x) {
+				groundTile.setPosition(curr.x * 60, curr.y * 60);
 				window->draw(groundTile);
-				if (mapX < next.x)
-					mapX++;		// Draw left or right until next Vector2f
+				if (curr.x < next.x)
+					curr.x++;		// Draw left or right until next Vector2f
 				else
-					mapX--;
-				gridStatus[mapX][mapY] = 1;
+					curr.x--;
+				gridStatus[curr.x][curr.y] = 1;
 			}
 		}
 	}
@@ -222,19 +220,23 @@ void GameBoard::render() {
 	window->draw(waveText);
 	window->draw(healthText);
 	window->draw(waveWord);
+	FrecType type = gameState->getPurchaseFrec();
+	if (type != FrecType::empty) {
+		renderRange(mousePos.x, mousePos.y,
+				gameState->getFrecProps(type)["range"]);
+		std::cout << "range is " << gameState->getFrecProps(type)["range"]
+				<< std::endl;
+		renderShadow(mousePos.x, mousePos.y, 2);
+	}
 }
 
-// Draw Hover Object
-void GameBoard::renderHover(int mouseX, int mouseY, int range) {
-	int gridX = ceil(mouseX / 60);
-	int gridY = ceil(mouseY / 60);
-	int backSquares = 0;
-	if (range % 2 == 1)
-		backSquares = floor(range / 2);
+// Draw Range
+void GameBoard::renderRange(int mouseX, int mouseY, int range) {
+	int gridX = ceil(mouseX / 60) * 60 + 60;
+	int gridY = ceil(mouseY / 60) * 60 + 60;
 
-	hoverOutline.setRadius(range * 60 / 2);
-	hoverOutline.setPosition((gridX - backSquares + 0.5) * 60,
-			(gridY - backSquares + 0.5) * 60);
+	hoverOutline.setRadius(range);
+	hoverOutline.setPosition(gridX - range, gridY - range);
 	window->draw(hoverOutline);
 }
 
@@ -289,6 +291,7 @@ int main() {
 // Main game loop
 	while (window->isOpen()) {
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+		gameState->mousePos = mousePos;
 
 		// Display the help menu
 		if (gameState->getHelperState()) {
@@ -337,8 +340,6 @@ int main() {
 		// Render
 		window->clear();
 		gameBoard->render();
-		gameBoard->renderHover(mousePos.x, mousePos.y, 5);
-		gameBoard->renderShadow(mousePos.x, mousePos.y, 2);
 		froshController->render();
 		frecController->render();
 		gameMenuController->render();
