@@ -14,7 +14,7 @@
 class FrecButton: public Clickable {
 public:
 	FrecButton(sf::Vector2f _position, int _radius, sf::Texture* _texture,
-			std::string inText, FrecType _type, GameState* _gameState);
+			std::string inText, std::string in, FrecType _type, GameState* _gameState);
 	void setTextureRect(const sf::IntRect& rect);
 	virtual ~FrecButton();
 
@@ -34,6 +34,8 @@ private:
 	sf::CircleShape graphic;
 	bool displayText;
 	sf::Text frecButtonText;
+	sf::Text frecButtonText2;
+	sf::RectangleShape frecTextBack;
 };
 
 #endif /* FRECBUTTON_H_ */

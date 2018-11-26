@@ -59,19 +59,19 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
 	FrecButton* _clickable;
 	_clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits,
-			_texture, "Price: 30T, Damage: 1, Cooldown: 1s", FrecType::slammer,
+			_texture, "20T","Damage: 1\nRate: 1s", FrecType::thrower,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,
-			_texture, "Price: 30T, Damage: 1, Cooldown: 1s", FrecType::swinger,
+			_texture, "30T","Damage: 2\nRate: 2s", FrecType::slammer,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	clickVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,
-			_texture, "Price: 30T, Damage: 1, Cooldown: 1s", FrecType::thrower,
+			_texture, "40T","Damage: 3\nRate: 2s", FrecType::swinger,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	clickVec.push_back(_clickable);
