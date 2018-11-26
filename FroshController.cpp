@@ -9,11 +9,14 @@
 #include "Frosh.h"
 #include <iostream>
 #include <algorithm> // remove and remove_if
+#include <memory>
+
+using std::shared_ptr;
 
 FroshController::FroshController(sf::RenderWindow* _window,
 		GameState* _gameState, const std::vector<sf::Vector2f> _path) :
 		window(_window), gameState(_gameState), pathInCubits(_path) {
-	froshVec = new std::vector<Frosh*>;
+	froshVec = new std::vector<shared_ptr<Frosh>>;
 	modifier = 1;
 	froshSprites = new sf::Texture;
 	if (!froshSprites->loadFromFile("assets/FroshSprite.png")) {
@@ -21,41 +24,45 @@ FroshController::FroshController(sf::RenderWindow* _window,
 	}
 
 	froshProps["slow"]= { {"tam", 1}, {"health", 30}, {"damage", 3}, {"speed", 1}};
-	froshProps["regular"]= { {"tam", 2}, {"health", 20}, {"damage", 2}, {"speed", 1.8}};
+	froshProps["regular"]= { {"tam", 2}, {"health", 2}, {"damage", 2}, {"speed", 1.8}};
 	froshProps["fast"]= { {"tam", 3}, {"health", 10}, {"damage", 1}, {"speed", 2.6}};
 }
 
 FroshController::~FroshController() {
-	for (Frosh* frosh : *froshVec) {
-		delete frosh;
-		frosh = nullptr;
-	}
-	delete froshSprites;
-	froshSprites = nullptr;
+	// Shared pointers delete themselves
+//	for (shared_ptr<Frosh> frosh : *froshVec) {
+//		delete frosh;
+//		frosh = nullptr;
+//	}
+//	delete froshSprites;
+//	froshSprites = nullptr;
 }
 
-Frosh* FroshController::spawnFrosh(sf::Vector2f position, FroshType type) {
-	Frosh* frosh;
+// This is used to produce frosh, and will be placed
+// within the froshVec vector
+shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
+		FroshType type) {
+	shared_ptr<Frosh> frosh = nullptr;
 	std::map<string, int> props;
 	switch (type) {
 	case FroshType::slow:
 		props = froshProps["slow"];
-		frosh = new Frosh(position, froshBaseSize, froshSprites,
+		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
 				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
 				props["speed"] * modifier);
 		break;
 	case FroshType::regular:
 		props = froshProps["regular"];
-		frosh = new Frosh(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 130, 120, 120), props["tam"] * modifier,
+		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
+				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
 				props["speed"] * modifier);
 		break;
 	case FroshType::fast:
 		props = froshProps["fast"];
-		frosh = new Frosh(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 260, 120, 120), props["tam"] * modifier,
+		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
+				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
 				props["speed"] * modifier);
 		break;
@@ -65,23 +72,30 @@ Frosh* FroshController::spawnFrosh(sf::Vector2f position, FroshType type) {
 	return frosh;
 }
 
-void FroshController::removeFrosh(Frosh* targetFrosh) {
+// This goes through the array and releases all frosh objects
+// whose health are < 0, erasing them from the vector
+void FroshController::updateFrosh() {
+
+}
+
+// Deprecated. This causes unknown memory accesses
+void FroshController::removeFrosh(shared_ptr<Frosh> targetFrosh) {
 	// This is an acceptable computational cost due to rarity of action.
 	// O(N) for each deletion
 	for (int i = 0, size = froshVec->size(); i < size; i++) {
 		if ((*froshVec)[i] == targetFrosh) {
-			delete (*froshVec)[i];
-			(*froshVec)[i] = nullptr; // CYA
+			targetFrosh = nullptr;
 			froshVec->erase(froshVec->begin() + i);
 			break;
 		}
 	}
 }
 
-void FroshController::dealDamage(Frosh* frosh, int damage) {
-	if (frosh->reduceHealth(damage) <= 0) {
+void FroshController::dealDamage(shared_ptr<Frosh> frosh, int damage) {
+	if (frosh != nullptr && frosh->reduceHealth(damage) <= 0) {
 		gameState->updateTamBy(frosh->getTamValue());
 		removeFrosh(frosh);
+		updateFrosh();
 	}
 }
 
@@ -94,7 +108,8 @@ void FroshController::update() {
 	int cubit = gameState->cubit;
 	int maxPathIndex = pathInCubits.size() - 1;
 	float pixelSpeed;
-	for (Frosh* frosh : *froshVec) {
+	for (shared_ptr<Frosh> frosh : *froshVec) {
+		// Frosh has reached the finish line
 		if (frosh->getPathIndex() == maxPathIndex) {
 			gameState->updateHealthBy(-(frosh->getDamage()));
 			removeFrosh(frosh);
@@ -136,10 +151,11 @@ void FroshController::update() {
 			frosh->setPosition(currentPos);
 		}
 	}
+	updateFrosh();
 }
 
 void FroshController::render() {
-	for (Frosh* frosh : *froshVec) {
+	for (shared_ptr<Frosh> frosh : *froshVec) {
 		frosh->render(window);
 	}
 }
@@ -152,6 +168,6 @@ void FroshController::setModifier(float _modifier) {
 	this->modifier = _modifier;
 }
 
-std::vector<Frosh*>* FroshController::getFroshVec() {
+std::vector<shared_ptr<Frosh>>* FroshController::getFroshVec() {
 	return this->froshVec;
 }

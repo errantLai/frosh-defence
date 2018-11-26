@@ -6,6 +6,7 @@
  */
 
 #include "Frosh.h"
+#include <iostream>
 
 Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
 		sf::IntRect _textureRect, int _tam, int _health, int _damage,
@@ -26,8 +27,7 @@ Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
 
 // FroshController is responsible for creating and deleting objects
 Frosh::~Frosh() {
-	// RectangleShape can safely fall out of scope, should be picked
-	// up by garbage collection
+	std::cout << "Frosh Deleted" << std::endl;
 }
 
 int Frosh::getTamValue() {
@@ -64,6 +64,7 @@ void Frosh::setTextureRect(sf::IntRect textureRect) {
 
 int Frosh::reduceHealth(int damage) {
 	this->health -= damage;
+	std::cout << "Health now " << this->health << std::endl;
 	return this->health;
 }
 
