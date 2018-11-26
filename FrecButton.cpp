@@ -50,7 +50,7 @@ FrecButton::FrecButton(sf::Vector2f _position, int _radius,
 	frecTextBack.setTexture(_menuTexture);
 	frecTextBack.setTextureRect(sf::IntRect(1056, 165, 320, 128));
 	// Position by Frec
-	int baseY = -15, baseX = 1500;
+	int baseY = -15, baseX = 1573;
 	if (_type == FrecType::thrower) {
 		baseY += 275;
 	} else if (_type == FrecType::slammer) {
