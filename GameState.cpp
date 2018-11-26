@@ -68,7 +68,6 @@ FrecType GameState::getPurchaseFrec() {
 }
 
 void GameState::setPurchaseFrec(FrecType frecType) {
-	std::cout << "Purchase frec set " << std::endl;
 	this->purchaseFrec = frecType;
 }
 
