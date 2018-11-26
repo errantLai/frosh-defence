@@ -6,7 +6,7 @@ throwProjectile::throwProjectile(int ind, int _damage,
 		sf::Vector2f frecPosition, weak_ptr<Frosh> froshToFireAt) :
 		index(ind), damage(_damage), projectilePosition(frecPosition), froshTarget(
 				froshToFireAt) {
-	speed = 4.0f;
+	speed = 8.0f;
 	projectileShape = sf::RectangleShape(sf::Vector2f(30.0f, 30.0f));
 	projectileShape.setSize(sf::Vector2f(30.0f, 30.0f)); //size of projectile
 
