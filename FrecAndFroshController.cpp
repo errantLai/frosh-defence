@@ -53,8 +53,10 @@ void FrecAndFroshController::drawAllThrowObjectsOnGrid(
 
 //if missile to frosh collision occurs, delete throwObject, else, move towards frosh
 void FrecAndFroshController::updateProjectiles() { //this parameter will be replaced by allFrosh[j]->getPosition() in each if statement
-	for (int i = 0, projectileSize = allThrowObjects.size(); i < projectileSize;
-			i++) { //for each throw object
+	int i = 0;
+	while(i<allThrowObjects.size()){
+	//for (int i = 0, projectileSize = allThrowObjects.size(); i < projectileSize;
+	//		i++) { //for each throw object
 		//if there's a collision, delete object and deal damage
 		//cout<< "Projectile Positions:" << allThrowObjects[i]->getThrowProjectilePosition().x << " and y " << allThrowObjects[i]->getThrowProjectilePosition().y << endl;
 
@@ -67,6 +69,7 @@ void FrecAndFroshController::updateProjectiles() { //this parameter will be repl
 				//delete throw object
 				cout << "DAMAGE DEALT" << endl;
 				deleteProjectile(allThrowObjects[i]);
+				i--;
 			} else { //if the projectile assigned to a frosh hasnt hit yet, move towards frosh
 				allThrowObjects[i]->moveObjectTowardsFrosh(
 						frosh->getCenterPosition());
@@ -74,7 +77,9 @@ void FrecAndFroshController::updateProjectiles() { //this parameter will be repl
 		} else {
 			cout << "Frosh already ded" << endl;
 			deleteProjectile(allThrowObjects[i]);
+			i--;
 		}
+		i++;
 	}
 }
 

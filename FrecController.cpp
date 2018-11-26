@@ -31,7 +31,7 @@ FrecController::~FrecController() {
 
 Frec* FrecController::spawnFrec(sf::Vector2f position, FrecType type) {
 	Frec* frec;
-	sf::Texture* texture;
+	sf::Texture* texture = slammerTexture; //visual studio wants texture to be initilized to something
 	if (type == FrecType::empty) {
 		return nullptr;
 	} else if (type == FrecType::slammer) {
