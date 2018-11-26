@@ -62,19 +62,19 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 			_texture, "20T", "Damage: 1\nRate: 1s", FrecType::thrower,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
-	clickVec.push_back(_clickable);
+	frecButtonVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,
 			_texture, "30T", "Damage: 2\nRate: 2s", FrecType::slammer,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
-	clickVec.push_back(_clickable);
+	frecButtonVec.push_back(_clickable);
 
 	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,
 			_texture, "40T", "Damage: 3\nRate: 2s", FrecType::swinger,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
-	clickVec.push_back(_clickable);
+	frecButtonVec.push_back(_clickable);
 
 	// -------------------------
 	// Menu Buttons
@@ -113,6 +113,15 @@ GameMenuController::~GameMenuController() {
 		delete d;
 		d = nullptr;
 	}
+	for (Clickable* c : frecButtonVec) {
+		sf::Vector2f temp = c->getPosition();
+		temp.x = (temp.x - menuPos.x) / cubit;
+		temp.y = (temp.y - menuPos.y) / cubit;
+		cout << "Clickable Cubits: (" << temp.x << ", " << temp.y << ")"
+				<< endl;
+		delete c;
+		c = nullptr;
+	}
 	for (Clickable* c : clickVec) {
 		sf::Vector2f temp = c->getPosition();
 		temp.x = (temp.x - menuPos.x) / cubit;
@@ -133,6 +142,9 @@ GameMenuController::~GameMenuController() {
 
 void GameMenuController::setDebug(bool mode) {
 	if (mode) {
+		for (Clickable* c : frecButtonVec) {
+			c->setDebug(true);
+		}
 		for (Clickable* c : clickVec) {
 			c->setDebug(true);
 		}
@@ -148,6 +160,9 @@ void GameMenuController::process(sf::Event event, sf::Vector2i mousePos) {
 			&& (event.mouseButton.button == sf::Mouse::Left)) {
 		gameState->setPurchaseFrec(FrecType::empty);
 	}
+	for (Clickable* c : frecButtonVec) {
+		c->process(event, mousePos);
+	}
 	for (Clickable* c : clickVec) {
 		c->process(event, mousePos);
 	}
@@ -160,10 +175,20 @@ void GameMenuController::update() {
 	} else {
 		upgradeButton->setTransparency(180);
 	}
+	for (FrecButton* f : frecButtonVec) {
+		if (f->getFrecType() == gameState->getPurchaseFrec()) {
+			f->setTransparency(255);
+		} else {
+			f->setTransparency(180);
+		}
+	}
 }
 void GameMenuController::render() {
 	for (sf::Drawable* d : drawVec) {
 		windowPointer->draw(*d);
+	}
+	for (Clickable* c : frecButtonVec) {
+		c->render(*windowPointer);
 	}
 	for (Clickable* c : clickVec) {
 		c->render(*windowPointer);
