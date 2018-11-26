@@ -43,6 +43,7 @@ void FrecController::process(const sf::Event& event,
 		frec->process(event, mousePos);
 		if (frec->wasClicked) {
 			gameState->setBoardFrec(frec);
+			gameState->setPurchaseFrec(FrecType::empty);
 			frec->wasClicked = false;
 		}
 	}

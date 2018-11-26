@@ -10,6 +10,7 @@
 #include "Clickable.h"
 #include "GameState.h"
 #include "MenuButton.h"
+#include "FrecButton.h"
 #include <SFML/Audio.hpp>
 #include <vector>
 
@@ -28,6 +29,7 @@ public:
 
 private:
 	std::vector<sf::Drawable*> drawVec;
+	std::vector<FrecButton*> frecButtonVec;
 	std::vector<Clickable*> clickVec;
 	std::vector<sf::Texture*> texturesVector;
 	sf::RenderWindow* windowPointer;

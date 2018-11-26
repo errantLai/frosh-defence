@@ -17,6 +17,8 @@ public:
 			std::string inText, std::string in, FrecType _type, GameState* _gameState);
 	void setTextureRect(const sf::IntRect& rect);
 	virtual ~FrecButton();
+	FrecType getFrecType();
+	void setTransparency(const int transparency);
 
 	void update() override;
 	// Draw the button, relying on textures/shapes defined

@@ -68,6 +68,14 @@ FrecButton::FrecButton(sf::Vector2f _position, int _radius,
 FrecButton::~FrecButton() {
 }
 
+FrecType FrecButton::getFrecType() {
+	return this->frecType;
+}
+
+void FrecButton::setTransparency(const int transparency) {
+	graphic.setFillColor(sf::Color(255, 255, 255, transparency));
+}
+
 void FrecButton::setTextureRect(const sf::IntRect& rect) {
 	graphic.setTextureRect(rect);
 }
