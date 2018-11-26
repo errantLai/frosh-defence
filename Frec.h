@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "Clickable.h"
+
 using namespace std;
 typedef sf::IntRect* srcArrayPtr;
 
@@ -14,7 +16,7 @@ enum class FrecType {
 	empty, slammer, swinger, thrower
 };
 
-class Frec {
+class Frec: public Clickable {
 public:
 	Frec() = delete;
 	Frec(const sf::Vector2f position, sf::Texture* texture, FrecType type,
@@ -31,6 +33,7 @@ public:
 	float getRange() const;
 	FrecType getFrecType() const;
 	int getCooldown();
+	bool wasClicked;
 
 	// accessors for attributes on heap
 	srcArrayPtr* getIntRects() const;
@@ -41,13 +44,17 @@ public:
 	void decreaseCooldown();
 	void resetCooldown();
 
+	void update() override;
+	void render(sf::RenderWindow& _window) override;
+	void onClick() override;
+	void upgrade();
+
 	// Handling attacks
 	void froshDirection(sf::Vector2f froshPos); // find the direction of the frosh relative to the frec
 	float froshDistance(sf::Vector2f frosh); // returns distance between two points
 	bool froshCollides(sf::Vector2f frosh); // collision detection between two objects, using the distance function
 	void Attack();
 	void StopAttack();
-	void upgrade();
 	void flipSprite();
 	void flipBack();
 

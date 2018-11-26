@@ -133,9 +133,12 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 	int gridY = ceil(mousePos.y / 60);
 	if ((event.type == sf::Event::MouseButtonPressed)
 			&& (event.mouseButton.button == sf::Mouse::Left)) {
+		//Remove selected game frec. If double clicking a frec,
+		// it will simply regain the connection by the frecController
+		gameState->setBoardFrec(nullptr);
 		FrecType type = gameState->getPurchaseFrec();
 		// If an open space exists, fill the board with twos.
-		if (gridSpaceAvailable(gridX, gridY) && frecIsPurchasable(type)) {
+		if (frecIsPurchasable(type) && gridSpaceAvailable(gridX, gridY)) {
 			gridStatus[gridX][gridY] = 2;
 			gridStatus[gridX + 1][gridY] = 2;
 			gridStatus[gridX][gridY + 1] = 2;
@@ -319,9 +322,11 @@ int main() {
 			} else {
 				gameMenuController->process(event, mousePos);
 				gameBoard->process(event, mousePos);
+				frecController->process(event, mousePos);
 			}
 		}
 
+		gameMenuController->update();
 		if (clk->newTick()) {
 			//update
 			froshController->update();

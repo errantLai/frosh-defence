@@ -71,6 +71,13 @@ void GameState::setPurchaseFrec(FrecType frecType) {
 	this->purchaseFrec = frecType;
 }
 
+Frec* GameState::getBoardFrec() {
+	return this->boardFrec;
+}
+void GameState::setBoardFrec(Frec* frec) {
+	this->boardFrec = frec;
+}
+
 std::map<string, int> GameState::getFrecProps(FrecType type) {
 	return this->frecProps[type];
 }

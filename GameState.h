@@ -49,9 +49,12 @@ public:
 	int getFroshRemaining();
 	int getFroshEliminated();
 	bool getHelperState();
-	// This is used by the GameMenuController to determine opacity
+	// This is used by the GameMenuController to determine opacity,
+	// as well as determining which frec the frecController should buy
 	FrecType getPurchaseFrec();
 	void setPurchaseFrec(FrecType frecType);
+	Frec* getBoardFrec();
+	void setBoardFrec(Frec* frec);
 
 	std::map<string, int> getFrecProps(FrecType type);
 	std::map<string, int> getFroshProps(FroshType type);
