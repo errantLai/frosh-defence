@@ -90,11 +90,11 @@ void Clickable::process(const sf::Event& event, const sf::Vector2i& mousePos) {
 }
 
 void Clickable::onMouseEnter() {
-	cout << "Mouse entered" << endl;
+//	cout << "Mouse entered" << endl;
 }
 void Clickable::onMousePressed() {
-	cout << "Mouse pressed" << endl;
+//	cout << "Mouse pressed" << endl;
 }
 void Clickable::onMouseLeave() {
-	cout << "Mouse left" << endl;
+//	cout << "Mouse left" << endl;
 }

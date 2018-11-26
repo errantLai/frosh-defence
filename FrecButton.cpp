@@ -89,6 +89,7 @@ void FrecButton::render(sf::RenderWindow& _window) {
 void FrecButton::onClick() {
 	graphic.setOutlineThickness(0);
 	gameState->setPurchaseFrec(this->frecType);
+	gameState->setBoardFrec(nullptr);
 }
 
 void FrecButton::onMouseEnter() {

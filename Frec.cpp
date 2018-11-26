@@ -7,11 +7,11 @@ typedef sf::IntRect* srcArrayPtr;
 
 Frec::Frec(const sf::Vector2f position, sf::Texture* _texture, FrecType _type,
 		int damage, int range, int cooldown) :
-		frecPos(position), texture(_texture), type(_type), frecDamage(damage), frecRange(
-				range), baseCooldown(cooldown) {
+		Clickable(position, sf::Vector2f(120, 120)), frecPos(position), texture(
+				_texture), type(_type), frecDamage(damage), frecRange(range), baseCooldown(
+				cooldown) {
 	// these can be changed to adapt to whichever frec spritesheet we are using
 	// and to their sizes, as well as the coordinate
-
 	// construct current sprite on the given position
 	srcSprite = new srcArrayPtr[numPers];
 	int x = 0;
@@ -34,6 +34,7 @@ Frec::Frec(const sf::Vector2f position, sf::Texture* _texture, FrecType _type,
 	mode = 'a';
 	direction = 'r';
 	currentCooldown = 0;
+	wasClicked = false;
 }
 
 Frec::~Frec() {
@@ -75,6 +76,17 @@ void Frec::decreaseCooldown() {
 }
 void Frec::resetCooldown() {
 	this->currentCooldown = this->baseCooldown;
+}
+
+void Frec::update() {
+}
+void Frec::render(sf::RenderWindow& _window) {
+	_window.draw(this->frecSprite);
+}
+
+void Frec::onClick() {
+	std::cout << "Frec clicked" << std::endl;
+	this->wasClicked = true;
 }
 
 sf::Vector2f Frec::getPosition() const {
@@ -206,7 +218,6 @@ void Frec::Attack() {
 
 void Frec::StopAttack() {
 	currentSprite = srcSprite[0][0];
-	;
 	frecSprite.setTextureRect(currentSprite);
 }
 

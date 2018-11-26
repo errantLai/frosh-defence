@@ -37,6 +37,17 @@ Frec* FrecController::spawnFrec(sf::Vector2f position, FrecType type) {
 	return frec;
 }
 
+void FrecController::process(const sf::Event& event,
+		const sf::Vector2i& mousePos) {
+	for (Frec* frec : *frecVec) {
+		frec->process(event, mousePos);
+		if (frec->wasClicked) {
+			gameState->setBoardFrec(frec);
+			frec->wasClicked = false;
+		}
+	}
+}
+
 void FrecController::update() {
 }
 
@@ -62,5 +73,4 @@ void FrecController::render() {
 std::vector<Frec*>* FrecController::getFrecVec() {
 	return this->frecVec;
 }
-
 

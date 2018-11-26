@@ -32,6 +32,8 @@ public:
 
 	Frec* spawnFrec(sf::Vector2f position, FrecType type);
 	// Game functions
+
+	void process(const sf::Event& event, const sf::Vector2i& mousePos);
 	void update();
 	// Displays all the contained frec on the board
 	void render();

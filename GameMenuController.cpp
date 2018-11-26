@@ -104,8 +104,8 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	UpgradeButton* _upgrade = new UpgradeButton(menuPosition(0.9, 14.3), 289,
 			200, _menuTexture);
 	_upgrade->setTextureRect(sf::IntRect(1056, 0, 224, 160));
+	this->upgradeButton = _upgrade;
 	clickVec.push_back(_upgrade);
-
 }
 
 GameMenuController::~GameMenuController() {
@@ -147,14 +147,19 @@ void GameMenuController::process(sf::Event event, sf::Vector2i mousePos) {
 			&& (event.type == sf::Event::MouseButtonPressed)
 			&& (event.mouseButton.button == sf::Mouse::Left)) {
 		gameState->setPurchaseFrec(FrecType::empty);
-	} else {
-		for (Clickable* c : clickVec) {
-			c->process(event, mousePos);
-		}
+	}
+	for (Clickable* c : clickVec) {
+		c->process(event, mousePos);
 	}
 }
 
 void GameMenuController::update() {
+	// TODO: Check the upgrade cost of the frec to toggle opacity
+	if (gameState->getBoardFrec() != nullptr) {
+		upgradeButton->setTransparency(255);
+	} else {
+		upgradeButton->setTransparency(180);
+	}
 }
 void GameMenuController::render() {
 	for (sf::Drawable* d : drawVec) {

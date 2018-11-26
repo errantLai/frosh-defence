@@ -9,6 +9,7 @@
 #define GAMEMENUCONTROLLER_H_
 #include "Clickable.h"
 #include "GameState.h"
+#include "MenuButton.h"
 #include <SFML/Audio.hpp>
 #include <vector>
 
@@ -34,8 +35,9 @@ private:
 	GameState* gameState;
 	sf::Vector2f gameSize, menuPos;
 	int cubit;
-
 	sf::Vector2f menuPosition(float xCubits, float yCubits);
+
+	UpgradeButton* upgradeButton;
 };
 
 #endif /* GAMEMENUCONTROLLER_H_ */
