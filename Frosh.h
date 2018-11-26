@@ -36,6 +36,7 @@ private:
 	// read the pathIndex, and delete it once the final index is reached.
 public:
 	// The actual texture definition occurs within the froshController
+	Frosh() = delete;
 	Frosh(sf::Vector2f position, sf::Vector2f size, sf::Texture* texture,
 			sf::IntRect textureRect, int _tam, int _health, int _damage,
 			float _pixelSpeed);

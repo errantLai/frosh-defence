@@ -2,10 +2,10 @@
 #include <math.h>
 
 //creates a throwProjectile object
-throwProjectile::throwProjectile(int ind, sf::Vector2f frecPosition,
-		Frosh* froshToFireAt) :
-		index(ind), projectilePosition(frecPosition), froshTarget(froshToFireAt) {
-	damage = 10;
+throwProjectile::throwProjectile(int ind, int _damage,
+		sf::Vector2f frecPosition, weak_ptr<Frosh> froshToFireAt) :
+		index(ind), damage(_damage), projectilePosition(frecPosition), froshTarget(
+				froshToFireAt) {
 	speed = 4.0f;
 	projectileShape = sf::RectangleShape(sf::Vector2f(30.0f, 30.0f));
 	projectileShape.setSize(sf::Vector2f(30.0f, 30.0f)); //size of projectile
@@ -21,6 +21,7 @@ throwProjectile::throwProjectile(int ind, sf::Vector2f frecPosition,
 			frecPosition.y + 30.0f / 2);
 }
 throwProjectile::~throwProjectile() {
+	cout << "Projectile Deleted" << endl;
 }
 
 void throwProjectile::drawProjectile(sf::RenderWindow* _window) {
@@ -37,15 +38,16 @@ sf::Vector2f throwProjectile::normalize(sf::Vector2f v) {
 	return v;
 }
 
-void throwProjectile::moveObjectTowardsFrosh(sf::Vector2f frosh) //draws the projectile to the window
-		{
-	sf::Vector2f movePos = normalize(frosh - projectilePosition);
+//draws the projectile to the window
+void throwProjectile::moveObjectTowardsFrosh(sf::Vector2f froshPos) {
+	sf::Vector2f movePos = normalize(froshPos - projectilePosition);
 	projectileShape.move(movePos * getSpeed()); //using the x,y positions, moves at a percentage towards the frosh object
 	projectilePosition = projectilePosition + movePos * getSpeed();
 	projectileCenter = projectileCenter + movePos * getSpeed();
 }
-float throwProjectile::DistanceFromFrosh(sf::Vector2f frosh) // returns distance between two points
-		{
+
+// returns distance between two points
+float throwProjectile::DistanceFromFrosh(sf::Vector2f frosh) {
 	//use abs to prevent a negative distance
 	float x = abs(
 			(frosh.x - projectilePosition.x)
@@ -61,15 +63,8 @@ bool throwProjectile::projectileFroshCollision(sf::Vector2f frosh) // simple col
 	//return DistanceFromFrosh(frosh) < projectileShape.getSize().x || DistanceFromFrosh(frosh) < projectileShape.getSize().y;// if dist < frec range we have a collision
 } //will always do for < 10
 
-void throwProjectile::dealDamage() {
-	int dmg = getDamage();
-	std::cout << "Damage Dealt" << std::endl;
-	//find out how to deal damage, talk to the frosh lads about a controller implementation
-} //deals the damage associated with the projectile
-
 //Accessors:
-
-Frosh* throwProjectile::getFroshTarget() {
+weak_ptr<Frosh> throwProjectile::getFroshTarget() {
 	return froshTarget;
 }
 string throwProjectile::getThrowProjImage() {

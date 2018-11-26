@@ -1,22 +1,39 @@
 #include "FrecAndFroshController.h"
 #include <math.h>
+#include <memory>
+
+using std::weak_ptr;
+using std::shared_ptr;
 
 FrecAndFroshController::FrecAndFroshController(sf::RenderWindow* _window,
-		GameState* _gameState, vector<Frec*>* _allFrecs,
-		vector<Frosh*>* _allFrosh) :
-		window(_window), gameState(_gameState), allThrowFrecs(_allFrecs), allFrosh(
-				_allFrosh) {
+		GameState* _gameState, FroshController* _froshController,
+		vector<Frec*>* _allFrecs, vector<shared_ptr<Frosh>>* _allFrosh) :
+		window(_window), gameState(_gameState), froshController(
+				_froshController), allThrowFrecs(_allFrecs), allFrosh(_allFrosh) {
 }
 FrecAndFroshController::~FrecAndFroshController() {
 }
 
 /*___________________________________________OBJECT BEING THROWN_________________________________________________*/
 
-void FrecAndFroshController::addThrowObjectToList(int index,
-		sf::Vector2f frecPosition, Frosh* froshPtr) {
+void FrecAndFroshController::addThrowObjectToList(int index, int damage,
+		sf::Vector2f frecPosition, weak_ptr<Frosh> froshPtr) {
 	allThrowObjects.push_back(
-			new throwProjectile(index, frecPosition, froshPtr));
+			new throwProjectile(index, damage, frecPosition, froshPtr));
 }
+
+void FrecAndFroshController::deleteProjectile(throwProjectile* projectile) {
+	// This is an acceptable computational cost due to rarity of action.
+	// O(N) for each deletion
+	for (int i = 0, size = allThrowObjects.size(); i < size; i++) {
+		if ((allThrowObjects)[i] == projectile) {
+			projectile = nullptr;
+			allThrowObjects.erase(allThrowObjects.begin() + i);
+			break;
+		}
+	}
+}
+
 void FrecAndFroshController::deleteThrowObjectAtIndex(int index) {
 	delete allThrowObjects[index];
 	allThrowObjects[index] = nullptr;
@@ -35,39 +52,47 @@ void FrecAndFroshController::drawAllThrowObjectsOnGrid(
 /*___________________________________________Attack Logic_________________________________________________*/
 
 //if missile to frosh collision occurs, delete throwObject, else, move towards frosh
-void FrecAndFroshController::moveAllThrowObjectTowardsFroshAndDelete() { //this parameter will be replaced by allFrosh[j]->getPosition() in each if statement
+void FrecAndFroshController::updateProjectiles() { //this parameter will be replaced by allFrosh[j]->getPosition() in each if statement
 	for (int i = 0, projectileSize = allThrowObjects.size(); i < projectileSize;
 			i++) { //for each throw object
 		//if there's a collision, delete object and deal damage
 		//cout<< "Projectile Positions:" << allThrowObjects[i]->getThrowProjectilePosition().x << " and y " << allThrowObjects[i]->getThrowProjectilePosition().y << endl;
 
-		if (allThrowObjects[i]->projectileFroshCollision(
-				allThrowObjects[i]->getFroshTarget()->getCenterPosition())) {
-			//deal damage to frosh
-			allThrowObjects[i]->getFroshTarget()->reduceHealth(
-					allThrowObjects[i]->getFroshTarget()->getHealth());
-			//getTams as well similar logic ^
-			cout << "DAMAGE DEALT, projectile deleted" << endl;
-
-			//delete throw object
-			deleteThrowObjectAtIndex(i);
-		} else { //if the projectile assigned to a frosh hasnt hit yet, move towards frosh
-			allThrowObjects[i]->moveObjectTowardsFrosh(
-					allThrowObjects[i]->getFroshTarget()->getCenterPosition());
+		if (auto frosh = allThrowObjects[i]->getFroshTarget().lock()) {
+			if (allThrowObjects[i]->projectileFroshCollision(
+					frosh->getCenterPosition())) {
+				//deal damage to frosh
+				froshController->dealDamage(frosh,
+						allThrowObjects[i]->getDamage());
+				//delete throw object
+				cout << "DAMAGE DEALT" << endl;
+				deleteProjectile(allThrowObjects[i]);
+			} else { //if the projectile assigned to a frosh hasnt hit yet, move towards frosh
+				allThrowObjects[i]->moveObjectTowardsFrosh(
+						frosh->getCenterPosition());
+			}
+		} else {
+			cout << "Frosh already ded" << endl;
+			deleteProjectile(allThrowObjects[i]);
 		}
 	}
 }
 
 // Uses Pythagorean to detect a point collision with a circle
-bool FrecAndFroshController::collisionDetected(Frec* frec, Frosh* frosh) {
-	float distX = frosh->getCenterPosition().x - frec->getCenterPosition().x;
-	float distY = frosh->getCenterPosition().y - frec->getCenterPosition().y;
-	float distance = sqrt((distX * distX) + (distY * distY));
+bool FrecAndFroshController::collisionDetected(Frec* frec,
+		weak_ptr<Frosh> _frosh) {
+	if (auto frosh = _frosh.lock()) {
+		float distX = frosh->getCenterPosition().x
+				- frec->getCenterPosition().x;
+		float distY = frosh->getCenterPosition().y
+				- frec->getCenterPosition().y;
+		float distance = sqrt((distX * distX) + (distY * distY));
 //	cout << "DistX: " << distX << " DistY: " << distY << endl;
 //	cout << "Distance detected: " << distance << " for a range: "
 //			<< frec->getRange() << endl;
-	if (distance <= frec->getRange())
-		return true;
+		if (distance <= frec->getRange())
+			return true;
+	}
 	return false;
 }
 
@@ -77,17 +102,16 @@ void FrecAndFroshController::updateFrecFroshRange() {
 	if (allThrowFrecsInRangeOfFrosh.size() > 0)
 		allThrowFrecsInRangeOfFrosh.erase(allThrowFrecsInRangeOfFrosh.begin(),
 				allThrowFrecsInRangeOfFrosh.end());
-	//clear contents of
-	if (allFroshInRangeOfFrecs.size() > 0)
-		allFroshInRangeOfFrecs.erase(allFroshInRangeOfFrecs.begin(),
-				allFroshInRangeOfFrecs.end());
+	allFroshInRangeOfFrecs.erase(allFroshInRangeOfFrecs.begin(),
+			allFroshInRangeOfFrecs.end());
 
 	for (int i = 0, allFrecSize = allThrowFrecs->size(); i < allFrecSize; i++) { //for each frec object
 		for (int j = 0, allFroshSize = allFrosh->size(); j < allFroshSize;
 				j++) { //for each frosh object
 			if (collisionDetected((*allThrowFrecs)[i], (*allFrosh)[j])) {
 				// cout << "Frec Frosh Collision" << endl;
-				allFroshInRangeOfFrecs.push_back((*allFrosh)[j]); //the indices will line up for each frec sticking to one frosh target
+				weak_ptr<Frosh> frosh = (*allFrosh)[j];
+				allFroshInRangeOfFrecs.push_back(frosh);
 				allThrowFrecsInRangeOfFrosh.push_back((*allThrowFrecs)[i]);
 			}
 		}
@@ -102,9 +126,8 @@ void FrecAndFroshController::updateFrecFroshRange() {
 void FrecAndFroshController::update() { //essentially do every attack related function in a small time tick within process
 	//for each frec, decrease its cooldown by one tick, when at 0 it can fire
 	for (int i = 0, frecSize = allThrowFrecs->size(); i < frecSize; i++) {
-		if ((*allThrowFrecs)[i]->getCooldown() > 1) {
+		if ((*allThrowFrecs)[i]->getCooldown() >= 1) {
 			(*allThrowFrecs)[i]->decreaseCooldown();
-			cout << "Cooldown: " << (*allThrowFrecs)[i]->getCooldown() << endl;
 		}
 	}
 	//ascocitate each frec with a frosh within range, each with a vector of pointers (eg. frec index 0 will fire at frosh index 0)
@@ -116,13 +139,14 @@ void FrecAndFroshController::update() { //essentially do every attack related fu
 			cout << "Firing Projectile" << endl;
 			allThrowFrecsInRangeOfFrosh[i]->resetCooldown();
 			addThrowObjectToList(allThrowObjects.size() - 1,
+					allThrowFrecsInRangeOfFrosh[i]->getDamage(),
 					allThrowFrecsInRangeOfFrosh[i]->getPosition(),
 					allFroshInRangeOfFrecs[i]); //append a throw object to the end of the vector
 			//allThrowObjects[allThrowObjects.size() - 1]->setFroshTarget(allFroshInRangeOfFrecs[i]); //assign a frosh target
 		}
 	}
 	//move each projectile towards its assigned frosh target, delete and deal damage if hit
-	moveAllThrowObjectTowardsFroshAndDelete();
+	updateProjectiles();
 }
 
 void FrecAndFroshController::render() {

@@ -276,7 +276,7 @@ int main() {
 			gameMenuController->getMenuPos().x);
 
 	FrecAndFroshController* attackController = new FrecAndFroshController(
-			window, gameState, frecController->getFrecVec(),
+			window, gameState, froshController, frecController->getFrecVec(),
 			froshController->getFroshVec());
 
 // TODO: Remove this temp frosh creating code
