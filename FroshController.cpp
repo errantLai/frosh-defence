@@ -9,8 +9,10 @@
 #include "Frosh.h"
 #include <iostream>
 #include <algorithm> // remove and remove_if
+#include <string>
 #include <memory>
 
+using std::string;
 using std::shared_ptr;
 
 FroshController::FroshController(sf::RenderWindow* _window,
@@ -40,6 +42,11 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 		FroshType type) {
 	shared_ptr<Frosh> frosh = nullptr;
 	std::map<string, int> props;
+
+	std::vector<std::map<string, int>> waveOne;
+	waveOne.push_back( { { "count", 50 }, { "slow", 4 } });
+	waveOne.push_back( { { "count", 120 }, { "regular", 4 }, {"fast", 2} });
+
 	switch (type) {
 	case FroshType::slow:
 		props = gameState->getFroshProps(type);
@@ -77,8 +84,8 @@ void FroshController::updateFrosh() {
 
 // Deprecated. This causes unknown memory accesses
 void FroshController::removeFrosh(shared_ptr<Frosh> targetFrosh) {
-	// This is an acceptable computational cost due to rarity of action.
-	// O(N) for each deletion
+// This is an acceptable computational cost due to rarity of action.
+// O(N) for each deletion
 	for (int i = 0, size = froshVec->size(); i < size; i++) {
 		if ((*froshVec)[i] == targetFrosh) {
 			targetFrosh = nullptr;
@@ -97,10 +104,10 @@ void FroshController::dealDamage(shared_ptr<Frosh> frosh, int damage) {
 }
 
 void FroshController::update() {
-	// Go through each frosh object, and find the best point.
-	// Follow that path! This is a simple implementation, which
-	// relies on the fact that all paths follow linear changes,
-	// aka no need for diagonal travel.
+// Go through each frosh object, and find the best point.
+// Follow that path! This is a simple implementation, which
+// relies on the fact that all paths follow linear changes,
+// aka no need for diagonal travel.
 	int size = froshVec->size();
 	if (size < 10) {
 
