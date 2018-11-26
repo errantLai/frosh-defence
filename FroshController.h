@@ -10,10 +10,13 @@
 #include "Frosh.h"
 #include "GameState.h"
 #include "GameController.h"
+#include <memory>
 #include <string>
 #include <SFML/Graphics.hpp>
 
 using std::string;
+using std::weak_ptr;
+using std::shared_ptr;
 
 class FroshController {
 private:
@@ -26,7 +29,7 @@ private:
 	// This is a difficulty modifer that affects the stats
 	// of generated frosh. This is modified when waves change
 	float modifier;
-	std::vector<Frosh*>* froshVec;
+	std::vector<shared_ptr<Frosh>>* froshVec;
 	const std::vector<sf::Vector2f> pathInCubits;
 
 public:
@@ -36,13 +39,14 @@ public:
 	// This destroys all the frosh that it contains
 	virtual ~FroshController();
 
-	Frosh* spawnFrosh(sf::Vector2f position, FroshType type);
-	// This removes a frosh from the vector, deleting it.
-	void removeFrosh(Frosh* targetFrosh);
+	shared_ptr<Frosh> spawnFrosh(sf::Vector2f position, FroshType type);
+	void updateFrosh();
+	// This removes a frosh from the vector, setting it to null.
+	void removeFrosh(shared_ptr<Frosh> targetFrosh);
 	// Used by the attackController to deal damage. This function
 	// is responsible for updating the state of the frosh, as well
 	// as increasing the Tam value when a frosh is defeated
-	void dealDamage(Frosh* frosh, int damage);
+	void dealDamage(shared_ptr<Frosh> frosh, int damage);
 
 	// Game functions
 	void update();
@@ -52,7 +56,7 @@ public:
 	// Accessors
 	float getModifier();
 	void setModifier(float _modifier);
-	std::vector<Frosh*>* getFroshVec();
+	std::vector<shared_ptr<Frosh>>* getFroshVec();
 };
 
 #endif /* FROSHCONTROLLER_H_ */
