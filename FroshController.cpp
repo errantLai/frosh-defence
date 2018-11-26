@@ -9,8 +9,10 @@
 #include "Frosh.h"
 #include <iostream>
 #include <algorithm> // remove and remove_if
+#include <string>
 #include <memory>
 
+using std::string;
 using std::shared_ptr;
 
 FroshController::FroshController(sf::RenderWindow* _window,
@@ -41,18 +43,46 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 	shared_ptr<Frosh> frosh = nullptr;
 	std::map<string, int> props;
 
-	props = gameState->getFroshProps(type);
-	frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-			sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
-			props["health"] * modifier, props["damage"] * modifier,
-			props["speed"] * modifier);
+	std::vector<std::map<string, int>> waveOne;
+	waveOne.push_back( { { "count", 50 }, { "slow", 4 } });
+	waveOne.push_back( { { "count", 120 }, { "regular", 4 }, {"fast", 2} });
 
+	switch (type) {
+	case FroshType::slow:
+		props = gameState->getFroshProps(type);
+		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
+				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
+				props["health"] * modifier, props["damage"] * modifier,
+				props["speed"] * modifier);
+		break;
+	case FroshType::regular:
+		props = gameState->getFroshProps(type);
+		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
+				sf::IntRect(0, 130, 120, 120), props["tam"] * modifier,
+				props["health"] * modifier, props["damage"] * modifier,
+				props["speed"] * modifier);
+		break;
+	case FroshType::fast:
+		props = gameState->getFroshProps(type);
+		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
+				sf::IntRect(0, 260, 120, 120), props["tam"] * modifier,
+				props["health"] * modifier, props["damage"] * modifier,
+				props["speed"] * modifier);
+		break;
+	}
 	froshVec->push_back(frosh);
 	std::cout << "Frosh added" << std::endl;
 	return frosh;
 }
 
 int counter = 90;
+int froshCount = 0;
+void FroshController::froshWave(int number, FroshType type){
+	if (froshCount < 3*number){
+		spawnFrosh(sf::Vector2f(875,0), type);
+		froshCount++;
+	}
+}
 // This goes through the array and releases all frosh objects
 // whose health are < 0, erasing them from the vector
 void FroshController::updateFrosh() {
@@ -61,8 +91,8 @@ void FroshController::updateFrosh() {
 
 // Deprecated. This causes unknown memory accesses
 void FroshController::removeFrosh(shared_ptr<Frosh> targetFrosh) {
-	// This is an acceptable computational cost due to rarity of action.
-	// O(N) for each deletion
+// This is an acceptable computational cost due to rarity of action.
+// O(N) for each deletion
 	for (int i = 0, size = froshVec->size(); i < size; i++) {
 		if ((*froshVec)[i] == targetFrosh) {
 			targetFrosh = nullptr;
@@ -81,33 +111,34 @@ void FroshController::dealDamage(shared_ptr<Frosh> frosh, int damage) {
 }
 
 void FroshController::update() {
-	// Go through each frosh object, and find the best point.
-	// Follow that path! This is a simple implementation, which
-	// relies on the fact that all paths follow linear changes,
-	// aka no need for diagonal travel.
-    int size = froshVec->size();
-    if (size < 10){
+// Go through each frosh object, and find the best point.
+// Follow that path! This is a simple implementation, which
+// relies on the fact that all paths follow linear changes,
+// aka no need for diagonal travel.
+	//int size = froshVec->size();
+//	if (size < 10) {
 
-    	if (::counter > 99 && :: counter < 101){
-    		spawnFrosh(sf::Vector2f(875,0), FroshType::slow);
-    		std::cout << size << std::endl;
-    	}
-    	else if (::counter > 199  && ::counter < 201){
-    		spawnFrosh(sf::Vector2f(875, 0), FroshType::regular);
-    		std::cout << size << std::endl;
-    		std::cout << "Regular" << std::endl;
-    	}
-    	else if (::counter > 299 && ::counter < 301){
-    		spawnFrosh(sf::Vector2f(875, 0), FroshType::fast);
-    		::counter = 0;
-    		std::cout << size << std::endl;
-    		std::cout << "Fast" << std::endl;
-    		std::cout << ::counter << std::endl;
-    	}
-    }
+		if (::counter > 99 && ::counter < 101) {
+			froshWave(3, FroshType::slow);
+			//spawnFrosh(sf::Vector2f(875, 0), FroshType::slow);
+			//std::cout << size << std::endl;
+		} else if (::counter > 199 && ::counter < 201) {
+			froshWave(3, FroshType::regular);
+			//spawnFrosh(sf::Vector2f(875, 0), FroshType::regular);
+			//std::cout << size << std::endl;
+			std::cout << "Regular" << std::endl;
+		} else if (::counter > 299 && ::counter < 301) {
+			froshWave(3, FroshType::fast);
+			//spawnFrosh(sf::Vector2f(875, 0), FroshType::fast);
+			::counter = 0;
+			//std::cout << size << std::endl;
+			std::cout << "Fast" << std::endl;
+			std::cout << ::counter << std::endl;
+		}
+	//}
 	sf::Vector2f currentPos, targetPos, distancePos;
 	int cubit = gameState->cubit;
-	int maxPathIndex = pathInCubits.size() - 1;
+	int maxPathIndex = pathInCubits.size();
 	float pixelSpeed;
 	for (shared_ptr<Frosh> frosh : *froshVec) {
 		// Frosh has reached the finish line
