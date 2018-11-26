@@ -6,6 +6,7 @@
  */
 #pragma once
 #include "GameState.h"
+#include "Frec.h"
 #include "FrecController.h"
 
 // Game Controller keeps all Game State Variables Running and Updated
@@ -40,7 +41,7 @@ public:
 	void process(sf::Event event, sf::Vector2i mousePos);
 	void update();
 	void render();		// Render board
-	void renderHover(int mouseX, int mouseY, int range);
+	void renderRange(int mouseX, int mouseY, int range);
 	void renderShadow(int mouseX, int mouseY, int range);
 	int gridStatus[32][18] = { 0 };
 };

@@ -25,7 +25,6 @@ private:
 	GameState* gameState;
 
 	sf::Vector2f froshBaseSize = sf::Vector2f(120, 120);
-	std::map<string, std::map<string, int>> froshProps;
 	// This is a difficulty modifer that affects the stats
 	// of generated frosh. This is modified when waves change
 	float modifier;

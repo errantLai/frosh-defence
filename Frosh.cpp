@@ -20,9 +20,7 @@ Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
 	shape.setTexture(texture);
 	shape.setTextureRect(textureRect);
 	shape.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
-
 	targetPathPoint = 0;
-
 }
 
 // FroshController is responsible for creating and deleting objects

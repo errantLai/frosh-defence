@@ -14,14 +14,13 @@
 using std::cout;
 using std::endl;
 
-
 sf::Font font;
 
 const bool _debug = true;
 
 FrecButton::FrecButton(sf::Vector2f _position, int _radius,
-		sf::Texture* _texture, std::string inText, std::string inText2, FrecType _type,
-		GameState* _gameState) :
+		sf::Texture* _texture, std::string inText, std::string inText2,
+		FrecType _type, GameState* _gameState) :
 		frecType(_type), gameState(_gameState) {
 	if (!font.loadFromFile("assets/georgia.ttf")) {
 	}
@@ -29,7 +28,6 @@ FrecButton::FrecButton(sf::Vector2f _position, int _radius,
 	if (!_menuTexture->loadFromFile("assets/menuButtons.png")) {
 		std::cerr << "The texture does not exist" << std::endl;
 	}
-
 
 	graphic = sf::CircleShape(_radius);
 	setPosition(_position);
@@ -52,13 +50,17 @@ FrecButton::FrecButton(sf::Vector2f _position, int _radius,
 	frecTextBack.setTexture(_menuTexture);
 	frecTextBack.setTextureRect(sf::IntRect(1056, 165, 320, 128));
 	// Position by Frec
-	int baseY=-15, baseX = 1500;
-	if(_type == FrecType::thrower){ 		baseY += 275;	}
-	else if(_type == FrecType::slammer){ 	baseY += 515;	}
-	else if(_type == FrecType::swinger){ 	baseY += 755; 	}
-	frecButtonText.setPosition(	baseX + 70, baseY+ 35);
+	int baseY = -15, baseX = 1500;
+	if (_type == FrecType::thrower) {
+		baseY += 275;
+	} else if (_type == FrecType::slammer) {
+		baseY += 515;
+	} else if (_type == FrecType::swinger) {
+		baseY += 755;
+	}
+	frecButtonText.setPosition(baseX + 70, baseY + 35);
 	frecButtonText2.setPosition(baseX + 150, baseY + 40);
-	frecTextBack.setPosition(	baseX, baseY);
+	frecTextBack.setPosition(baseX, baseY);
 
 	update();
 }
@@ -77,7 +79,7 @@ void FrecButton::render(sf::RenderWindow& _window) {
 	frecButtonText.setFont(font);
 	frecButtonText2.setFont(font);
 	_window.draw(graphic);
-	if (displayText){
+	if (displayText) {
 		_window.draw(frecTextBack);
 		_window.draw(frecButtonText);
 		_window.draw(frecButtonText2);
