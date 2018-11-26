@@ -10,8 +10,12 @@
 
 FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState) :
 		window(_window), gameState(_gameState) {
-	frecThrowTexture = new sf::Texture;
-	frecThrowTexture->loadFromFile("assets/ThrowingFrecSprite.png");
+	slammerTexture = new sf::Texture;
+	swingerTexture = new sf::Texture;
+	throwerTexture = new sf::Texture;
+	slammerTexture->loadFromFile("assets/SlammingFrecSprite.png");
+	swingerTexture->loadFromFile("assets/SwingFrecSprite.png");
+	throwerTexture->loadFromFile("assets/ThrowingFrecSprite.png");
 	frecVec = new std::vector<Frec*>;
 }
 
@@ -20,18 +24,26 @@ FrecController::~FrecController() {
 		delete frec;
 		frec = nullptr;
 	}
-	delete frecThrowTexture;
-	frecThrowTexture = nullptr;
+	delete slammerTexture;
+	delete swingerTexture;
+	delete throwerTexture;
 }
 
 Frec* FrecController::spawnFrec(sf::Vector2f position, FrecType type) {
 	Frec* frec;
+	sf::Texture* texture;
 	if (type == FrecType::empty) {
 		return nullptr;
+	} else if (type == FrecType::slammer) {
+		texture = slammerTexture;
+	} else if (type == FrecType::swinger) {
+		texture = swingerTexture;
+	} else if (type == FrecType::thrower) {
+		texture = throwerTexture;
 	}
 	std::map<string, int> props = gameState->getFrecProps(type);
-	frec = new Frec(position, frecThrowTexture, type, props["damage"],
-			props["range"], props["cooldown"]);
+	frec = new Frec(position, texture, type, props["damage"], props["range"],
+			props["cooldown"]);
 	frecVec->push_back(frec);
 	std::cout << frecVec->size() << std::endl;
 	return frec;
