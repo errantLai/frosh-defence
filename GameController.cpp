@@ -224,8 +224,6 @@ void GameBoard::render() {
 	if (type != FrecType::empty) {
 		renderRange(mousePos.x, mousePos.y,
 				gameState->getFrecProps(type)["range"]);
-		std::cout << "range is " << gameState->getFrecProps(type)["range"]
-				<< std::endl;
 		renderShadow(mousePos.x, mousePos.y, 2);
 	}
 }
@@ -284,7 +282,6 @@ int main() {
 // TODO: Remove this temp frosh creating code
 	//froshController->spawnFrosh(sf::Vector2f(100, 100), FroshType::fast);
 	//froshController->spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
-
 
 	gameMenuController->setDebug(debug);
 	sf::Event event;

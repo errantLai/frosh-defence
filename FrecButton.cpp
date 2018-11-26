@@ -84,7 +84,6 @@ void FrecButton::render(sf::RenderWindow& _window) {
 		_window.draw(frecButtonText);
 		_window.draw(frecButtonText2);
 	}
-
 }
 
 void FrecButton::onClick() {
