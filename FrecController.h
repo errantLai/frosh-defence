@@ -16,7 +16,9 @@ using std::string;
 
 class FrecController {
 public:
-	sf::Texture* frecThrowTexture;
+	sf::Texture* slammerTexture;
+	sf::Texture* swingerTexture;
+	sf::Texture* throwerTexture;
 	sf::RenderWindow* window;
 	GameState* gameState;
 
