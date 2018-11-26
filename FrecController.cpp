@@ -13,27 +13,6 @@ FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState)
 	frecThrowTexture = new sf::Texture;
 	frecThrowTexture->loadFromFile("assets/ThrowingFrecSprite.png");
 	frecVec = new std::vector<Frec*>;
-
-	/*
-	 - upgrades:
-	 - Throw:
-	 - damage *= 1.25; // up 25%
-	 - range += 1;
-	 - speed *= 1.25; // up 25%
-
-	 - Slam:
-	 - damage *= 1.5; // up 50%
-	 - speed *= 1.25; // up 25%
-
-	 - Swing:
-	 - damage *= 1.4; // up 40%
-	 - range += 1;
-	 - speed *= 1.2; // up 20%
-	 */
-
-	frecProps[FrecType::slammer]= { {"tam", 10}, {"damage", 10}, {"range", 100}, {"cooldown", 25}};
-	frecProps[FrecType::swinger]= { {"tam", 10}, {"damage", 5}, {"range", 200}, {"cooldown", 20}};
-	frecProps[FrecType::thrower]= { {"tam", 10}, {"damage", 3}, {"range", 300}, {"cooldown", 25}};
 }
 
 FrecController::~FrecController() {
@@ -50,7 +29,7 @@ Frec* FrecController::spawnFrec(sf::Vector2f position, FrecType type) {
 	if (type == FrecType::empty) {
 		return nullptr;
 	}
-	std::map<string, int> props = frecProps[type];
+	std::map<string, int> props = gameState->getFrecProps(type);
 	frec = new Frec(position, frecThrowTexture, type, props["damage"],
 			props["range"], props["cooldown"]);
 	frecVec->push_back(frec);
@@ -62,14 +41,15 @@ void FrecController::update() {
 }
 
 void FrecController::render() {
-	sf::CircleShape range = sf::CircleShape(60);
+	sf::CircleShape range;
 	sf::Vector2f pos;
 	range.setFillColor(sf::Color::Transparent);
 	range.setOutlineColor(sf::Color::Red);
 	range.setOutlineThickness(-3);
 	for (Frec* frec : *frecVec) {
-		pos = frec->getCenterPosition();
 		window->draw(frec->getFrecSprite());
+
+		pos = frec->getCenterPosition();
 		range.setRadius(frec->getRange());
 		pos.x -= (frec->getRange());
 		pos.y -= (frec->getRange());
@@ -83,6 +63,4 @@ std::vector<Frec*>* FrecController::getFrecVec() {
 	return this->frecVec;
 }
 
-std::map<string, int> FrecController::getFrecProps(FrecType type) {
-	return this->frecProps[type];
-}
+

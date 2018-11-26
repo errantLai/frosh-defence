@@ -22,10 +22,6 @@ FroshController::FroshController(sf::RenderWindow* _window,
 	if (!froshSprites->loadFromFile("assets/FroshSprite.png")) {
 		std::cerr << "The frosh texture could not be loaded" << std::endl;
 	}
-
-	froshProps["slow"]= { {"tam", 1}, {"health", 30}, {"damage", 3}, {"speed", 1}};
-	froshProps["regular"]= { {"tam", 2}, {"health", 2}, {"damage", 2}, {"speed", 1.8}};
-	froshProps["fast"]= { {"tam", 3}, {"health", 10}, {"damage", 1}, {"speed", 2.6}};
 }
 
 FroshController::~FroshController() {
@@ -44,29 +40,13 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 		FroshType type) {
 	shared_ptr<Frosh> frosh = nullptr;
 	std::map<string, int> props;
-	switch (type) {
-	case FroshType::slow:
-		props = froshProps["slow"];
-		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
-				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier);
-		break;
-	case FroshType::regular:
-		props = froshProps["regular"];
-		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
-				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier);
-		break;
-	case FroshType::fast:
-		props = froshProps["fast"];
-		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
-				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier);
-		break;
-	}
+
+	props = gameState->getFroshProps(type);
+	frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
+			sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
+			props["health"] * modifier, props["damage"] * modifier,
+			props["speed"] * modifier);
+
 	froshVec->push_back(frosh);
 	std::cout << "Frosh added" << std::endl;
 	return frosh;
