@@ -47,6 +47,7 @@ public:
 	// as increasing the Tam value when a frosh is defeated
 	void dealDamage(shared_ptr<Frosh> frosh, int damage);
 
+	void froshWave(int number, FroshType type);
 	// Game functions
 	void update();
 	// Displays all the contained frosh on the board
