@@ -16,7 +16,7 @@ FroshController::FroshController(sf::RenderWindow* _window,
 	froshVec = new std::vector<Frosh*>;
 	modifier = 1;
 	froshSprites = new sf::Texture;
-	if (!froshSprites->loadFromFile("assets/zergling_120.png")) {
+	if (!froshSprites->loadFromFile("assets/FroshSprite.png")) {
 		std::cerr << "The frosh texture could not be loaded" << std::endl;
 	}
 
@@ -48,14 +48,14 @@ Frosh* FroshController::spawnFrosh(sf::Vector2f position, FroshType type) {
 	case FroshType::regular:
 		props = froshProps["regular"];
 		frosh = new Frosh(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
+				sf::IntRect(0, 130, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
 				props["speed"] * modifier);
 		break;
 	case FroshType::fast:
 		props = froshProps["fast"];
 		frosh = new Frosh(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
+				sf::IntRect(0, 260, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
 				props["speed"] * modifier);
 		break;
@@ -119,14 +119,19 @@ void FroshController::update() {
 				pixelSpeed = abs(distancePos.y);
 			}
 
+			//In each of these indexes, change the frosh sprite to reflect direction
 			if (distancePos.x > 0) {
 				currentPos.x += pixelSpeed;
+				//frosh->setTextureRect(sf::IntRect(120, 0, 120, 120));
 			} else if (distancePos.x < 0) {
 				currentPos.x -= pixelSpeed;
+				//frosh->setTextureRect(sf::IntRect(120, 0, 120, 120));
 			} else if (distancePos.y > 0) {
 				currentPos.y += pixelSpeed;
+				//frosh->setTextureRect(sf::IntRect(0, 0, 120, 120));
 			} else if (distancePos.y < 0) {
 				currentPos.y -= pixelSpeed;
+				//frosh->setTextureRect(sf::IntRect(0, 0, 120, 120));
 			}
 			frosh->setPosition(currentPos);
 		}
