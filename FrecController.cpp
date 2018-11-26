@@ -31,9 +31,9 @@ FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState)
 	 - speed *= 1.2; // up 20%
 	 */
 
-	frecProps[FrecType::slammer]= { {"tam", 20}, {"damage", 30}, {"range", 1000}, {"cooldown", 6}};
-	frecProps[FrecType::swinger]= { {"tam", 20}, {"damage", 30}, {"range", 200}, {"cooldown", 30}};
-	frecProps[FrecType::thrower]= { {"tam", 20}, {"damage", 30}, {"range", 400}, {"cooldown", 10}};
+	frecProps[FrecType::slammer]= { {"tam", 10}, {"damage", 10}, {"range", 100}, {"cooldown", 25}};
+	frecProps[FrecType::swinger]= { {"tam", 10}, {"damage", 5}, {"range", 200}, {"cooldown", 20}};
+	frecProps[FrecType::thrower]= { {"tam", 10}, {"damage", 3}, {"range", 300}, {"cooldown", 25}};
 }
 
 FrecController::~FrecController() {
@@ -62,11 +62,20 @@ void FrecController::update() {
 }
 
 void FrecController::render() {
+	sf::CircleShape range = sf::CircleShape(60);
+	sf::Vector2f pos;
+	range.setFillColor(sf::Color::Transparent);
+	range.setOutlineColor(sf::Color::Red);
+	range.setOutlineThickness(-3);
 	for (Frec* frec : *frecVec) {
+		pos = frec->getCenterPosition();
 		window->draw(frec->getFrecSprite());
-		sf::CircleShape test(10);
-		test.setPosition(frec->getCenterPosition());
-		window->draw(test);
+		range.setRadius(frec->getRange());
+		pos.x -= (frec->getRange());
+		pos.y -= (frec->getRange());
+
+		range.setPosition(pos);
+		window->draw(range);
 	}
 }
 
