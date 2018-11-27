@@ -22,7 +22,7 @@ Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
 
 	//shape.setType(type);
 
-	shape.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
+	shape.setFillColor(sf::Color(255, 255, 255, 255)); // Half transparency
 	targetPathPoint = 0;
 }
 
