@@ -41,6 +41,7 @@ public:
 	void process(sf::Event event, sf::Vector2i mousePos);
 	void update();
 	void render();		// Render board
+	void renderLabels();
 	void renderRange(int mouseX, int mouseY, int range);
 	void renderShadow(int mouseX, int mouseY, int range);
 	int gridStatus[32][18] = { 0 };
