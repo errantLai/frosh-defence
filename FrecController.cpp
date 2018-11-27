@@ -8,7 +8,6 @@
 #include "Frec.h"
 #include "FrecController.h"
 
-
 FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState) :
 		window(_window), gameState(_gameState) {
 	slammerTexture = new sf::Texture;
@@ -73,15 +72,14 @@ void FrecController::render() {
 	range.setOutlineThickness(-3);
 	for (Frec* frec : *frecVec) {
 		window->draw(frec->getFrecSprite());
-		if(gameState->getBoardFrec() == frec){
-			pos = frec->getCenterPosition();
-					range.setRadius(frec->getRange());
-					pos.x -= (frec->getRange());
-					pos.y -= (frec->getRange());
 
-					range.setPosition(pos);
-					window->draw(range);
-		}
+		pos = frec->getOriginalFrecPosition();
+		range.setRadius(frec->getRange());
+		pos.x = pos.x - frec->getRange()+60;
+		pos.y = pos.y - frec->getRange()+60;
+
+		range.setPosition(pos);
+		window->draw(range);
 	}
 }
 
