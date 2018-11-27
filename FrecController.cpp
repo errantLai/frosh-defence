@@ -8,6 +8,7 @@
 #include "Frec.h"
 #include "FrecController.h"
 
+
 FrecController::FrecController(sf::RenderWindow* _window, GameState* _gameState) :
 		window(_window), gameState(_gameState) {
 	slammerTexture = new sf::Texture;

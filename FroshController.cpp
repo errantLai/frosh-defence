@@ -184,8 +184,6 @@ void FroshController::update() {
 				pixelSpeed = abs(distancePos.y);
 			}
 
-			//string froshType = ToString(frosh->getFroshType());
-
 			int y;
 			FroshType type = frosh->getFroshType();
 			if (type == FroshType::slow) {
@@ -199,6 +197,8 @@ void FroshController::update() {
 			}
 
 			//In each of these indexes, change the frosh sprite to reflect direction
+			//string froshType = ToString(frosh->getFroshType());
+
 			if (distancePos.x > 0) {
 				currentPos.x += pixelSpeed;
 				frosh->setTextureRect(sf::IntRect(260, y, 130, 130));
@@ -218,6 +218,37 @@ void FroshController::update() {
 	updateFrosh();
 	::counter++;
 }
+/*
+void FroshController::turnFrosh(shared_ptr<Frosh> frosh, sf::IntRect _textureRect, int direction){
+	frosh->getTextureRect();
+
+	int x = 0;
+	int y = 0;
+	char froshType = ToString(frosh->getFroshtype());
+
+	switch(froshType) {
+		case "slow":  y=0;
+		case "regular": y=130;
+		case "fast": y=260;
+	}
+
+	//1 means down, 2 means right
+	switch(direction) {
+	case 1: x = 0;
+	case 2: x = 1;
+	}
+	frosh->setTextureRect(sf::IntRect());
+
+	if(froshType == "regular") {
+		frosh->setTextureRect(sf::IntRect(222, 120, 120, 120));
+		frosh->setTextureRect(_textureRect);
+
+	}
+	//frosh->setTextureRect(sf::IntRect(222, 120, 120, 120));
+	//frosh->setTextureRect(textureRect);
+	frosh->setPosition(sf::Vector2f(100, 400));
+}
+*/
 
 void FroshController::render() {
 	for (shared_ptr<Frosh> frosh : *froshVec) {

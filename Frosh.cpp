@@ -70,6 +70,7 @@ sf::IntRect Frosh::getTextureRect() {
 
 void Frosh::setTextureRect(sf::IntRect textureRect) {
 	this->textureRect = textureRect;
+    this->shape.setTextureRect(textureRect);
 }
 
 int Frosh::reduceHealth(int damage) {
