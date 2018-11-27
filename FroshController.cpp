@@ -51,23 +51,23 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 	case FroshType::slow:
 		props = gameState->getFroshProps(type);
 		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 130, 130), props["tam"] * modifier,
+				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier, FroshType::slow);
+				props["speed"] * modifier);
 		break;
 	case FroshType::regular:
 		props = gameState->getFroshProps(type);
 		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 130, 130, 130), props["tam"] * modifier,
+				sf::IntRect(0, 130, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier, FroshType::regular);
+				props["speed"] * modifier);
 		break;
 	case FroshType::fast:
 		props = gameState->getFroshProps(type);
 		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 260, 130, 130), props["tam"] * modifier,
+				sf::IntRect(0, 260, 120, 120), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier, FroshType::fast);
+				props["speed"] * modifier);
 		break;
 	}
 	froshVec->push_back(frosh);
@@ -141,6 +141,7 @@ void FroshController::update() {
 // Follow that path! This is a simple implementation, which
 // relies on the fact that all paths follow linear changes,
 // aka no need for diagonal travel.
+
 	if (::wave == 1){
 		waveOne();
 	}
@@ -179,33 +180,18 @@ void FroshController::update() {
 			}
 
 			//In each of these indexes, change the frosh sprite to reflect direction
-			//string froshType = ToString(frosh->getFroshType());
-
-			int y;
-			FroshType type = frosh->getFroshType();
-			if(type == FroshType::slow) {
-				y = 0;
-			} else if (type == FroshType::regular) {
-				y = 130;
-			} else if (type == FroshType::fast) {
-				y = 260;
-			} else {
-				y = 75;
-			}
-
-
 			if (distancePos.x > 0) {
 				currentPos.x += pixelSpeed;
-				frosh->setTextureRect(sf::IntRect(260, y, 130, 130));
+				//frosh->setTextureRect(sf::IntRect(120, 0, 120, 120));
 			} else if (distancePos.x < 0) {
 				currentPos.x -= pixelSpeed;
-				frosh->setTextureRect(sf::IntRect(260, y, -130, 130));
+				//frosh->setTextureRect(sf::IntRect(120, 0, 120, 120));
 			} else if (distancePos.y > 0) {
 				currentPos.y += pixelSpeed;
-				frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
+				//frosh->setTextureRect(sf::IntRect(0, 0, 120, 120));
 			} else if (distancePos.y < 0) {
 				currentPos.y -= pixelSpeed;
-				frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
+				//frosh->setTextureRect(sf::IntRect(0, 0, 120, 120));
 			}
 			frosh->setPosition(currentPos);
 		}
@@ -213,37 +199,6 @@ void FroshController::update() {
 	updateFrosh();
 	::counter++;
 }
-/*
-void FroshController::turnFrosh(shared_ptr<Frosh> frosh, sf::IntRect _textureRect, int direction){
-	frosh->getTextureRect();
-
-	int x = 0;
-	int y = 0;
-	char froshType = ToString(frosh->getFroshtype());
-
-	switch(froshType) {
-		case "slow":  y=0;
-		case "regular": y=130;
-		case "fast": y=260;
-	}
-
-	//1 means down, 2 means right
-	switch(direction) {
-	case 1: x = 0;
-	case 2: x = 1;
-	}
-	frosh->setTextureRect(sf::IntRect());
-
-	if(froshType == "regular") {
-		frosh->setTextureRect(sf::IntRect(222, 120, 120, 120));
-		frosh->setTextureRect(_textureRect);
-
-	}
-	//frosh->setTextureRect(sf::IntRect(222, 120, 120, 120));
-	//frosh->setTextureRect(textureRect);
-	frosh->setPosition(sf::Vector2f(100, 400));
-}
-*/
 
 void FroshController::render() {
 	for (shared_ptr<Frosh> frosh : *froshVec) {
