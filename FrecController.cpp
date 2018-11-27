@@ -45,7 +45,6 @@ Frec* FrecController::spawnFrec(sf::Vector2f position, FrecType type) {
 	frec = new Frec(position, texture, type, props["damage"], props["range"],
 			props["cooldown"]);
 	frecVec->push_back(frec);
-	std::cout << frecVec->size() << std::endl;
 	return frec;
 }
 

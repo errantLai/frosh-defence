@@ -60,23 +60,26 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	std::map<string, int> props2 = gameState->getFrecProps(FrecType::slammer);
 	std::map<string, int> props3 = gameState->getFrecProps(FrecType::swinger);
 	FrecButton* _clickable;
-	_clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits, _texture,
-			to_string(props1["tam"]), "Damage: "+to_string(props1["damage"])+"\nRate: "+to_string(props1["cooldown"]),
-			FrecType::thrower,
+	_clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits,
+			_texture, to_string(props1["tam"]),
+			"Damage: " + to_string(props1["damage"]) + "\nRate: "
+					+ to_string(props1["cooldown"]), FrecType::thrower,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	frecButtonVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,_texture,
-			to_string(props2["tam"]), "Damage: "+to_string(props2["damage"])+"\nRate: "+to_string(props2["cooldown"]),
-			FrecType::slammer,
+	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,
+			_texture, to_string(props2["tam"]),
+			"Damage: " + to_string(props2["damage"]) + "\nRate: "
+					+ to_string(props2["cooldown"]), FrecType::slammer,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	frecButtonVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,_texture,
-			to_string(props3["tam"]), "Damage: "+to_string(props3["damage"])+"\nRate: "+to_string(props3["cooldown"]),
-			FrecType::swinger,
+	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,
+			_texture, to_string(props3["tam"]),
+			"Damage: " + to_string(props3["damage"]) + "\nRate: "
+					+ to_string(props3["cooldown"]), FrecType::swinger,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	frecButtonVec.push_back(_clickable);
@@ -122,8 +125,6 @@ GameMenuController::~GameMenuController() {
 		sf::Vector2f temp = c->getPosition();
 		temp.x = (temp.x - menuPos.x) / cubit;
 		temp.y = (temp.y - menuPos.y) / cubit;
-		cout << "Clickable Cubits: (" << temp.x << ", " << temp.y << ")"
-				<< endl;
 		delete c;
 		c = nullptr;
 	}
@@ -131,8 +132,6 @@ GameMenuController::~GameMenuController() {
 		sf::Vector2f temp = c->getPosition();
 		temp.x = (temp.x - menuPos.x) / cubit;
 		temp.y = (temp.y - menuPos.y) / cubit;
-		cout << "Clickable Cubits: (" << temp.x << ", " << temp.y << ")"
-				<< endl;
 		delete c;
 		c = nullptr;
 	}

@@ -67,7 +67,6 @@ void FrecAndFroshController::updateProjectiles() { //this parameter will be repl
 				froshController->dealDamage(frosh,
 						allThrowObjects[i]->getDamage());
 				//delete throw object
-				cout << "DAMAGE DEALT" << endl;
 				deleteProjectile(allThrowObjects[i]);
 				i--;
 			} else { //if the projectile assigned to a frosh hasnt hit yet, move towards frosh
@@ -75,7 +74,6 @@ void FrecAndFroshController::updateProjectiles() { //this parameter will be repl
 						frosh->getCenterPosition());
 			}
 		} else {
-			cout << "Frosh already ded" << endl;
 			deleteProjectile(allThrowObjects[i]);
 			i--;
 		}
