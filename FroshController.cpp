@@ -76,11 +76,41 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 }
 
 int counter = 90;
-int froshCount = 0;
+int wave = 1;
 void FroshController::froshWave(int number, FroshType type){
-	if (froshCount < 3*number){
+	//if (froshCount < 4*number){
 		spawnFrosh(sf::Vector2f(875,0), type);
-		froshCount++;
+		//::froshCount++;
+	}
+//}
+
+void FroshController::waveOne()	{
+	if (::counter == 50 || ::counter == 150 || ::counter == 300) {
+		froshWave(3, FroshType::slow);
+	}
+	if (::counter == 100 || ::counter == 250 || ::counter == 350 || ::counter == 450 || ::counter == 500) {
+		froshWave(3, FroshType::regular);
+	}
+	if (::counter == 200 || ::counter == 400 || ::counter == 550) {
+		froshWave(3, FroshType::fast);
+	}
+	if (::counter == 1500){
+		::counter = 0;
+		::wave = 2;
+	}
+}
+
+void FroshController::waveTwo()	{
+	if (::counter == 50 || ::counter == 150 || ::counter == 300) {
+		froshWave(3, FroshType::slow);
+	}
+	if (::counter == 100 || ::counter == 250 || ::counter == 350) {
+		froshWave(3, FroshType::regular);
+	}
+	if (::counter == 200 || ::counter == 400 || ::counter == 550 || ::counter == 450 || ::counter == 500) {
+		froshWave(3, FroshType::fast);
+	}
+	if (::counter == 1000){
 	}
 }
 // This goes through the array and releases all frosh objects
@@ -115,27 +145,23 @@ void FroshController::update() {
 // Follow that path! This is a simple implementation, which
 // relies on the fact that all paths follow linear changes,
 // aka no need for diagonal travel.
-	//int size = froshVec->size();
-//	if (size < 10) {
 
-		if (::counter > 99 && ::counter < 101) {
-			froshWave(3, FroshType::slow);
-			//spawnFrosh(sf::Vector2f(875, 0), FroshType::slow);
-			//std::cout << size << std::endl;
-		} else if (::counter > 199 && ::counter < 201) {
-			froshWave(3, FroshType::regular);
-			//spawnFrosh(sf::Vector2f(875, 0), FroshType::regular);
-			//std::cout << size << std::endl;
-			std::cout << "Regular" << std::endl;
-		} else if (::counter > 299 && ::counter < 301) {
-			froshWave(3, FroshType::fast);
-			//spawnFrosh(sf::Vector2f(875, 0), FroshType::fast);
-			::counter = 0;
-			//std::cout << size << std::endl;
-			std::cout << "Fast" << std::endl;
-			std::cout << ::counter << std::endl;
-		}
-	//}
+//		if (::counter == 50) {
+//			froshWave(3, FroshType::slow);
+//		} else if (::counter == 100) {
+//			froshWave(3, FroshType::regular);
+//		} else if (::counter == 150) {
+//			froshWave(3, FroshType::fast);
+//			::counter = 0;
+//		}
+	if (::wave == 1){
+		waveOne();
+	}
+	else if (::wave == 2){
+		waveTwo();
+	}
+
+
 	sf::Vector2f currentPos, targetPos, distancePos;
 	int cubit = gameState->cubit;
 	int maxPathIndex = pathInCubits.size();
