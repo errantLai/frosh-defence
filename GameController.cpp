@@ -363,11 +363,6 @@ int main() {
 			healthText.setString(std::to_string(gameState->getHealth()));
 			tamText.setString(std::to_string(gameState->getTams()));
 			gameState->dirtyBit = false;
-			if (gameState->getHealth() < 1) {
-				clk->stop();
-				deathLoop();
-				return 0;
-			}
 		}
 		// Render
 		window->clear();
@@ -383,6 +378,11 @@ int main() {
 			text.setFont(font);
 			text.setPosition(float(mousePos.x), float(mousePos.y));
 			window->draw(text);
+		}
+		if (gameState->getHealth() < 1) {
+			clk->stop();
+			deathLoop();
+			return 0;
 		}
 		window->display();
 	} // End of main game loop

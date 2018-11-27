@@ -88,9 +88,9 @@ void FroshController::waveOne() {
 	if (::counter == 200 || ::counter == 400 || ::counter == 550) {
 		froshWave(3, FroshType::fast);
 	}
-	if (::counter == 1500) {
+	if (::counter == 1000) {
 		::counter = 0;
-		this->modifier *= 1.5;
+		this->modifier *= 1.1;
 		::wave = 2;
 		gameState->setCurrentWave(2);
 	}
@@ -98,21 +98,21 @@ void FroshController::waveOne() {
 
 void FroshController::waveTwo() {
 	if (::counter == 50 || ::counter == 150 || ::counter == 300
-			|| ::counter == 175 || ::counter == 225) {
+			|| ::counter == 175) {
 		froshWave(3, FroshType::slow);
 	}
 	if (::counter == 100 || ::counter == 250 || ::counter == 350
-			|| ::counter == 475 || ::counter == 275) {
+			|| ::counter == 475) {
 		froshWave(3, FroshType::regular);
 	}
 	if (::counter == 200 || ::counter == 400 || ::counter == 550
-			|| ::counter == 450 || ::counter == 500 || ::counter == 75
-			|| ::counter == 125 || ::counter == 325) {
+			|| ::counter == 450 || ::counter == 500 || ::counter == 75) {
 		froshWave(3, FroshType::fast);
 	}
-	if (::counter == 600) {
+	if (::counter == 900) {
 		::counter = 0;
 		modifier *= 1.2;
+		gameState->setCurrentWave(gameState->getCurrentWave() + 1);
 	}
 }
 // This goes through the array and releases all frosh objects

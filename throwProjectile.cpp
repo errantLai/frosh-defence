@@ -7,6 +7,11 @@ throwProjectile::throwProjectile(int ind, int _damage,
 		index(ind), damage(_damage), projectilePosition(frecPosition), froshTarget(
 				froshToFireAt) {
 	speed = 8.0f;
+	if (auto frosh = froshToFireAt.lock()) {
+		if (frosh->getPixelSpeed() > speed - 3.5) {
+			speed = frosh->getPixelSpeed() + 3.5;
+		}
+	}
 	projectileShape = sf::RectangleShape(sf::Vector2f(30.0f, 30.0f));
 	projectileShape.setSize(sf::Vector2f(30.0f, 30.0f)); //size of projectile
 
