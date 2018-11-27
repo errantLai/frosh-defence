@@ -68,9 +68,9 @@ void Frosh::setPosition(sf::Vector2f position) {
 sf::IntRect Frosh::getTextureRect() {
 	return this->textureRect;
 }
+
 void Frosh::setTextureRect(sf::IntRect textureRect) {
 	this->textureRect = textureRect;
-    this->shape.setTextureRect(textureRect);
 }
 
 int Frosh::reduceHealth(int damage) {

@@ -73,13 +73,14 @@ void FrecController::render() {
 	for (Frec* frec : *frecVec) {
 		window->draw(frec->getFrecSprite());
 
-		pos = frec->getOriginalFrecPosition();
-		range.setRadius(frec->getRange());
-		pos.x = pos.x - frec->getRange()+60;
-		pos.y = pos.y - frec->getRange()+60;
-
-		range.setPosition(pos);
-		window->draw(range);
+		if (gameState->getBoardFrec() == frec) {
+			pos = frec->getOriginalFrecPosition();
+			range.setRadius(frec->getRange());
+			pos.x = pos.x - frec->getRange() + 60;
+			pos.y = pos.y - frec->getRange() + 60;
+			range.setPosition(pos);
+			window->draw(range);
+		}
 	}
 }
 

@@ -10,8 +10,6 @@
 #include <SFML/Graphics.hpp>
 #include "GameState.h"
 
-
-
 class Frosh {
 private:
 	sf::RectangleShape shape;
@@ -21,8 +19,6 @@ private:
 	sf::Texture* texture;
 	sf::IntRect textureRect;
 
-	FroshType type;
-
 	// Internal game attributes
 	int tamValue;
 	// Decreases when attacked by a frec
@@ -31,6 +27,7 @@ private:
 	int damage;
 	// Pixels moved after each update()
 	float pixelSpeed;
+	FroshType type;
 	// The index of the path that it is moving towards
 	// Reaching the final index means clearing the map
 	int targetPathPoint;
