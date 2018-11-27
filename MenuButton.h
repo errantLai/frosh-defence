@@ -60,14 +60,18 @@ private:
 class UpgradeButton: public MenuButton {
 public:
 	UpgradeButton(sf::Vector2f _positin, int _sizex, int _sizey,
-			sf::Texture* _texture);
+			sf::Texture* _texture, GameState* gameState);
+
+	bool getCanUpgrade();
+	void setCanUpgrade(bool status);
 private:
-	//GameState* gameState;
+	GameState* gameState;
+	bool selected;
+	bool canUpgrade = true;
+
 	void onClick() override;
 	void onMouseEnter() override;
 	void onMouseLeave() override;
-	void update();
-	bool selected;
 
 };
 #endif /* MENUBUTTON_H_ */

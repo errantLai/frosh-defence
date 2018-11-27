@@ -31,10 +31,11 @@ Frec::Frec(const sf::Vector2f position, sf::Texture* _texture, FrecType _type,
 	frecSprite.setPosition(frecPos.x, frecPos.y);
 
 	// set initial attributes
-	//mode = 'a';
-	//direction = 'r';
+	mode = 'a';
+	direction = 'r';
 	currentCooldown = 0;
 	wasClicked = false;
+	upgradeCost = 25;
 }
 
 Frec::~Frec() {
@@ -85,7 +86,6 @@ void Frec::render(sf::RenderWindow& _window) {
 }
 
 void Frec::onClick() {
-	std::cout << "Frec clicked" << std::endl;
 	this->wasClicked = true;
 }
 
@@ -109,6 +109,10 @@ float Frec::getRange() const {
 
 int Frec::getCooldown() {
 	return this->currentCooldown;
+}
+
+int Frec::getUpgradeCost() {
+	return this->upgradeCost;
 }
 
 void Frec::froshDirection(sf::Vector2f froshPos) {
@@ -289,7 +293,10 @@ void Frec::StopAttack() {
 }
 
 void Frec::upgrade() {
-
+	this->frecDamage *= 1.2;
+	this->frecRange *= 1.2;
+	this->currentCooldown *= 1.2;
+	this->upgradeCost*= 1.8;
 }
 
 srcArrayPtr* Frec::getIntRects() const {
