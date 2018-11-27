@@ -22,8 +22,8 @@ GameState::GameState(Timer* timer) :
 	frecProps[FrecType::swinger]= { {"tam", 50}, {"damage", 50}, {"range", 125}, {"cooldown", 3*FPS}};
 	frecProps[FrecType::thrower]= { {"tam", 40}, {"damage", 10}, {"range", 300}, {"cooldown", 1.25*FPS}};
 
-	froshProps[FroshType::slow]= { {"tam", 1}, {"health", 60}, {"damage", 3}, {"speed", 2}};
-	froshProps[FroshType::regular]= { {"tam", 2}, {"health", 30}, {"damage", 2}, {"speed", 3.6}};
+	froshProps[FroshType::slow]= { {"tam", 1}, {"health", 60}, {"damage", 3}, {"speed", 3}};
+	froshProps[FroshType::regular]= { {"tam", 2}, {"health", 30}, {"damage", 2}, {"speed", 4}};
 	froshProps[FroshType::fast]= { {"tam", 3}, {"health", 15}, {"damage", 1}, {"speed", 5}};
 }
 
