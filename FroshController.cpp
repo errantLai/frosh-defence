@@ -43,10 +43,6 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 	shared_ptr<Frosh> frosh = nullptr;
 	std::map<string, int> props;
 
-	std::vector<std::map<string, int>> waveOne;
-	waveOne.push_back( { { "count", 50 }, { "slow", 4 } });
-	waveOne.push_back( { { "count", 120 }, { "regular", 4 }, {"fast", 2} });
-
 	switch (type) {
 	case FroshType::slow:
 		props = gameState->getFroshProps(type);
@@ -77,39 +73,46 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 
 int counter = 90;
 int wave = 1;
-void FroshController::froshWave(int number, FroshType type){
-		spawnFrosh(sf::Vector2f(875,0), type);
-	}
+void FroshController::froshWave(int number, FroshType type) {
+	spawnFrosh(sf::Vector2f(875, 0), type);
+}
 
-void FroshController::waveOne()	{
+void FroshController::waveOne() {
 	if (::counter == 50 || ::counter == 150 || ::counter == 300) {
 		froshWave(3, FroshType::slow);
 	}
-	if (::counter == 100 || ::counter == 250 || ::counter == 350 || ::counter == 450 || ::counter == 500) {
+	if (::counter == 100 || ::counter == 250 || ::counter == 350
+			|| ::counter == 450 || ::counter == 500) {
 		froshWave(3, FroshType::regular);
 	}
 	if (::counter == 200 || ::counter == 400 || ::counter == 550) {
 		froshWave(3, FroshType::fast);
 	}
-	if (::counter == 1750){
+	if (::counter == 1500) {
 		::counter = 0;
+		this->modifier *= 1.5;
 		::wave = 2;
 		gameState->setCurrentWave(2);
 	}
 }
 
-void FroshController::waveTwo()	{
-	if (::counter == 50 || ::counter == 150 || ::counter == 300 || ::counter == 175 || ::counter == 225) {
+void FroshController::waveTwo() {
+	if (::counter == 50 || ::counter == 150 || ::counter == 300
+			|| ::counter == 175 || ::counter == 225) {
 		froshWave(3, FroshType::slow);
 	}
-	if (::counter == 100 || ::counter == 250 || ::counter == 350 || ::counter == 475 || ::counter == 275) {
+	if (::counter == 100 || ::counter == 250 || ::counter == 350
+			|| ::counter == 475 || ::counter == 275) {
 		froshWave(3, FroshType::regular);
 	}
-	if (::counter == 200 || ::counter == 400 || ::counter == 550 || ::counter == 450 || ::counter == 500 || ::counter == 75 || ::counter == 125 || ::counter == 325) {
+	if (::counter == 200 || ::counter == 400 || ::counter == 550
+			|| ::counter == 450 || ::counter == 500 || ::counter == 75
+			|| ::counter == 125 || ::counter == 325) {
 		froshWave(3, FroshType::fast);
 	}
-	if (::counter ==  600){
+	if (::counter == 600) {
 		::counter = 0;
+		modifier *= 1.2;
 	}
 }
 // This goes through the array and releases all frosh objects
@@ -145,10 +148,9 @@ void FroshController::update() {
 // relies on the fact that all paths follow linear changes,
 // aka no need for diagonal travel.
 
-	if (::wave == 1){
+	if (::wave == 1) {
 		waveOne();
-	}
-	else if (::wave == 2){
+	} else if (::wave == 2) {
 		waveTwo();
 	}
 
@@ -182,20 +184,19 @@ void FroshController::update() {
 				pixelSpeed = abs(distancePos.y);
 			}
 
-            //string froshType = ToString(frosh->getFroshType());
+			//string froshType = ToString(frosh->getFroshType());
 
-            int y;
-            FroshType type = frosh->getFroshType();
-            if(type == FroshType::slow) {
-                y = 0;
-            } else if (type == FroshType::regular) {
-                y = 130;
-            } else if (type == FroshType::fast) {
-                y = 260;
-            } else {
-                y = 75;
-            }
-
+			int y;
+			FroshType type = frosh->getFroshType();
+			if (type == FroshType::slow) {
+				y = 0;
+			} else if (type == FroshType::regular) {
+				y = 130;
+			} else if (type == FroshType::fast) {
+				y = 260;
+			} else {
+				y = 75;
+			}
 
 			//In each of these indexes, change the frosh sprite to reflect direction
 			if (distancePos.x > 0) {
@@ -203,13 +204,13 @@ void FroshController::update() {
 				frosh->setTextureRect(sf::IntRect(260, y, 130, 130));
 			} else if (distancePos.x < 0) {
 				currentPos.x -= pixelSpeed;
-                frosh->setTextureRect(sf::IntRect(260, y, -130, 130));
+				frosh->setTextureRect(sf::IntRect(260, y, -130, 130));
 			} else if (distancePos.y > 0) {
 				currentPos.y += pixelSpeed;
-                frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
+				frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
 			} else if (distancePos.y < 0) {
 				currentPos.y -= pixelSpeed;
-                frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
+				frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
 			}
 			frosh->setPosition(currentPos);
 		}
