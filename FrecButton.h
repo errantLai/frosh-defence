@@ -24,6 +24,7 @@ public:
 	// Draw the button, relying on textures/shapes defined
 	// by the class that implements this interface.
 	void render(sf::RenderWindow& _window) override;
+	void renderText(sf::RenderWindow& _window) ;
 
 private:
 	FrecType frecType;
