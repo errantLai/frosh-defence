@@ -341,6 +341,11 @@ int main() {
 			healthText.setString(std::to_string(gameState->getHealth()));
 			tamText.setString(std::to_string(gameState->getTams()));
 			gameState->dirtyBit = false;
+			if(gameState->getHealth()<1){
+				//TODO :: GAMEOVERIMAGE DISPLAY
+				clk->stop();
+				//window->close();
+			}
 		}
 		// Render
 		window->clear();
