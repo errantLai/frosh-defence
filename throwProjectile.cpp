@@ -59,7 +59,7 @@ float throwProjectile::DistanceFromFrosh(sf::Vector2f frosh) {
 }
 bool throwProjectile::projectileFroshCollision(sf::Vector2f frosh) // simple collision detection between two circles
 		{
-	return DistanceFromFrosh(frosh) < 3;
+	return DistanceFromFrosh(frosh) < 20;
 	//return DistanceFromFrosh(frosh) < projectileShape.getSize().x || DistanceFromFrosh(frosh) < projectileShape.getSize().y;// if dist < frec range we have a collision
 } //will always do for < 10
 
