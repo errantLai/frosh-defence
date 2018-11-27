@@ -32,11 +32,12 @@ sf::RectangleShape helpScreen;
 sf::Text tamText, waveText, waveWord, healthText, text;
 
 const std::vector<Vector2f> path = { Vector2f(15, 0), Vector2f(15, 4), Vector2f(
-		20, 4), Vector2f(22, 4), Vector2f(22, 8), Vector2f(10,
-		8), Vector2f(10, 6), Vector2f(4, 6), Vector2f(4, 13), Vector2f(12, 13),
-		 Vector2f(12, 15), Vector2f(17, 15),
-		Vector2f(17, 12), Vector2f(21, 12), Vector2f(21, 18) };
+		20, 4), Vector2f(22, 4), Vector2f(22, 8), Vector2f(10, 8), Vector2f(10,
+		6), Vector2f(4, 6), Vector2f(4, 13), Vector2f(12, 13), Vector2f(12, 15),
+		Vector2f(17, 15), Vector2f(17, 12), Vector2f(21, 12), Vector2f(21, 18) };
+
 sf::RenderWindow* window;
+sf::Event event;
 
 bool debug;
 
@@ -63,7 +64,7 @@ GameBoard::GameBoard(GameState* _gameState, FrecController* _frecController,
 	_wavesCounter->setTextureRect(sf::IntRect(0, 192, 768, 224));
 
 	sf::Texture* _helpTexture = new sf::Texture;
-	if (!_helpTexture->loadFromFile("assets/help_screen.jpg")) {
+	if (!_helpTexture->loadFromFile("assets/help_screen.png")) {
 		std::cerr << "Error loading the help screen" << std::endl;
 	}
 
@@ -216,7 +217,6 @@ void GameBoard::render() {
 		}
 	}
 
-
 	FrecType type = gameState->getPurchaseFrec();
 	if (type != FrecType::empty) {
 		renderRange(mousePos.x, mousePos.y,
@@ -224,14 +224,14 @@ void GameBoard::render() {
 		renderShadow(mousePos.x, mousePos.y, 2);
 	}
 }
-void GameBoard::renderLabels(){
+void GameBoard::renderLabels() {
 	window->draw(*_tamsCounter);
-		window->draw(*_livesCounter);
-		window->draw(*_wavesCounter);
-		window->draw(tamText);
-		window->draw(waveText);
-		window->draw(healthText);
-		window->draw(waveWord);
+	window->draw(*_livesCounter);
+	window->draw(*_wavesCounter);
+	window->draw(tamText);
+	window->draw(waveText);
+	window->draw(healthText);
+	window->draw(waveWord);
 }
 
 // Draw Range
@@ -254,6 +254,29 @@ void GameBoard::renderShadow(int mouseX, int mouseY, int range) {
 }
 
 GameController::GameController() {
+}
+
+void deathLoop() {
+	sf::Texture* texture = new sf::Texture;
+	if (!texture->loadFromFile("assets/game_over.png")) {
+		std::cerr << "Error loading the help screen" << std::endl;
+	}
+
+	sf::RectangleShape deathScreen = sf::RectangleShape(
+			sf::Vector2f(1920, 1080));
+	deathScreen.setPosition(0, 0);
+	deathScreen.setTexture(texture);
+	window->draw(deathScreen);
+	window->display();
+	while (true) {
+		while (window->pollEvent(event)) {
+			if (event.type == sf::Event::EventType::Closed
+					|| (event.type == sf::Event::MouseButtonPressed)
+					|| (event.type == sf::Event::KeyPressed)) {
+				return;
+			}
+		}
+	}
 }
 
 // Main
@@ -290,7 +313,6 @@ int main() {
 	//froshController->spawnFrosh(sf::Vector2f(500, 500), FroshType::regular);
 
 	gameMenuController->setDebug(debug);
-	sf::Event event;
 // Main game loop
 	while (window->isOpen()) {
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
@@ -341,10 +363,10 @@ int main() {
 			healthText.setString(std::to_string(gameState->getHealth()));
 			tamText.setString(std::to_string(gameState->getTams()));
 			gameState->dirtyBit = false;
-			if(gameState->getHealth()<1){
-				//TODO :: GAMEOVERIMAGE DISPLAY
+			if (gameState->getHealth() < 1) {
 				clk->stop();
-				//window->close();
+				deathLoop();
+				return 0;
 			}
 		}
 		// Render
