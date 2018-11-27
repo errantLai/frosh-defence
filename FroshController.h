@@ -38,6 +38,8 @@ public:
 	// This destroys all the frosh that it contains
 	virtual ~FroshController();
 
+	void turnFrosh(shared_ptr<Frosh> frosh, sf::IntRect textureRect, int direction );
+
 	shared_ptr<Frosh> spawnFrosh(sf::Vector2f position, FroshType type);
 	void updateFrosh();
 	// This removes a frosh from the vector, setting it to null.

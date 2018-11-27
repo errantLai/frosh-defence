@@ -8,6 +8,9 @@
 #ifndef FROSH_H_
 #define FROSH_H_
 #include <SFML/Graphics.hpp>
+#include "GameState.h"
+
+
 
 class Frosh {
 private:
@@ -17,6 +20,8 @@ private:
 	// for changing specific directions, etc.
 	sf::Texture* texture;
 	sf::IntRect textureRect;
+
+	FroshType type;
 
 	// Internal game attributes
 	int tamValue;
@@ -39,12 +44,15 @@ public:
 	Frosh() = delete;
 	Frosh(sf::Vector2f position, sf::Vector2f size, sf::Texture* texture,
 			sf::IntRect textureRect, int _tam, int _health, int _damage,
-			float _pixelSpeed);
+			float _pixelSpeed, FroshType type);
 	virtual ~Frosh();
 
 	// Game logic functions
 	void update();
 	void render(sf::RenderWindow* window);
+
+	void setFroshType(FroshType type);
+	FroshType getFroshType() const;
 
 	// Accessors
 	int getTamValue();
