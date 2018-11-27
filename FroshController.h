@@ -48,6 +48,8 @@ public:
 	void dealDamage(shared_ptr<Frosh> frosh, int damage);
 
 	void froshWave(int number, FroshType type);
+	void waveOne();
+	void waveTwo();
 	// Game functions
 	void update();
 	// Displays all the contained frosh on the board
