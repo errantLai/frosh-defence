@@ -16,8 +16,6 @@ using std::cout;
 using std::endl;
 using std::to_string;
 
-sf::Event event;
-
 // The position is relative to the top left of the menu region,
 // so zero is used as the start menu height
 sf::Vector2f GameMenuController::menuPosition(float xCubits, float yCubits) {

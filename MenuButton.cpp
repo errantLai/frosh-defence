@@ -115,9 +115,7 @@ void UpgradeButton::onClick() {
 }
 
 void UpgradeButton::onMouseEnter() {
-	std::cout << "Enter!" << std::endl;
 }
 
 void UpgradeButton::onMouseLeave() {
-	std::cout << "Leave!" << std::endl;
 }
