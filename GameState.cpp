@@ -14,15 +14,17 @@
 #include "Timer.h"
 #include "Frec.h"
 
+const int FPS = 30;
+
 GameState::GameState(Timer* timer) :
 		timer(timer) {
-	frecProps[FrecType::slammer]= { {"tam", 30}, {"damage", 15}, {"range", 100}, {"cooldown", 100}};
-	frecProps[FrecType::swinger]= { {"tam", 50}, {"damage", 5}, {"range", 200}, {"cooldown", 20}};
-	frecProps[FrecType::thrower]= { {"tam", 20}, {"damage", 3}, {"range", 300}, {"cooldown", 40}};
+	frecProps[FrecType::slammer]= { {"tam", 30}, {"damage", 15}, {"range", 200}, {"cooldown", 1.5*FPS}};
+	frecProps[FrecType::swinger]= { {"tam", 50}, {"damage", 50}, {"range", 125}, {"cooldown", 3*FPS}};
+	frecProps[FrecType::thrower]= { {"tam", 40}, {"damage", 10}, {"range", 300}, {"cooldown", 1.25*FPS}};
 
-	froshProps[FroshType::slow]= { {"tam", 1}, {"health", 30}, {"damage", 3}, {"speed", 2}};
-	froshProps[FroshType::regular]= { {"tam", 2}, {"health", 2}, {"damage", 2}, {"speed", 3.6}};
-	froshProps[FroshType::fast]= { {"tam", 3}, {"health", 10}, {"damage", 1}, {"speed", 5.2}};
+	froshProps[FroshType::slow]= { {"tam", 1}, {"health", 60}, {"damage", 3}, {"speed", 2}};
+	froshProps[FroshType::regular]= { {"tam", 2}, {"health", 30}, {"damage", 2}, {"speed", 3.6}};
+	froshProps[FroshType::fast]= { {"tam", 3}, {"health", 15}, {"damage", 1}, {"speed", 5}};
 }
 
 // Game State Accessors

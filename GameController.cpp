@@ -216,19 +216,22 @@ void GameBoard::render() {
 		}
 	}
 
-	window->draw(*_tamsCounter);
-	window->draw(*_livesCounter);
-	window->draw(*_wavesCounter);
-	window->draw(tamText);
-	window->draw(waveText);
-	window->draw(healthText);
-	window->draw(waveWord);
+
 	FrecType type = gameState->getPurchaseFrec();
 	if (type != FrecType::empty) {
 		renderRange(mousePos.x, mousePos.y,
 				gameState->getFrecProps(type)["range"]);
 		renderShadow(mousePos.x, mousePos.y, 2);
 	}
+}
+void GameBoard::renderLabels(){
+	window->draw(*_tamsCounter);
+		window->draw(*_livesCounter);
+		window->draw(*_wavesCounter);
+		window->draw(tamText);
+		window->draw(waveText);
+		window->draw(healthText);
+		window->draw(waveWord);
 }
 
 // Draw Range
@@ -346,6 +349,7 @@ int main() {
 		frecController->render();
 		gameMenuController->render();
 		attackController->render();
+		gameBoard->renderLabels();
 		if (debug) {
 			//text.setString(std::to_string(gridX) + "," + std::to_string(gridY));
 			text.setString(std::to_string(clk->elapsedTicks()));
