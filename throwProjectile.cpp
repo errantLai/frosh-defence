@@ -25,8 +25,8 @@ throwProjectile::throwProjectile(int ind, int _damage,
 	projectileCenter = sf::Vector2f(frecPosition.x + 30.0f / 2,
 			frecPosition.y + 30.0f / 2);
 }
+
 throwProjectile::~throwProjectile() {
-	cout << "Projectile Deleted" << endl;
 }
 
 void throwProjectile::drawProjectile(sf::RenderWindow* _window) {

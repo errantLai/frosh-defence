@@ -28,7 +28,6 @@ Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
 
 // FroshController is responsible for creating and deleting objects
 Frosh::~Frosh() {
-	std::cout << "Frosh Deleted" << std::endl;
 }
 
 int Frosh::getTamValue() {
@@ -75,7 +74,6 @@ void Frosh::setTextureRect(sf::IntRect textureRect) {
 
 int Frosh::reduceHealth(int damage) {
 	this->health -= damage;
-	std::cout << "Health now " << this->health << std::endl;
 	return this->health;
 }
 

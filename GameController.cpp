@@ -146,8 +146,6 @@ void GameBoard::process(sf::Event event, sf::Vector2i mousePos) {
 			gridStatus[gridX + 1][gridY + 1] = 2;
 			sf::Vector2f spawnPos = sf::Vector2f(gridX * gameState->cubit,
 					gridY * gameState->cubit);
-			std::cout << "Spawn Pos: " << spawnPos.x << " " << spawnPos.y
-					<< std::endl;
 			frecController->spawnFrec(spawnPos, type);
 			gameState->updateTamBy(-(gameState->getFrecProps(type)["tam"]));
 		}
