@@ -78,9 +78,8 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 int counter = 90;
 int froshCount = 0;
 void FroshController::froshWave(int number, FroshType type){
-	if (froshCount < 3*number){
+	for (int i = 0;i < number;i ++ ) {
 		spawnFrosh(sf::Vector2f(875,0), type);
-		froshCount++;
 	}
 }
 // This goes through the array and releases all frosh objects
@@ -127,7 +126,7 @@ void FroshController::update() {
 			//spawnFrosh(sf::Vector2f(875, 0), FroshType::regular);
 			//std::cout << size << std::endl;
 			std::cout << "Regular" << std::endl;
-		} else if (::counter > 299 && ::counter < 301) {
+		} else if (::counter > 299) {
 			froshWave(3, FroshType::fast);
 			//spawnFrosh(sf::Vector2f(875, 0), FroshType::fast);
 			::counter = 0;
