@@ -14,6 +14,7 @@
 
 using std::cout;
 using std::endl;
+using std::to_string;
 
 sf::Event event;
 
@@ -57,21 +58,27 @@ GameMenuController::GameMenuController(sf::RenderWindow* windowPointer,
 	}
 	texturesVector.push_back(_texture);
 	std::cerr << menuPos.x << ", " << menuPos.y << std::endl;
+	std::map<string, int> props1 = gameState->getFrecProps(FrecType::thrower);
+	std::map<string, int> props2 = gameState->getFrecProps(FrecType::slammer);
+	std::map<string, int> props3 = gameState->getFrecProps(FrecType::swinger);
 	FrecButton* _clickable;
-	_clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits,
-			_texture, "20T", "Damage: 1\nRate: 1s", FrecType::thrower,
+	_clickable = new FrecButton(menuPosition(1.4, 2.2), frecButtonCubits, _texture,
+			to_string(props1["tam"]), "Damage: "+to_string(props1["damage"])+"\nRate: "+to_string(props1["cooldown"]),
+			FrecType::thrower,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 0, 0, 512, 512));
 	frecButtonVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,
-			_texture, "30T", "Damage: 2\nRate: 2s", FrecType::slammer,
+	_clickable = new FrecButton(menuPosition(1.4, 6.2), frecButtonCubits,_texture,
+			to_string(props2["tam"]), "Damage: "+to_string(props2["damage"])+"\nRate: "+to_string(props2["cooldown"]),
+			FrecType::slammer,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 1, 0, 512, 512));
 	frecButtonVec.push_back(_clickable);
 
-	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,
-			_texture, "40T", "Damage: 3\nRate: 2s", FrecType::swinger,
+	_clickable = new FrecButton(menuPosition(1.4, 10.2), frecButtonCubits,_texture,
+			to_string(props3["tam"]), "Damage: "+to_string(props3["damage"])+"\nRate: "+to_string(props3["cooldown"]),
+			FrecType::swinger,
 			gameState);
 	_clickable->setTextureRect(sf::IntRect(512 * 2, 0, 512, 512));
 	frecButtonVec.push_back(_clickable);
