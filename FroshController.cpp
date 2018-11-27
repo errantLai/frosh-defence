@@ -71,7 +71,7 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 		break;
 	}
 	froshVec->push_back(frosh);
-	std::cout << "Frosh added" << std::endl;
+	//std::cout << "Frosh added" << std::endl;
 	return frosh;
 }
 
@@ -99,14 +99,17 @@ void FroshController::waveOne()	{
 }
 
 void FroshController::waveTwo()	{
-	if (::counter == 50 || ::counter == 150 || ::counter == 300) {
+	if (::counter == 50 || ::counter == 150 || ::counter == 300 || ::counter == 175 || ::counter == 225) {
 		froshWave(3, FroshType::slow);
 	}
-	if (::counter == 100 || ::counter == 250 || ::counter == 350) {
+	if (::counter == 100 || ::counter == 250 || ::counter == 350 || ::counter == 475 || ::counter == 275) {
 		froshWave(3, FroshType::regular);
 	}
-	if (::counter == 200 || ::counter == 400 || ::counter == 550 || ::counter == 450 || ::counter == 500) {
+	if (::counter == 200 || ::counter == 400 || ::counter == 550 || ::counter == 450 || ::counter == 500 || ::counter == 75 || ::counter == 125 || ::counter == 325) {
 		froshWave(3, FroshType::fast);
+	}
+	if (::counter ==  600){
+		::counter = 0;
 	}
 }
 // This goes through the array and releases all frosh objects
