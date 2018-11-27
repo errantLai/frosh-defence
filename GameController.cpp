@@ -32,10 +32,10 @@ sf::RectangleShape helpScreen;
 sf::Text tamText, waveText, waveWord, healthText, text;
 
 const std::vector<Vector2f> path = { Vector2f(15, 0), Vector2f(15, 4), Vector2f(
-		20, 4), Vector2f(20, 1), Vector2f(24, 1), Vector2f(24, 8), Vector2f(10,
-		8), Vector2f(10, 4), Vector2f(5, 4), Vector2f(5, 14), Vector2f(10, 14),
-		Vector2f(10, 12), Vector2f(14, 12), Vector2f(14, 15), Vector2f(20, 15),
-		Vector2f(20, 11), Vector2f(24, 11), Vector2f(24, 18) };
+		20, 4), Vector2f(22, 4), Vector2f(22, 8), Vector2f(10,
+		8), Vector2f(10, 6), Vector2f(4, 6), Vector2f(4, 13), Vector2f(12, 13),
+		 Vector2f(12, 15), Vector2f(17, 15),
+		Vector2f(17, 12), Vector2f(21, 12), Vector2f(21, 18) };
 sf::RenderWindow* window;
 
 bool debug;
