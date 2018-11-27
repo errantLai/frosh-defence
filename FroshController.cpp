@@ -51,23 +51,23 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 	case FroshType::slow:
 		props = gameState->getFroshProps(type);
 		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 0, 120, 120), props["tam"] * modifier,
+				sf::IntRect(0, 0, 130, 130), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier);
+				props["speed"] * modifier, FroshType::slow);
 		break;
 	case FroshType::regular:
 		props = gameState->getFroshProps(type);
 		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 130, 120, 120), props["tam"] * modifier,
+				sf::IntRect(0, 130, 130, 130), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier);
+				props["speed"] * modifier, FroshType::regular);
 		break;
 	case FroshType::fast:
 		props = gameState->getFroshProps(type);
 		frosh = std::make_shared<Frosh>(position, froshBaseSize, froshSprites,
-				sf::IntRect(0, 260, 120, 120), props["tam"] * modifier,
+				sf::IntRect(0, 260, 130, 130), props["tam"] * modifier,
 				props["health"] * modifier, props["damage"] * modifier,
-				props["speed"] * modifier);
+				props["speed"] * modifier, FroshType::fast);
 		break;
 	}
 	froshVec->push_back(frosh);
@@ -179,19 +179,34 @@ void FroshController::update() {
 				pixelSpeed = abs(distancePos.y);
 			}
 
+            //string froshType = ToString(frosh->getFroshType());
+
+            int y;
+            FroshType type = frosh->getFroshType();
+            if(type == FroshType::slow) {
+                y = 0;
+            } else if (type == FroshType::regular) {
+                y = 130;
+            } else if (type == FroshType::fast) {
+                y = 260;
+            } else {
+                y = 75;
+            }
+
+
 			//In each of these indexes, change the frosh sprite to reflect direction
 			if (distancePos.x > 0) {
 				currentPos.x += pixelSpeed;
-				//frosh->setTextureRect(sf::IntRect(120, 0, 120, 120));
+				frosh->setTextureRect(sf::IntRect(260, y, 130, 130));
 			} else if (distancePos.x < 0) {
 				currentPos.x -= pixelSpeed;
-				//frosh->setTextureRect(sf::IntRect(120, 0, 120, 120));
+                frosh->setTextureRect(sf::IntRect(260, y, -130, 130));
 			} else if (distancePos.y > 0) {
 				currentPos.y += pixelSpeed;
-				//frosh->setTextureRect(sf::IntRect(0, 0, 120, 120));
+                frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
 			} else if (distancePos.y < 0) {
 				currentPos.y -= pixelSpeed;
-				//frosh->setTextureRect(sf::IntRect(0, 0, 120, 120));
+                frosh->setTextureRect(sf::IntRect(0, y, 130, 130));
 			}
 			frosh->setPosition(currentPos);
 		}
