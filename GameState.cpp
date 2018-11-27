@@ -80,6 +80,10 @@ void GameState::setBoardFrec(Frec* frec) {
 	this->boardFrec = frec;
 }
 
+void GameState::setCurrentWave(int wave) {
+	this->currentWave = wave;
+}
+
 std::map<string, int> GameState::getFrecProps(FrecType type) {
 	return this->frecProps[type];
 }

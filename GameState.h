@@ -46,6 +46,7 @@ public:
 	int getHealth();
 	int getTams();
 	int getCurrentWave();
+	void setCurrentWave(int wave);
 	int getFroshRemaining();
 	int getFroshEliminated();
 	bool getHelperState();

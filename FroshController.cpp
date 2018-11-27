@@ -78,11 +78,8 @@ shared_ptr<Frosh> FroshController::spawnFrosh(sf::Vector2f position,
 int counter = 90;
 int wave = 1;
 void FroshController::froshWave(int number, FroshType type){
-	//if (froshCount < 4*number){
 		spawnFrosh(sf::Vector2f(875,0), type);
-		//::froshCount++;
 	}
-//}
 
 void FroshController::waveOne()	{
 	if (::counter == 50 || ::counter == 150 || ::counter == 300) {
@@ -94,9 +91,10 @@ void FroshController::waveOne()	{
 	if (::counter == 200 || ::counter == 400 || ::counter == 550) {
 		froshWave(3, FroshType::fast);
 	}
-	if (::counter == 1500){
+	if (::counter == 1750){
 		::counter = 0;
 		::wave = 2;
+		gameState->setCurrentWave(2);
 	}
 }
 
@@ -109,8 +107,6 @@ void FroshController::waveTwo()	{
 	}
 	if (::counter == 200 || ::counter == 400 || ::counter == 550 || ::counter == 450 || ::counter == 500) {
 		froshWave(3, FroshType::fast);
-	}
-	if (::counter == 1000){
 	}
 }
 // This goes through the array and releases all frosh objects
@@ -145,22 +141,12 @@ void FroshController::update() {
 // Follow that path! This is a simple implementation, which
 // relies on the fact that all paths follow linear changes,
 // aka no need for diagonal travel.
-
-//		if (::counter == 50) {
-//			froshWave(3, FroshType::slow);
-//		} else if (::counter == 100) {
-//			froshWave(3, FroshType::regular);
-//		} else if (::counter == 150) {
-//			froshWave(3, FroshType::fast);
-//			::counter = 0;
-//		}
 	if (::wave == 1){
 		waveOne();
 	}
 	else if (::wave == 2){
 		waveTwo();
 	}
-
 
 	sf::Vector2f currentPos, targetPos, distancePos;
 	int cubit = gameState->cubit;
