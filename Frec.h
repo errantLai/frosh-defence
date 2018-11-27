@@ -23,6 +23,11 @@ public:
 			int damage, int range, int cooldown);
 	~Frec();
 
+	bool wasClicked;
+	int upgradeCost;
+	// accessors for attributes on heap
+	srcArrayPtr* getIntRects() const;
+
 	// accessors for attributes on stack
 	char getDirection() const;
 	char getMode() const;
@@ -34,10 +39,7 @@ public:
 	float getRange() const;
 	FrecType getFrecType() const;
 	int getCooldown();
-	bool wasClicked;
-
-	// accessors for attributes on heap
-	srcArrayPtr* getIntRects() const;
+	int getUpgradeCost();
 
 	// Attribute modifiers
 	void setMode(char);
@@ -48,7 +50,7 @@ public:
 	void update() override;
 	void render(sf::RenderWindow& _window) override;
 	void onClick() override;
-	void upgrade();
+	virtual void upgrade();
 
 	// Handling attacks
 	void froshDirection(sf::Vector2f froshPos); // find the direction of the frosh relative to the frec

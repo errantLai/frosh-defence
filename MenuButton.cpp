@@ -10,7 +10,8 @@
 #include <iostream>
 
 MenuButton::MenuButton(sf::Vector2f _position, int _sizex, int _sizey,
-		sf::Texture* _texture) {
+		sf::Texture* _texture) :
+		Clickable(_position, sf::Vector2f(_sizex, _sizey)) {
 	graphic = sf::RectangleShape(sf::Vector2f(_sizex, _sizey));
 	setPosition(_position);
 	graphic.setTexture(_texture);
@@ -93,23 +94,30 @@ void PauseButton::onClick() {
 
 // Upgrade Button Implementation
 UpgradeButton::UpgradeButton(sf::Vector2f _position, int _sizex, int _sizey,
-		sf::Texture* _texture) :
-		MenuButton(_position, _sizex, _sizey, _texture) {
+		sf::Texture* _texture, GameState* _gameState) :
+		MenuButton(_position, _sizex, _sizey, _texture), gameState(_gameState) {
 	selected = false;
 }
+
+bool UpgradeButton::getCanUpgrade() {
+	return this->canUpgrade;
+}
+
+void UpgradeButton::setCanUpgrade(bool status) {
+	this->canUpgrade = status;
+}
+
 void UpgradeButton::onClick() {
-
+	if (gameState->getBoardFrec() != nullptr && canUpgrade) {
+		gameState->updateTamBy(-(gameState->getBoardFrec()->getUpgradeCost()));
+		gameState->getBoardFrec()->upgrade();
+	}
 }
+
 void UpgradeButton::onMouseEnter() {
-
+	std::cout << "Enter!" << std::endl;
 }
+
 void UpgradeButton::onMouseLeave() {
-
-}
-void UpgradeButton::update() {
-	if (selected) {
-		setTransparency(255);
-		selected = false;
-	} else
-		setTransparency(180);
+	std::cout << "Leave!" << std::endl;
 }
