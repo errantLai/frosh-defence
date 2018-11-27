@@ -10,15 +10,18 @@
 
 Frosh::Frosh(sf::Vector2f _position, sf::Vector2f _size, sf::Texture* _texture,
 		sf::IntRect _textureRect, int _tam, int _health, int _damage,
-		float _pixelSpeed) :
+		float _pixelSpeed, FroshType _type) :
 		texture(_texture), textureRect(_textureRect), tamValue(_tam), health(
-				_health), damage(_damage), pixelSpeed(_pixelSpeed) {
+				_health), damage(_damage), pixelSpeed(_pixelSpeed), type(_type) {
 	// Map shape properties
 	shape = sf::RectangleShape(sf::Vector2f(_size.x, _size.y));
 	shape.setPosition(_position);
 	shape.setSize(_size);
 	shape.setTexture(texture);
 	shape.setTextureRect(textureRect);
+
+	//shape.setType(type);
+
 	shape.setFillColor(sf::Color(255, 255, 255, 180)); // Half transparency
 	targetPathPoint = 0;
 }
@@ -49,6 +52,15 @@ sf::Vector2f Frosh::getCenterPosition() {
 	return center;
 }
 
+/*void Frosh::setFroshType(FroshType type) {
+	return this->type;
+	//this->shape.setType(type);
+}*/
+
+FroshType Frosh::getFroshType() const {
+	return this->type;
+}
+
 void Frosh::setPosition(sf::Vector2f position) {
 	this->shape.setPosition(position);
 }
@@ -58,6 +70,7 @@ sf::IntRect Frosh::getTextureRect() {
 }
 void Frosh::setTextureRect(sf::IntRect textureRect) {
 	this->textureRect = textureRect;
+    this->shape.setTextureRect(textureRect);
 }
 
 int Frosh::reduceHealth(int damage) {
