@@ -82,6 +82,7 @@ void GameState::setBoardFrec(Frec* frec) {
 
 void GameState::setCurrentWave(int wave) {
 	this->currentWave = wave;
+	dirtyBit = true;
 }
 
 std::map<string, int> GameState::getFrecProps(FrecType type) {
