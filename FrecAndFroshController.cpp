@@ -83,6 +83,7 @@ void FrecAndFroshController::updateProjectiles() { //this parameter will be repl
 	}
 }
 
+//FREC AND FROSH COLLISION
 // Uses Pythagorean to detect a point collision with a circle
 bool FrecAndFroshController::collisionDetected(Frec* frec,
 		weak_ptr<Frosh> _frosh) {
@@ -114,7 +115,7 @@ void FrecAndFroshController::updateFrecFroshRange() {
 		for (int j = 0, allFroshSize = allFrosh->size(); j < allFroshSize;
 				j++) { //for each frosh object
 			if (collisionDetected((*allThrowFrecs)[i], (*allFrosh)[j])) {
-				// cout << "Frec Frosh Collision" << endl;
+				// cout << "Frec Frosh Collision" << endl;		
 				weak_ptr<Frosh> frosh = (*allFrosh)[j];
 				allFroshInRangeOfFrecs.push_back(frosh);
 				allThrowFrecsInRangeOfFrosh.push_back((*allThrowFrecs)[i]);
@@ -141,8 +142,11 @@ void FrecAndFroshController::update() { //essentially do every attack related fu
 	for (int i = 0, availableFrosh = allThrowFrecsInRangeOfFrosh.size();
 			i < availableFrosh; i++) { //frecs and frosh will have same index i
 		if (allThrowFrecsInRangeOfFrosh[i]->getCooldown() <= 0) { //if the frec is not on cooldown fire a new projectile, else do nothing
-			cout << "Firing Projectile" << endl;
+			//cout << "Firing Projectile" << endl;
 			allThrowFrecsInRangeOfFrosh[i]->resetCooldown();
+			auto frosh = allFroshInRangeOfFrecs[i].lock();
+			(allThrowFrecsInRangeOfFrosh)[i]->froshDirection(frosh->getPosition());
+			(allThrowFrecsInRangeOfFrosh)[i]->Attack(); //sets directioon
 			addThrowObjectToList(allThrowObjects.size() - 1,
 					allThrowFrecsInRangeOfFrosh[i]->getDamage(),
 					allThrowFrecsInRangeOfFrosh[i]->getPosition(),

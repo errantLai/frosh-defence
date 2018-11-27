@@ -7,7 +7,7 @@ typedef sf::IntRect* srcArrayPtr;
 
 Frec::Frec(const sf::Vector2f position, sf::Texture* _texture, FrecType _type,
 		int damage, int range, int cooldown) :
-		Clickable(position, sf::Vector2f(120, 120)), frecPos(position), texture(
+		Clickable(position, sf::Vector2f(120, 120)), coordinate(position), frecPos(position), texture(
 				_texture), type(_type), frecDamage(damage), frecRange(range), baseCooldown(
 				cooldown) {
 	// these can be changed to adapt to whichever frec spritesheet we are using
@@ -25,14 +25,14 @@ Frec::Frec(const sf::Vector2f position, sf::Texture* _texture, FrecType _type,
 		y += 128;
 		x = 0;
 	}
-
+	
 	currentSprite = srcSprite[0][0];
 	frecSprite = sf::Sprite(*texture, currentSprite);
 	frecSprite.setPosition(frecPos.x, frecPos.y);
 
 	// set initial attributes
-	mode = 'a';
-	direction = 'r';
+	//mode = 'a';
+	//direction = 'r';
 	currentCooldown = 0;
 	wasClicked = false;
 }
@@ -112,25 +112,53 @@ int Frec::getCooldown() {
 }
 
 void Frec::froshDirection(sf::Vector2f froshPos) {
-	float dx = frecPos.x - froshPos.x;
-	float dy = frecPos.y - froshPos.y;
-	if (dy > 0 && dy > dx && dx < -dy)
-		setDirection('u');
-	else if (dx < 0 && -dx > dy && dy >= dx)
-		setDirection('r');
-	else if (dy < 0 && dy < dx && -dy >= dx)
+	float dx = coordinate.x - froshPos.x;
+	float dy = coordinate.y - froshPos.y;
+	if ((dy > 0 && (dx >= 0 && dx < dy)) || (dy > 0 && (dx < 0 && -dx <= dy))) {
+		if (direction != 'u') {
+			setDirection('u');
+			//cout << "direction up" << endl;
+		}
+	}
+	else if ((dy > 0 && (dx <= 0 && dx < dy)) || (dy > 0 && (dx < 0 && -dx <= dy))) {
+		if (direction != 'r') {
+			setDirection('r');
+			//cout << "direction right" << endl;
+		}
+	}
+	else if ((dy < 0 && (dx >= 0 && dx <= -dy)) || (dy < 0 && (dx < 0 && dx > dy))) {
+		if (direction != 'd') {
+			setDirection('d');
+			//cout << "direction down" << endl;
+		}
+	}
+	else if ((dx > 0 && (dy >= 0 && dx >= dy)) || (dx > 0 && (dy < 0 && dx > -dy))) {
+		if (direction != 'l') {
+			setDirection('l');
+			//cout << "direction left" << endl;
+		}
+	}
+	else {
 		setDirection('d');
-	else
-		setDirection('l');
+	}
 }
 
 sf::Sprite Frec::getFrecSprite() const {
 	return frecSprite;
 }
 
+sf::Vector2f Frec::getOriginalFrecPosition()
+{
+	return coordinate;
+}
+
+void resetSpriteRange() {
+
+}
+
 void Frec::flipSprite() {
 	frecSprite.setScale(-1.0, 1.0);
-	frecSprite.setPosition(frecPos.x + 128, frecPos.y);
+	frecSprite.setPosition(frecPos.x +128, frecPos.y);
 }
 void Frec::flipBack() {
 	frecSprite.setScale(1.0, 1.0);
@@ -139,14 +167,14 @@ void Frec::flipBack() {
 
 float Frec::froshDistance(sf::Vector2f frosh) // returns distance between two points
 		{
-	float x = (frecPos.x - frosh.x) * (frecPos.x - frosh.x);
-	float y = (frecPos.y - frosh.y) * (frecPos.y - frosh.y);
+	float x = (coordinate.x - frosh.x) * (coordinate.x - frosh.x);
+	float y = (coordinate.y - frosh.y) * (coordinate.y - frosh.y);
 	float xPlusY = x + y;
 	return (float) (powf(xPlusY, 0.5)); //returns hypotenuse , ie. distance between points
 }
 
 bool Frec::froshCollides(sf::Vector2f frosh) // simple collision detection between two circles
-		{
+{
 	float dist = froshDistance(frosh); // gets distance between circles
 	return dist < frecRange; // if dist < frec range we have a collision
 }
@@ -157,64 +185,103 @@ void Frec::Attack() {
 	// use another layer of conditional to determine which direction is facing
 	// i.e. switch (direction) {case 'l': //sth; case 'r': //sth; ...}
 	// where "sth" is using the logic bellow to loop through its sprites
-
+	//spriteCooldownSwitch starts at 15, each tick represents one cycle
 	switch (direction) {
 	case 'u':
-		if (currentSprite == srcSprite[1][0]) {
-			currentSprite = srcSprite[1][1];
-			frecSprite.setTextureRect(currentSprite);
-		} else if (currentSprite == srcSprite[1][1]) {
-			currentSprite = srcSprite[1][2];
-			frecSprite.setTextureRect(currentSprite);
-		} else {
-			currentSprite = srcSprite[1][0];
-			frecSprite.setTextureRect(currentSprite);
-		} // end if else
+		if (spriteFrame){
+			frecSprite.setTextureRect(srcSprite[1][0]);
+			spriteFrame = false;
+		}
+		else {
+			frecSprite.setTextureRect(srcSprite[1][1]);
+			spriteFrame = true;
+		}
 		break;
 	case 'd':
-		if (currentSprite == srcSprite[0][0]) {
-			currentSprite = srcSprite[0][1];
-			frecSprite.setTextureRect(currentSprite);
-		} else if (currentSprite == srcSprite[0][1]) {
-			currentSprite = srcSprite[0][2];
-			frecSprite.setTextureRect(currentSprite);
-		} else {
-			currentSprite = srcSprite[0][0];
-			frecSprite.setTextureRect(currentSprite);
-		} // end if else
+		if (spriteFrame) {
+			frecSprite.setTextureRect(srcSprite[0][0]);
+			spriteFrame = false;
+		}
+		else{
+			frecSprite.setTextureRect(srcSprite[0][1]);
+			spriteFrame = true;
+		}
 		break;
 	case 'l':
-		if (currentSprite == srcSprite[2][0]) {
-			currentSprite = srcSprite[2][1];
-			frecSprite.setTextureRect(currentSprite);
-			//frecSprite.setScale(-1.0,1.0);
-		} else if (currentSprite == srcSprite[2][1]) {
-			currentSprite = srcSprite[2][2];
-			frecSprite.setTextureRect(currentSprite);
-			//frecSprite.setScale(-1.0, 1.0);
-		} else {
-			currentSprite = srcSprite[2][0];
-			frecSprite.setTextureRect(currentSprite);
+		if (spriteFrame) {
+			frecSprite.setTextureRect(srcSprite[2][0]);
+			spriteFrame = false;
 			flipSprite();
-		} // end if else
+		}
+		else {
+			frecSprite.setTextureRect(srcSprite[2][1]);
+			spriteFrame = true;
+			flipSprite();
+		}
 		break;
 	case 'r':
-		if (currentSprite == srcSprite[2][0]) {
-			currentSprite = srcSprite[2][1];
-			frecSprite.setTextureRect(currentSprite);
-			//frecSprite.setScale(1.0, 1.0);
-		} else if (currentSprite == srcSprite[2][1]) {
-			currentSprite = srcSprite[2][2];
-			frecSprite.setTextureRect(currentSprite);
-			//frecSprite.setScale(1.0, 1.0);
-		} else {
-			currentSprite = srcSprite[2][0];
-			frecSprite.setTextureRect(currentSprite);
+		if (spriteFrame) {
+			frecSprite.setTextureRect(srcSprite[2][0]);
+			spriteFrame = false;
+			flipBack();
+		}
+		else{
+			frecSprite.setTextureRect(srcSprite[2][1]);
+			spriteFrame = true;
 			flipBack();
 		}
 		break;
 	} // end switch
 }
+
+//void Frec::Attack() {
+//	// (myClock.getElapsedClick() > attackSpeeck) or whatever,
+//	// waiting for the "click" done by the controller class
+//	// use another layer of conditional to determine which direction is facing
+//	// i.e. switch (direction) {case 'l': //sth; case 'r': //sth; ...}
+//	// where "sth" is using the logic bellow to loop through its sprites
+//	//spriteCooldownSwitch starts at 15, each tick represents one cycle
+//	spriteCooldownSwitch= spriteCooldownSwitch-3;
+//	if (spriteCooldownSwitch < 0)
+//		spriteCooldownSwitch = 30;
+//	switch (direction) {
+//	case 'u':
+//		if (spriteCooldownSwitch <= 30 && spriteCooldownSwitch > 15)
+//			frecSprite.setTextureRect(srcSprite[1][0]);
+//		else if (spriteCooldownSwitch < 15)
+//			frecSprite.setTextureRect(srcSprite[1][1]);
+//		break;
+//	case 'd':
+//		if (spriteCooldownSwitch <= 30 && spriteCooldownSwitch > 15)
+//			frecSprite.setTextureRect(srcSprite[0][0]);
+//		else if (spriteCooldownSwitch < 15)
+//			frecSprite.setTextureRect(srcSprite[0][1]);
+//		break;
+//	case 'l':
+//		if (spriteCooldownSwitch <= 30 && spriteCooldownSwitch > 15) {
+//			frecSprite.setTextureRect(srcSprite[2][0]);
+//			//if (spriteCooldownSwitch == 15)
+//			flipSprite();
+//		}
+//		else if (spriteCooldownSwitch < 15) {
+//			frecSprite.setTextureRect(srcSprite[2][1]);
+//			//if ()
+//			flipSprite();
+//		}
+//		break;
+//	case 'r':
+//		if (spriteCooldownSwitch <= 30 && spriteCooldownSwitch > 15) {
+//			frecSprite.setTextureRect(srcSprite[2][0]);
+//			flipBack();
+//		}	
+//		else if (spriteCooldownSwitch < 15) {
+//			frecSprite.setTextureRect(srcSprite[2][1]);
+//			flipBack();
+//		}
+//			
+//		break;
+//	} // end switch
+//}
 
 void Frec::StopAttack() {
 	currentSprite = srcSprite[0][0];
@@ -285,7 +352,7 @@ SlammingFrec::SlammingFrec(const std::vector<float> coordinateV) {
 	frecSprite.setTextureRect(currentSprite);
 	frecSprite.setPosition(coordinate[0], coordinate[1]);
 	frecAttributes = new float[3];
-	frecAttributes[0] = 0.25f; // speed
+	frecAttributes[0] = 10.25f; // speed
 	frecAttributes[1] = 2.0; // range
 	frecAttributes[2] = 1.0; // damage
 }
@@ -478,7 +545,7 @@ SwingingFrec::SwingingFrec(const std::vector<float> coordinateV) {
 void SwingingFrec::Attack() {
 	// (myClock.getElapsedClick() > attackSpeeck) or whatever, 
 	// waiting for the "click" done by the controller class
-	if (animationClock.getElapsedTime().asSeconds() > frecAttributes[0]) {
+	//if (animationClock.getElapsedTime().asSeconds() > frecAttributes[0]) {
 		// use another layer of conditional to determine which direction is facing
 		// i.e. switch (direction) {case 'l': //sth; case 'r': //sth; ...}
 		// where "sth" is using the logic bellow to loop through its sprites
@@ -525,13 +592,14 @@ void SwingingFrec::Attack() {
 			}
 			break;
 		} // end switch condition
-		animationClock.restart();
-	} // end switching figuresprite
+		//animationClock.restart();
+	//} // end switching figuresprite
 }
 
 void SwingingFrec::StopAttack() {
 	currentSprite = srcSprite[0][0];
 	frecSprite.setTextureRect(currentSprite);
+	mode = 'S';
 }
 
 void SwingingFrec::setMode(char AorS) {

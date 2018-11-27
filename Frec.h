@@ -27,6 +27,7 @@ public:
 	char getDirection() const;
 	char getMode() const;
 	sf::Sprite getFrecSprite() const;
+	sf::Vector2f getOriginalFrecPosition();
 	sf::Vector2f getPosition() const;
 	sf::Vector2f getCenterPosition() const;
 	float getDamage() const;
@@ -72,12 +73,12 @@ private:
 	int numPers = 3;
 	int numFrame = 3;
 	FrecType type;
-
+	int spriteCooldownSwitch = 15;
 	// the attributes about attack and frec properties
 	char mode; // a - attack; s - stop attack
 	char direction; // udlr -> up, down, left, right
 	int currentCooldown;
-
+	bool spriteFrame=true;
 	// modifed by the upgrade function
 	float frecDamage;
 	float frecRange;
