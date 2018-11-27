@@ -190,6 +190,9 @@ void GameMenuController::render() {
 	for (Clickable* c : frecButtonVec) {
 		c->render(*windowPointer);
 	}
+	for (FrecButton* c : frecButtonVec) {
+			c->renderText(*windowPointer);
+		}
 	for (Clickable* c : clickVec) {
 		c->render(*windowPointer);
 	}

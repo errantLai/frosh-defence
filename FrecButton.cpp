@@ -50,7 +50,7 @@ FrecButton::FrecButton(sf::Vector2f _position, int _radius,
 	frecTextBack.setTexture(_menuTexture);
 	frecTextBack.setTextureRect(sf::IntRect(1056, 165, 320, 128));
 	// Position by Frec
-	int baseY = -15, baseX = 1573;
+	int baseY = 45, baseX = 1573;
 	if (_type == FrecType::thrower) {
 		baseY += 275;
 	} else if (_type == FrecType::slammer) {
@@ -84,14 +84,18 @@ void FrecButton::update() {
 	graphic.setPosition(getPosition());
 }
 void FrecButton::render(sf::RenderWindow& _window) {
+
+	_window.draw(graphic);
+
+}
+void FrecButton::renderText(sf::RenderWindow& _window){
 	frecButtonText.setFont(font);
 	frecButtonText2.setFont(font);
-	_window.draw(graphic);
 	if (displayText) {
-		_window.draw(frecTextBack);
-		_window.draw(frecButtonText);
-		_window.draw(frecButtonText2);
-	}
+			_window.draw(frecTextBack);
+			_window.draw(frecButtonText);
+			_window.draw(frecButtonText2);
+		}
 }
 
 void FrecButton::onClick() {
