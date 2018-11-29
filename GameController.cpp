@@ -281,7 +281,7 @@ void deathLoop() {
 int main() {
 // Initialization
 	debug = false;
-	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence");
+	window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "Frosh Defence", sf::Style::Close);
 	window->setFramerateLimit(60);
 	sf::Font font;
 	if (!font.loadFromFile("assets/georgia.ttf")) {
